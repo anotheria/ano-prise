@@ -30,11 +30,14 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	private CacheStats moskitoCacheStats;
 	
 	public ExpiringCache(String name, int aStartSize, int aMaxSize, long anExpirationTime, CacheFactory<K, CachedObjectWrapper<V>> underlyingCacheFactory){
-		cache = underlyingCacheFactory.create(name, aStartSize, aMaxSize);
+		this(name, anExpirationTime, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
+	}
+
+	public ExpiringCache(String name, long anExpirationTime, Cache<K, CachedObjectWrapper<V>> underlyingCache){
+		cache = underlyingCache;
 		expirationTime = anExpirationTime;
 		moskitoCacheStats = cache.getCacheStats();
 	}
-
 	
 	
 	public V get(K id) {
