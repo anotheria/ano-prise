@@ -56,9 +56,9 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	
 	public RoundRobinHardwiredCache(String name, int aStartSize, int aMaxSize, float anIncrement){
 		super(name);
-		this.startSize = aStartSize;
-		this.maxSize   = aMaxSize;
-		this.increment = anIncrement;
+		startSize = aStartSize;
+		maxSize   = aMaxSize;
+		increment = anIncrement;
 		
 		cacheStatsCopy = getCacheStats();
 		

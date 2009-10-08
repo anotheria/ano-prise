@@ -2,7 +2,6 @@ package net.anotheria.anoprise.cache;
 
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
-import java.util.Map;
 
 import net.java.dev.moskito.core.predefined.CacheStats;
 
