@@ -66,8 +66,8 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 
 	}
 	
-	public synchronized void remove(K id){
-		Integer index = getCachePosition(id);
+	@Override public synchronized void remove(K id){
+		Integer index = id2index.get(id);
 		
 		if (index==null)
 			return ;
@@ -83,7 +83,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	@Override public synchronized V get(K id){
 		cacheStatsCopy.addRequest();
 		//System.out.println("Requested id: ."+id+".");
-		Integer index = getCachePosition(id);
+		Integer index = id2index.get(id);
 		//System.out.println("Index for id: "+index);
 		if (index==null)
 			return null;
@@ -101,9 +101,6 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 		return toRet;  
 	}
 	
-	private Integer getCachePosition(K id){
-		return id2index.get(id);
-	}
 	
 	@SuppressWarnings("unchecked")
 	@Override public synchronized void put(K id, V cacheable){
@@ -111,7 +108,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 		
 		cacheStatsCopy.addWrite();
 		
-		Integer oldPosition = getCachePosition(id);
+		Integer oldPosition = id2index.get(id);
 		if (oldPosition!=null){
 			cache[oldPosition.intValue()] = cacheable;
 			return;
@@ -198,7 +195,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	
 	@Override public String toString(){
 		if (cache==null)
-			return "Not initialized cache "+getName();
+			return getName()+" - not initialized.";
 		String ret = getName()+" ";
 		ret += "CurrentSize: "+cache.length+", MaxSize: "+maxSize;
 		ret += " Enlargement possible: "+enlargeable+", FirstCycleComplete: "+firstCycleComplete;

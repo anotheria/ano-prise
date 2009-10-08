@@ -91,9 +91,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 	
 	@Override public synchronized V get(K id){
 		cacheStatsCopy.addRequest();
-		//System.out.println("Requested id: ."+id+".");
 		Integer index = getCachePosition(id);
-		//System.out.println("Index for id: "+index);
 		if (index==null)
 			return null;
 		V toRet = cache[index.intValue()].get();
@@ -115,7 +113,6 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 	
 	@SuppressWarnings("unchecked")
 	@Override public synchronized void put(K id, V cacheable){
-		//System.out.println("--> put in cache "+id+", "+cacheable);
 		
 		SoftReference<V> toPut = new SoftReference<V>(cacheable);
 		cacheStatsCopy.addWrite();
