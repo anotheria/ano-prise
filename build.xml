@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<project name="ano-prise" default="dist" basedir=".">
+	<import file="../build/basic-project.xml"/>	
+
+	<!-- 
+		checkout svn://svn.anotheria.net/opensource/build/trunk as ../build 
+		in order for this build script to work.
+	-->
+</project>  
