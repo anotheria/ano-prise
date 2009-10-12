@@ -102,10 +102,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 		return cacheFactory.create(configurationName, startSize, maxSize);
 	}
 	
-	/* (non-Javadoc)
-	 * @see de.friendscout.vincent.util.cache.ICache#clearCache()
-	 */
-	public void clear() {
+	@Override public void clear() {
 		if (cacheOn)
 			cache.clear();
 	}
@@ -116,10 +113,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 		return cache.get(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.friendscout.vincent.util.cache.ICache#putInCache(java.lang.Object, java.lang.Object)
-	 */
-	public void put(K id, V cacheable) {
+	@Override public void put(K id, V cacheable) {
 		if (!cacheOn)
 			return;
 		try{
@@ -136,16 +130,10 @@ public class CacheController<K,V> implements Cache<K,V>{
 		cache.remove(id);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.friendscout.vincent.services.config.IConfigurable#getConfigurationName()
-	 */
 	public String getConfigurationName() {
 		return configurationName;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.friendscout.vincent.services.config.IConfigurable#notifyConfigurationFinished()
-	 */
 	public void notifyConfigurationFinished() {
 		log.info("configuration "+configurationName+" finished, settings are:");
 		log.info("cacheOn "+prevCacheOn+" -> "+cacheOn);
@@ -154,9 +142,6 @@ public class CacheController<K,V> implements Cache<K,V>{
 		init();
 	}
 
-	/* (non-Javadoc)
-	 * @see de.friendscout.vincent.services.config.IConfigurable#notifyConfigurationStarted()
-	 */
 	public void notifyConfigurationStarted() {
 		prevCacheOn = cacheOn;
 		prevMaxSize = maxSize;
@@ -166,9 +151,6 @@ public class CacheController<K,V> implements Cache<K,V>{
 		maxSize   = DEF_MAX_SIZE;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.friendscout.vincent.services.config.IConfigurable#setProperty(java.lang.String, java.lang.String)
-	 */
 	public void setProperty(String name, String value) {
 		if (name.equals(PARAM_CACHE_ON))
 			cacheOn = Boolean.valueOf(value).booleanValue();
