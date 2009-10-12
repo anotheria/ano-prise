@@ -1,0 +1,9 @@
+{
+	test:{
+		junit:{
+			XxxService: "foo.bar.XxxService",
+			DomainXxxService: "XxxService",
+			CmsXxxService: "XxxService",
+		},
+	},
+}
