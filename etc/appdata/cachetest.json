@@ -4,7 +4,9 @@
 	maxSize: 7000,
 	dev:{
 	},
-	test:{
+	unittest:{
+		startSize: 3000,
+		maxSize: 5000,
 	},
 	tenK:{
 		startSize: 10000,
