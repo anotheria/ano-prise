@@ -47,7 +47,7 @@ public final class Caches {
 	public static final <K,V> Cache<K,V> createConfigurableHardwiredCache(String name){
 		CacheFactory<K, V> factory = new RoundRobinHardwiredCacheFactory<K, V>();
 		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
-		ConfigurationManager.INSTANCE.configure(controller);
+		ConfigurationManager.INSTANCE.configureAs(controller, name);
 		return controller;
 	}
 	
