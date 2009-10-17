@@ -1,0 +1,17 @@
+{
+	cacheOn: true,
+	startSize: 3000,
+	maxSize: 7000,
+	dev:{
+	},
+	test:{
+	},
+	tenK:{
+		startSize: 10000,
+		maxSize: 10000,
+	},
+	off:{
+		cacheOn:false,
+	},
+	
+}

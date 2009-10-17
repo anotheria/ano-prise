@@ -3,6 +3,11 @@ package net.anotheria.anoprise.cache;
 import net.java.dev.moskito.core.predefined.CacheStats;
 
 import org.apache.log4j.Logger;
+import org.configureme.annotations.AfterConfiguration;
+import org.configureme.annotations.BeforeConfiguration;
+import org.configureme.annotations.BeforeInitialConfiguration;
+import org.configureme.annotations.Configure;
+import org.configureme.annotations.ConfigureMe;
 
 
 /**
@@ -14,10 +19,11 @@ import org.apache.log4j.Logger;
  * @author lrosenberg
  * Created on 29.07.2004
  */
+@ConfigureMe
 public class CacheController<K,V> implements Cache<K,V>{
-	private boolean cacheOn;
-	private int startSize;
-	private int maxSize;
+	@Configure private boolean cacheOn;
+	@Configure private int startSize;
+	@Configure private int maxSize;
 	 
 	private boolean prevCacheOn;
 	private int prevStartSize;
@@ -33,43 +39,30 @@ public class CacheController<K,V> implements Cache<K,V>{
 	public static final String PARAM_START_SIZE = "cache.start.size";
 	public static final String PARAM_MAX_SIZE = "cache.max.size";
 	
-	public static final String PARAM_FILTER   = "cache.filter";
-	
 	public static final boolean DEF_CACHE_ON = true;
 	public static final int DEF_START_SIZE   = 1000;
 	public static final int DEF_MAX_SIZE     = 5000;
-	
-	private CacheFactory<K,V> cacheFactory;
-	
-	private boolean oneTimeConfigured;
 	
 	private static Logger log;
 	static {
 		log = Logger.getLogger(CacheController.class);
 	}
 	
-	public CacheController(String aConfigurationName){
-		this(aConfigurationName, null);
-		throw new AssertionError("This constructor is not yet complete");
-	}
-
-	public CacheController(String aConfigurationName, CacheFactory<K,V> factory){
+	private CacheFactory<K, V> factory;
+	
+	public CacheController(String aConfigurationName, CacheFactory<K,V> aFactory){
 		this.configurationName = aConfigurationName;
-		cacheFactory = factory;
-		oneTimeConfigured = false;
+		factory = aFactory;
 	}
 	
-	
+	@BeforeInitialConfiguration public void preInit(){
+		prevCacheOn = false;
+		prevStartSize = -1;
+		prevMaxSize = -1;
+	}
 	
 	
 	private void init(){
-		if (!oneTimeConfigured){
-			//enforce initial configuration.
-			oneTimeConfigured = true;
-			prevCacheOn = false;
-			prevStartSize = -1;
-			prevMaxSize = -1;
-		}
 		log.debug("reiniting cache for "+configurationName);
 		if (!cacheOn){
 			if (prevCacheOn){
@@ -85,11 +78,12 @@ public class CacheController<K,V> implements Cache<K,V>{
 					log.debug("Cache remains on, settings unchanged.");					
 				}else{
 					log.debug("Cache remains on, settings changed, cache will be renewed.");
-					if (cache!=null)
+					if (cache!=null){
 						cache.clear();
-					else
+					}else{
 						log.warn("Cache is null, when it shouldn't be.");
-					cache = cacheFactory.create(configurationName, startSize, maxSize);
+					}
+					cache = factory.create(configurationName, startSize, maxSize);
 				}
 			}else{
 				log.debug("switching cache on.");
@@ -99,7 +93,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 	}
 	
 	protected Cache<K,V> createCache(int startSize, int maxSize){
-		return cacheFactory.create(configurationName, startSize, maxSize);
+		return factory.create(configurationName, startSize, maxSize);
 	}
 	
 	@Override public void clear() {
@@ -134,7 +128,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 		return configurationName;
 	}
 
-	public void notifyConfigurationFinished() {
+	@AfterConfiguration public void configurationFinished() {
 		log.info("configuration "+configurationName+" finished, settings are:");
 		log.info("cacheOn "+prevCacheOn+" -> "+cacheOn);
 		log.info("startSize "+prevStartSize+" -> "+startSize);
@@ -142,7 +136,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 		init();
 	}
 
-	public void notifyConfigurationStarted() {
+	@BeforeConfiguration public void configurationStarted() {
 		prevCacheOn = cacheOn;
 		prevMaxSize = maxSize;
 		prevStartSize = startSize;
@@ -151,15 +145,6 @@ public class CacheController<K,V> implements Cache<K,V>{
 		maxSize   = DEF_MAX_SIZE;
 	}
 
-	public void setProperty(String name, String value) {
-		if (name.equals(PARAM_CACHE_ON))
-			cacheOn = Boolean.valueOf(value).booleanValue();
-		if (name.equals(PARAM_START_SIZE))
-			startSize = Integer.parseInt(value);
-		if (name.equals(PARAM_MAX_SIZE))
-			maxSize = Integer.parseInt(value);
-	}
-	
 	public String getStats(){
 		String stats = cacheOn ? "On, "+startSize+", "+maxSize : "Off";
 		if (cacheOn)
@@ -184,5 +169,31 @@ public class CacheController<K,V> implements Cache<K,V>{
     	CacheStats stats = getCache().getCacheStats();
     	return stats;
     }
+
+	public void setCacheOn(boolean cacheOn) {
+		this.cacheOn = cacheOn;
+	}
+
+	public void setStartSize(int startSize) {
+		this.startSize = startSize;
+	}
+
+	public void setMaxSize(int maxSize) {
+		this.maxSize = maxSize;
+	}
+	
+	protected boolean isCacheOn(){
+		return cacheOn;
+	}
+	
+	protected int getStartSize(){
+		return startSize;
+	}
+	
+	protected int getMaxSize(){
+		return maxSize;
+	}
+	
+	
 
 }

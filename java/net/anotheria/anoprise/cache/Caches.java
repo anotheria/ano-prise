@@ -1,5 +1,7 @@
 package net.anotheria.anoprise.cache;
 
+import org.configureme.ConfigurationManager;
+
 /**
  * Utility for cache creation.
  * @author another
@@ -35,9 +37,32 @@ public final class Caches {
 		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
 	}
 	
+	public static final <K,V> Cache<K,V> createConfigurableSoftReferenceCache(String name){
+		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>();
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		ConfigurationManager.INSTANCE.configureAs(controller, name);
+		return controller;
+	}
 	
+	public static final <K,V> Cache<K,V> createConfigurableHardwiredCache(String name){
+		CacheFactory<K, V> factory = new RoundRobinHardwiredCacheFactory<K, V>();
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		ConfigurationManager.INSTANCE.configure(controller);
+		return controller;
+	}
 	
+	/*
+	public static final <K,V> Cache<K,V> createConfigurableHardwiredExpiringCache(String name){
+		Cache<K,CachedObjectWrapper<V>> underlyingCache = createHardwiredCache(name, startSize, maxSize);
+		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
+	}
 	
+	public static final <K,V> Cache<K,V> createConfigurableSoftReferenceExpiringCache(String name){
+		Cache<K,CachedObjectWrapper<V>> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
+		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
+	}
+	
+	*/
 	
 	
 	
