@@ -9,7 +9,7 @@ public class ConfigurableResolverTest {
 	private static ConfigurableResolver resolver;
 	
 	@BeforeClass public static void setUp(){
-		resolver = new ConfigurableResolver();
+		resolver = ConfigurableResolver.create();
 	}
 	
 	@Test public void resolveAliasTest(){
