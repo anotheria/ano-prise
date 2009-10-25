@@ -42,7 +42,7 @@ public class MetaFactory {
 	public static void reset(){
 		resolverList = new CopyOnWriteArrayList<AliasResolver>();
 		resolverList.add(new SystemPropertyResolver());
-		resolverList.add(new ConfigurableResolver());		
+		resolverList.add(ConfigurableResolver.create());		
 		
 		factoryClasses = Storage.createConcurrentHashMapStorage("mf-factoryClasses");
 		factories = Storage.createConcurrentHashMapStorage("mf-factories");

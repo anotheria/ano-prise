@@ -3,6 +3,7 @@ package net.anotheria.anoprise.metafactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.SetAll;
@@ -11,26 +12,22 @@ import org.configureme.annotations.SetAll;
 public class ConfigurableResolver implements AliasResolver{
 	private Map<String,String> aliasMap;
 	private int priority;
-
-//	private static ConfigurableResolver instance;
-//	
-//	private static Object lock = new Object();
-//    public static ConfigurableResolver getInstance(){
-//		if(instance != null)
-//			return instance;
-//		synchronized(lock){
-//			if(instance != null)
-//				return instance;
-//			instance = new ConfigurableResolver();
-//			ConfigurationManager.INSTANCE.configure(instance);
-//			return instance;
-//		}
-//	}
 	
-	public ConfigurableResolver(){
+	private static Logger log = Logger.getLogger(ConfigurableResolver.class);
+	
+	public static final ConfigurableResolver create(){
+		ConfigurableResolver resolver = new ConfigurableResolver();
+		try{
+			ConfigurationManager.INSTANCE.configure(resolver);
+		}catch(IllegalArgumentException e){
+			log.error("create() - no factory config found, configurable resolver remains unused", e);
+		}
+		return resolver;
+	}
+	
+	private ConfigurableResolver(){
 		priority = 50;
 		aliasMap = new ConcurrentHashMap<String, String>();
-		ConfigurationManager.INSTANCE.configure(this);
 	}
 
 	@SetAll
