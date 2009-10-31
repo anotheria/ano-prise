@@ -21,16 +21,39 @@ import org.configureme.annotations.ConfigureMe;
  */
 @ConfigureMe
 public class CacheController<K,V> implements Cache<K,V>{
+	/**
+	 * If true the cache is on.
+	 */
 	@Configure private boolean cacheOn;
+	/**
+	 * Cache start size.
+	 */
 	@Configure private int startSize;
+	/**
+	 * Cache max size.
+	 */
 	@Configure private int maxSize;
 	 
+	/**
+	 * CacheOn value previous to a reconfigure.
+	 */
 	private boolean prevCacheOn;
+	/**
+	 * Start size previous to a reconfigure.
+	 */
 	private int prevStartSize;
+	/**
+	 * Max size previous to a reconfigure.
+	 */
 	private int prevMaxSize;
-	
+	/**
+	 * Underlying cache.
+	 */
 	private Cache<K,V> cache;
 	
+	/**
+	 * Name of the cache configuration.
+	 */
 	private String configurationName;
 	
 	private int outOfMemoryErrors;
