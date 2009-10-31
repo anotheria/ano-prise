@@ -13,23 +13,63 @@ import net.java.dev.moskito.core.predefined.CacheStats;
 public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements Cache<K,V> {
 	
 	
+	/**
+	 * DEfault start size if no size is specified.
+	 */
 	public static final int DEF_START_SIZE = 1000;
+	/**
+	 * Default max size if no size is specified.
+	 */
 	public static final int DEF_MAX_SIZE   = 3000;
+	/**
+	 * Default cache size increment factor.
+	 */
 	public static final float DEF_INCREMENT = 0.5F; 
-	
+	/**
+	 * The underlying array of softreferences to cached objects.
+	 */
 	private SoftReference<V>[] cache;
 	
+	/**
+	 * Map for id2index resolution.
+	 */
 	private HashMap<K,Integer> id2index;
+	/**
+	 * Map for the reverse resolution (index2id).
+	 */
 	private HashMap<Integer,K> index2id;
 	
-	private int maxSize, startSize;
+	/**
+	 * Max cache size.
+	 */
+	private int maxSize;
+	/**
+	 * Start cache size.
+	 */
+	private int startSize;
+	/**
+	 * Cache size increment.
+	 */
 	private float increment;
+	/**
+	 * Current cache size.
+	 */
 	private int currentSize;
-	
+	/**
+	 * Last written element.
+	 */
 	private int lastElement ;
+	/**
+	 * True if the first cycle is complete and we started rollover.
+	 */
 	private boolean firstCycleComplete;
+	/**
+	 * True if the start size is smaller than max size.
+	 */
 	private boolean enlargeable;
-	
+	/**
+	 * Copy of cache stats object for faster access.
+	 */
 	private CacheStats cacheStatsCopy = null;
 	
 	
@@ -67,7 +107,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 
 	}
 	
-	public synchronized void remove(K id){
+	@Override public synchronized void remove(K id){
 		Integer index = getCachePosition(id);
 		
 		if (index==null)
@@ -212,11 +252,4 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 		ret += " lastElement: "+lastElement;
 		return ret;
 	}
-	
-	 
-
-	
-    
-
-
 }

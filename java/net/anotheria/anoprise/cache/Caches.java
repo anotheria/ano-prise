@@ -9,12 +9,26 @@ import org.configureme.ConfigurationManager;
  */
 public final class Caches {
 
-	
-	
+	/**
+	 * Creates a new softreference cache.
+	 * @param <K>
+	 * @param <V>
+	 * @param name
+	 * @return
+	 */
 	public static final <K,V> Cache<K,V> createSoftReferenceCache(String name){
 		return new RoundRobinSoftReferenceCache<K, V>(name);
 	}
 	
+	/**
+	 * Creates a new soft reference cache with given name, start and max size.
+	 * @param <K> type used as key in the cache.
+	 * @param <V> type used as value in the cache.
+	 * @param name name of the cache.
+	 * @param startSize starting size of the cache.
+	 * @param maxSize max size of the cache.
+	 * @return
+	 */
 	public static final <K,V> Cache<K,V> createSoftReferenceCache(String name, int startSize, int maxSize){
 		return new RoundRobinSoftReferenceCache<K, V>(name, startSize, maxSize);
 	}
