@@ -56,28 +56,43 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 */
 	private String configurationName;
 	
+	/**
+	 * Number of out of memory errors in the underlying cache.
+	 */
 	private int outOfMemoryErrors;
 	
-	public static final String PARAM_CACHE_ON = "cache.on";
-	public static final String PARAM_START_SIZE = "cache.start.size";
-	public static final String PARAM_MAX_SIZE = "cache.max.size";
-	
+	/**
+	 * Initial value for cacheOn.
+	 */
 	public static final boolean DEF_CACHE_ON = true;
+	/**
+	 * Initial value for start size.
+	 */
 	public static final int DEF_START_SIZE   = 1000;
+	/**
+	 * Initial value for the max size.
+	 */
 	public static final int DEF_MAX_SIZE     = 5000;
 	
-	private static Logger log;
-	static {
-		log = Logger.getLogger(CacheController.class);
-	}
+	private static Logger log = Logger.getLogger(CacheController.class);
 	
+	/**
+	 * Factory for underlying cache creation.
+	 */
 	private CacheFactory<K, V> factory;
-	
+	/**
+	 * Creates a new CacheController with a configuration name and a cache factory.
+	 * @param aConfigurationName the name to configure with.
+	 * @param aFactory the factory to create new cache instances.
+	 */
 	public CacheController(String aConfigurationName, CacheFactory<K,V> aFactory){
 		this.configurationName = aConfigurationName;
 		factory = aFactory;
 	}
 	
+	/**
+	 * Called before first configuration.
+	 */
 	@BeforeInitialConfiguration public void preInit(){
 		prevCacheOn = false;
 		prevStartSize = -1;
@@ -141,14 +156,10 @@ public class CacheController<K,V> implements Cache<K,V>{
 		}
 	}
 	
-	public void remove(K id){
+	@Override public void remove(K id){
 		if (!cacheOn)
 			return;
 		cache.remove(id);
-	}
-
-	public String getConfigurationName() {
-		return configurationName;
 	}
 
 	@AfterConfiguration public void configurationFinished() {
@@ -186,7 +197,7 @@ public class CacheController<K,V> implements Cache<K,V>{
     	return cache;
     }
     
-    public CacheStats getCacheStats(){
+    @Override public CacheStats getCacheStats(){
     	if (!cacheOn)
     		return new CacheStats();
     	CacheStats stats = getCache().getCacheStats();
@@ -216,7 +227,4 @@ public class CacheController<K,V> implements Cache<K,V>{
 	protected int getMaxSize(){
 		return maxSize;
 	}
-	
-	
-
 }
