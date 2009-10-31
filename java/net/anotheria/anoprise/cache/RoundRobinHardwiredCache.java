@@ -6,7 +6,7 @@ import net.java.dev.moskito.core.predefined.CacheStats;
 
 
 /**
- * A simple RoundRobin implementation of the cache.
+ * A simple RoundRobin implementation of the cache. This implementation stores the data in an array and uses two hashmaps for index2id and id2index resolution. All accesses to the cache are synchronized. The cache is threadsafe.
  * @author lrosenberg
  */
 public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cache<K,V> {
@@ -16,39 +16,88 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	public static final int DEF_MAX_SIZE   = 3000;
 	public static final float DEF_INCREMENT = 0.5F; 
 	
+	/**
+	 * Cache array. 
+	 */
 	private V[] cache;
-	
+	/**
+	 * Map for id2index resolve.
+	 */
 	private HashMap<K,Integer> id2index;
+	/**
+	 * Map for index2id (reverse) resolve.
+	 */
 	private HashMap<Integer,K> index2id;
-	
-	private int maxSize, startSize;
+	/**
+	 * Max size of the cache.
+	 */
+	private int maxSize;
+	/**
+	 * Start size of the cache.
+	 */
+	private int startSize;
+	/**
+	 * Increment factor for size increasement.
+	 */
 	private float increment;
+	/**
+	 * Current cache size.
+	 */
 	private int currentSize;
-	
+	/**
+	 * Last written element.
+	 */
 	private int lastElement ;
+	/**
+	 * True if the first cycle is complete.
+	 */
 	private boolean firstCycleComplete;
+	/**
+	 * True if the cache is enlargeable.
+	 */
 	private boolean enlargeable;
-	
+	/**
+	 * A copy of the CacheStats for optimized access.
+	 */
 	private CacheStats cacheStatsCopy = null;
 	
-	
+	/**
+	 * Creates a new cache.
+	 */
 	public RoundRobinHardwiredCache(){
 		this(getUnnamedInstanceName(RoundRobinHardwiredCache.class));
 	}
-	
+	/**
+	 * Creates a new cache with given start and max size.
+	 * @param aStartSize the start size.
+	 * @param aMaxSize the max size.
+	 */
 	public RoundRobinHardwiredCache(int aStartSize, int aMaxSize){
 		this(getUnnamedInstanceName(RoundRobinHardwiredCache.class), aStartSize, aMaxSize);
 	}
 	
-	
+	/**
+	 * Creates a new cache with given start and max size, and size increment.
+	 * @param aStartSize
+	 * @param aMaxSize
+	 * @param anIncrement
+	 */
 	public RoundRobinHardwiredCache(int aStartSize, int aMaxSize, float anIncrement){
 		this(getUnnamedInstanceName(RoundRobinHardwiredCache.class), aStartSize, aMaxSize, anIncrement);
 	}
-	
+	/**
+	 * Creates a new named cache with default start and max size and increment.
+	 * @param name
+	 */
 	public RoundRobinHardwiredCache(String name){
 		this(name, DEF_START_SIZE, DEF_MAX_SIZE, DEF_INCREMENT);
 	}
-	
+	/**
+	 * Creates a new named cache with given start and max size.
+	 * @param name
+	 * @param aStartSize
+	 * @param aMaxSize
+	 */
 	public RoundRobinHardwiredCache(String name, int aStartSize, int aMaxSize){
 		this(name, aStartSize, aMaxSize, DEF_INCREMENT);
 	}
