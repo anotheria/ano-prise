@@ -9,7 +9,6 @@ import org.junit.Test;
 public class MetaFactoryTest {
 	
 	@Before public void reinit(){
-		System.out.println("Reseting...");
 		MetaFactory.reset();
 	}
 	
