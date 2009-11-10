@@ -34,4 +34,6 @@ public interface CrudService<T extends CrudSaveable> {
 	 */
 	void save(T t) throws CrudServiceException;
 	
+	boolean exists(T t) throws CrudServiceException;
+	
 }

@@ -24,4 +24,9 @@ public class TestCrudsaveable implements CrudSaveable{
 	public String getId(){
 		return id;
 	}
+	
+	public boolean equals(Object o){
+		return o instanceof TestCrudsaveable && 
+		 	((TestCrudsaveable)o).id.equals(id) && ((TestCrudsaveable)o).content.equals(content);  
+	}
 }

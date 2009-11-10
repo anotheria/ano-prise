@@ -9,6 +9,10 @@ import java.io.ObjectOutputStream;
 
 public abstract class AbstractTestCrudService implements CrudService<TestCrudsaveable>{
 
+	@Override public boolean exists(TestCrudsaveable t) throws CrudServiceException{
+		return getFile(t.getOwnerId()).exists();
+	}
+	
 	@Override
 	public void create(TestCrudsaveable t) throws CrudServiceException{
 		File f = getFile(t.getOwnerId());
