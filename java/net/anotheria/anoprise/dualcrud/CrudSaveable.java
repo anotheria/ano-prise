@@ -1,5 +1,7 @@
 package net.anotheria.anoprise.dualcrud;
 
-public interface CrudSaveable {
+import java.io.Serializable;
+
+public interface CrudSaveable extends Serializable{
 	String getOwnerId();
 }
