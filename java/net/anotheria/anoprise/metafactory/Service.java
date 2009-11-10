@@ -1,7 +1,7 @@
 package net.anotheria.anoprise.metafactory;
 /**
- * Signalizing interface for all service types. Needed by meta factory.
- * @author another
+ * Marker interface for all service types. Needed by meta factory.
+ * @author lrosenberg
  *
  */
 public interface Service {
