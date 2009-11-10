@@ -60,7 +60,56 @@ public class TestDual {
 		assertTrue(testService.exists(a));
 		assertTrue("instance should have been moved to beta", beta.exists(a));
 		assertFalse("instance should have been moved to beta", alpha.exists(a));
+
+		//test migrate
+		testService.delete(a);
+		assertFalse("instance should be deleted on new", beta.exists(a));
+		assertFalse("instance should be deleted on old", alpha.exists(a));
+		alpha.create(a);
+		testService.migrate(a.getOwnerId());
+		assertTrue("instance should exists deleted on new", beta.exists(a));
+		assertFalse("instance should be deleted on old", alpha.exists(a));
+
+		//test save on the fly.
+		testService.delete(a);
+		assertFalse("instance should be deleted on new", beta.exists(a));
+		assertFalse("instance should be deleted on old", alpha.exists(a));
+		alpha.create(a);
+		testService.save(a);
+		assertTrue("instance should exists deleted on new", beta.exists(a));
+		assertFalse("instance should be deleted on old", alpha.exists(a));
 		
+		
+	}
+	//this tests tests how the dualServices handles illegal incorrect situations.
+	
+	@Test public void testOnTheFlyMigrationAutofix() throws Exception{
+		
+		DualCrudService<TestCrudsaveable> testService = DualCrudServiceFactory.createDualCrudService(alpha, beta, DualCrudConfig.migrateOnTheFly());
+		
+		String id = "ontheflyautofix";
+		String content = "on-the-fly-contentautofix";
+		
+		TestCrudsaveable a = new TestCrudsaveable(id, content);
+		TestCrudsaveable b = new TestCrudsaveable(id, content+"foo");
+		
+		alpha.delete(a);
+		beta.delete(a);
+		
+		alpha.create(a);
+		beta.create(a);
+		
+		//this is wrong, there should be no stuation where a file exists on both!
+		testService.save(a);
+		assertTrue("instance should exists deleted on new", beta.exists(a));
+		assertFalse("instance should be deleted on old", alpha.exists(a));
+
+		alpha.create(a);
+		testService.update(b);
+		assertTrue("instance should exists deleted on new", beta.exists(a));
+		assertFalse("instance should be deleted on old", alpha.exists(a));
+		
+		assertFalse(a.equals(testService.read(a.getOwnerId())));
 		
 		
 	}
@@ -125,6 +174,12 @@ public class TestDual {
 		assertTrue(usedService.exists(a));
 		assertFalse(unusedService.exists(a));
 		assertFalse(dualService.read(a.getId()).equals(a));
+		
+		try{
+			dualService.migrate(a.getOwnerId());
+			fail("migrate should throw error in single mode.");
+		}catch(CrudServiceException ignored){}
+		
 		
 		
 	}

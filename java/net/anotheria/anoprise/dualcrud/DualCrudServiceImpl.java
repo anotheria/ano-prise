@@ -1,11 +1,31 @@
 package net.anotheria.anoprise.dualcrud;
 
+import org.apache.log4j.Logger;
+
+/**
+ * The implementation of the DualCrudService which supports two instances of a CrudService and a dual link config.
+ * @author another
+ *
+ * @param <T>
+ */
 public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudService<T>{
 
-	
+	/**
+	 * Left instance is considered old, i.e. its used as secondaryReader/writer except for back-migration.
+	 */
 	private CrudService<T> left;
+	/**
+	 * Right service instance is considered new.
+	 */
 	private CrudService<T> right;
+	/**
+	 * The config with the operation mode.
+	 */
 	private DualCrudConfig config;
+	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(DualCrudServiceImpl.class);
 	
 	protected DualCrudServiceImpl(DualCrudConfig aConfig, CrudService<T> aLeft, CrudService<T> aRight){
 		config = aConfig;
@@ -33,14 +53,24 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			try{
 				secondary.delete(t);
 			}catch(CrudServiceException e){
-				//log exception, but dont abort.
+				log.warn("delete on secondary writer failed, ignored, delete("+t+")",e);
 			}
 		}
 	}
 
 	@Override
 	public void migrate(String ownerId) throws CrudServiceException {
-		// TODO Auto-generated method stub
+		CrudService<T> primaryWriter = config.getPrimaryWriter(left, right);
+		CrudService<T> secondaryWriter = config.getSecondaryWriter(left, right);
+		if (primaryWriter==secondaryWriter)
+			throw new CrudServiceException("Noop migration request");
+		T t = secondaryWriter.read(ownerId);
+		primaryWriter.save(t);
+		try{
+			secondaryWriter.delete(t);
+		}catch(CrudServiceException e){
+			log.warn("delete on secondary writer failed, ignored, migrate("+t+")",e);
+		}
 		
 	}
 
@@ -69,7 +99,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 					secondary.delete(fromSecondary);
 				}
 			}catch(CrudServiceException e){
-				//TODO log exception, but don't abort.
+				log.warn("migrate on the fly failed, ignored, read("+ownerId+")",e);
 			}
 			
 		}
@@ -87,7 +117,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			try{
 				secondary.delete(t);
 			}catch(CrudServiceException e){
-				//log.error
+				log.warn("delete on secondary writer failed, ignored, save("+t+")",e);
 			}
 		}
 		
@@ -107,7 +137,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 				try{
 					secondary.delete(t);
 				}catch(CrudServiceException e){
-					//log.error
+					log.warn("delete on secondary writer failed, ignored, update("+t+")",e);
 				}
 			}
 			
@@ -128,7 +158,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			try{
 				secondary.delete(t);
 			}catch(CrudServiceException e){
-				//log.error
+				log.warn("delete on secondary writer failed, ignored, save("+t+")",e);
 			}
 			return;
 		}
