@@ -66,7 +66,7 @@ public class BoundedCacheTester {
 
 	public static void tryToCorruptInternalStructures(final BoundedCache<Integer, String> cache) throws Exception{
 		int parallelThreadCount = 10;
-		final int operationCount = 100000;
+		final int operationCount = CacheTestSuite.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
 		final CountDownLatch stopLatch = new CountDownLatch(parallelThreadCount);
 		
@@ -148,7 +148,9 @@ public class BoundedCacheTester {
 		System.out.println("All threads finished: totals "+totals+" empty spots: "+emptySpots+" of "+MAX_SIZE);
 		System.out.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
 		System.out.println("Stats: "+cache.getCacheStats().toStatsString());
-		
+
+		System.err.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
+
 	}
 	
 	static class RunnerStats{

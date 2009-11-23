@@ -85,7 +85,7 @@ public class CacheTester {
 	
 	public static void tryToCorruptInternalStructures(final Cache<Integer, String> cache) throws Exception{
 		int parallelThreadCount = 10;
-		final int operationCount = 100000;
+		final int operationCount = CacheTestSuite.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
 		final CountDownLatch stopLatch = new CountDownLatch(parallelThreadCount);
 		
