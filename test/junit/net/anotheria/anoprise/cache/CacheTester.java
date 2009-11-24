@@ -1,13 +1,13 @@
 package net.anotheria.anoprise.cache;
 
-import static org.junit.Assert.*;
 import static net.anotheria.anoprise.cache.CacheTestSuite.MAX_SIZE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-
-import net.anotheria.anoprise.cache.BoundedCacheTest.RunnerStats;
 
 
 public class CacheTester {
