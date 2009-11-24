@@ -79,11 +79,15 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	
 	@Override public boolean offer(K id, V cacheable){
 
-		if (!lock.tryAcquire())
-			return false;
-		
 		cacheStatsCopy.addWrite();
-		cache.put(id, cacheable);
+		if (!lock.tryAcquire()){
+			cacheStatsCopy.addCacheFull();
+			return false;
+		}
+		
+		V old = cache.put(id, cacheable);
+		if (old!=null)
+			lock.release();
 		return true;
 	}
 	
@@ -100,7 +104,7 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 		if (cache==null)
 			return getName()+" - not initialized.";
 		String ret = getName()+" ";
-		ret += " MaxSize: "+maxSize+", remaining elements: "+lock.availablePermits();
+		ret += " MaxSize: "+maxSize+", remaining elements: "+lock.availablePermits()+", realSize: "+cache.size();
 		return ret;
 	}
 }

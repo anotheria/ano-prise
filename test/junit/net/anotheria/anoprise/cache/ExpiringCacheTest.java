@@ -31,6 +31,12 @@ public class ExpiringCacheTest {
 	@Test public void testConcurrency() throws Exception{
 		ExpiringCache<Integer, String> cache = new ExpiringCache<Integer, String>("test", 10000, new RoundRobinHardwiredCache<Integer, CachedObjectWrapper<String>>(START_SIZE,MAX_SIZE));
 		CacheTester.tryToCorruptInternalStructures(cache);
-		
 	}
+
+	@Test public void testCompetion() throws Exception{
+		ExpiringCache<Integer, String> cache = new ExpiringCache<Integer, String>("test", 10000, new RoundRobinHardwiredCache<Integer, CachedObjectWrapper<String>>(START_SIZE,MAX_SIZE));
+		CacheTester.writeCompetion(cache);
+	}
+
+	
 }	

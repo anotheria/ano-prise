@@ -31,6 +31,11 @@ public class RoundRobinHardwiredCacheTest {
 	@Test public void testConcurrency() throws Exception{
 		RoundRobinHardwiredCache<Integer, String> cache = new RoundRobinHardwiredCache<Integer, String>(START_SIZE, MAX_SIZE);
 		CacheTester.tryToCorruptInternalStructures(cache);
-		
 	}
+
+	@Test public void testCompetion() throws Exception{
+		RoundRobinHardwiredCache<Integer, String> cache = new RoundRobinHardwiredCache<Integer, String>(START_SIZE, MAX_SIZE);
+		CacheTester.writeCompetion(cache);
+	}
+
 }	

@@ -31,6 +31,10 @@ public class RoundRobinSoftReferenceExperimentalCacheTest {
 	@Test public void testConcurrency() throws Exception{
 		RoundRobinSoftReferenceExperimentalCache<Integer, String> cache = new RoundRobinSoftReferenceExperimentalCache<Integer, String>(START_SIZE, MAX_SIZE);
 		CacheTester.tryToCorruptInternalStructures(cache);
-		
+	}
+
+	@Test public void testCompetition() throws Exception{
+		RoundRobinSoftReferenceExperimentalCache<Integer, String> cache = new RoundRobinSoftReferenceExperimentalCache<Integer, String>(START_SIZE, MAX_SIZE);
+		CacheTester.writeCompetion(cache);
 	}
 }	
