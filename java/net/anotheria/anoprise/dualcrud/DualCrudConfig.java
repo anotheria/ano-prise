@@ -5,21 +5,55 @@ public class DualCrudConfig {
 	 * Direction in which migration takes place. Useful for reverse migration to rollback effects of a previously not that successful migration.
 	 */
 	private Direction migrationDirection;
+	/**
+	 * If true the DLService will try to read from both persistences.
+	 */
 	private boolean readFromBoth;
+	/**
+	 * If true and a migration direction is specified, reading from old persistence will cause a migration.
+	 */
 	private boolean migrateOnRead;
+	/**
+	 * If true, the service will write to both peristences.
+	 */
 	private boolean writeToBoth;
+	/**
+	 * If true upon a successful migration the old copy will be deleted.
+	 */
 	private boolean deleteUponMigration;
+	/**
+	 * If true the migration will take place at least on call to write.
+	 */
 	private boolean migrateOnWrite;
 	
-	
+	/**
+	 * Migration direction.
+	 * @author another
+	 *
+	 */
 	private static enum Direction{
+		/**
+		 * Read from left only, no migration.
+		 */
 		LEFT,
+		/**
+		 * Read from right only, no migration.
+		 */
 		RIGHT,
+		/**
+		 * Migrate from left to right.
+		 */
 		LEFTTORIGHT,
+		/**
+		 * Migrate from right to left.
+		 */
 		RIGHTTOLEFT
 	};
 	
-	
+	/**
+	 * This config allows reading from old and new persistences and migrating from old to new on each read from old persistence.
+	 * @return
+	 */
 	public static final DualCrudConfig migrateOnTheFly(){
 		DualCrudConfig config = new DualCrudConfig();
 
@@ -39,6 +73,10 @@ public class DualCrudConfig {
 		return config;
 	}
 
+	/**
+	 * This config enables reading and writing to both persistences, but migrates only on call to migrate().
+	 * @return
+	 */
 	public static final DualCrudConfig migrateOnCallOnly(){
 		DualCrudConfig config = new DualCrudConfig();
 
@@ -58,6 +96,11 @@ public class DualCrudConfig {
 		return config;
 	}
 
+	/**
+	 * This config is useful for writing to two persistences for backup. Everything written to the 'master' will also be writter to the 'slave' (in fact 
+	 * both persistences are equal).
+	 * @return
+	 */
 	public static final DualCrudConfig duplicate(){
 		DualCrudConfig config = new DualCrudConfig();
 
