@@ -179,9 +179,9 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 			if (lastElement==cache.length)
 				lastElement = 0;
 			Integer tmp = Integer.valueOf(lastElement);
-			Object old_id = index2id.get(tmp);
-			if (old_id!=null){
-				id2index.remove(old_id);
+			Object oldId = index2id.get(tmp);
+			if (oldId!=null){
+				id2index.remove(oldId);
 			}
 			id2index.put(id, tmp);
 			index2id.put(tmp, id);
@@ -202,9 +202,9 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 				
 				//System.out.println("Enlarging from "+cache.length+" to "+newsize+".");	
 				
-				V[] old_cache = cache;
+				V[] oldCache = cache;
 				cache = (V[])new Object[newsize];
-				System.arraycopy(old_cache, 0, cache, 0, currentSize);
+				System.arraycopy(oldCache, 0, cache, 0, currentSize);
 				currentSize = newsize;
 				
 				enlargeable = newsize < maxSize;
