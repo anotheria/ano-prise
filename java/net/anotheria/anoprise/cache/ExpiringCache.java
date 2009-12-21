@@ -2,13 +2,22 @@ package net.anotheria.anoprise.cache;
 
 import net.java.dev.moskito.core.predefined.CacheStats;
 
-
+/**
+ * A cache implementation where elements expire after some time.
+ * @author another
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class ExpiringCache<K,V> implements Cache<K,V>{
-
-
+	/**
+	 * Expiration time for cache entries to become invalid.
+	 */
 	private long expirationTime;
 	
-	
+	/**
+	 * Internal cache delegate.
+	 */
 	private Cache<K, CachedObjectWrapper<V>> cache;
 	private CacheStats moskitoCacheStats;
 	

@@ -11,18 +11,34 @@ import net.java.dev.moskito.core.producers.IStatsProducer;
 import net.java.dev.moskito.core.registry.IProducerRegistry;
 import net.java.dev.moskito.core.registry.ProducerRegistryFactory;
 
+/**
+ * Base class for cache implementations. Implements support for moskito monitoring in caches.
+ * @author lrosenberg
+ */
 public abstract class AbstractCache implements IStatsProducer{
 
-	
-	
-	
+	/**
+	 * List of stats as required by the IStatsProducer interface.
+	 */
 	private List<IStats> stats;
+	/**
+	 * CacheStats.
+	 */
 	private CacheStats cacheStats;
 
+	/**
+	 * Name of the cache.
+	 */
 	private String name;
+	/**
+	 * Instance counter for cache instances.
+	 */
 	private static final AtomicInteger instanceCounter = new AtomicInteger(0);
 
-	
+	/**
+	 * Creates new AbstractCache and registers it as producer.
+	 * @param aName
+	 */
 	protected AbstractCache(String aName){
 		name = aName;
 		

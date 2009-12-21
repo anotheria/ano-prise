@@ -1,5 +1,12 @@
 package net.anotheria.anoprise.cache;
 
+/**
+ * Factory for the RoundRobinHardwiredCache.
+ * @author lrosenberg
+ *
+ * @param <K> key type.
+ * @param <V> value type.
+ */
 public class RoundRobinHardwiredCacheFactory<K,V> implements CacheFactory<K, V> {
 
 	@Override

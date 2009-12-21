@@ -4,8 +4,7 @@ import org.configureme.ConfigurationManager;
 
 /**
  * Utility for cache creation.
- * @author another
- *
+ * @author lrosenberg
  */
 public final class Caches {
 
