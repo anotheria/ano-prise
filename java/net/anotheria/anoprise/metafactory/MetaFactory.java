@@ -8,6 +8,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.java.dev.moskito.util.storage.Storage;
 
+/**
+ * Utility class for dynamic instance creation of multiple possible instance types.
+ * @author lrosenberg
+ * @author dmetelin
+ */
 public class MetaFactory {
 	
 	/**

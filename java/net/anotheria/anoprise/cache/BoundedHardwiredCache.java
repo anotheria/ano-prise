@@ -15,9 +15,17 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	
 	public static final int DEF_MAX_SIZE   = 3000;
 	
+	/**
+	 * Internal storage.
+	 */
 	private ConcurrentHashMap<K, V> cache;
+	/**
+	 * Lock to ensure bounds. 
+	 */
 	private Semaphore lock;
-
+	/**
+	 * Configured maximum size.
+	 */
 	private int maxSize;
 	/**
 	 * A copy of the CacheStats for optimized access.

@@ -34,6 +34,12 @@ public interface CrudService<T extends CrudSaveable> {
 	 */
 	void save(T t) throws CrudServiceException;
 	
+	/**
+	 * Returns true if the corresponding instance exists.
+	 * @param t the instance to check.
+	 * @return
+	 * @throws CrudServiceException
+	 */
 	boolean exists(T t) throws CrudServiceException;
 	
 }

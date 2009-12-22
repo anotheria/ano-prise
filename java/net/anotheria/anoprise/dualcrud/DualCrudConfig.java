@@ -1,5 +1,10 @@
 package net.anotheria.anoprise.dualcrud;
 
+/**
+ * Configuration for the DualCrudService operations.
+ * @author lrosenberg.
+ *
+ */
 public class DualCrudConfig {
 	/**
 	 * Direction in which migration takes place. Useful for reverse migration to rollback effects of a previously not that successful migration.

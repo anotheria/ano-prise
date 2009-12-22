@@ -37,10 +37,17 @@ public enum Extension {
 	 * DB (VO) Service factory.
 	 */
 	DB,
-	
+	/**
+	 * Peristence service factory.
+	 */
 	PERSISTENCE,
+	/**
+	 * JDBC-based persistence service factory.
+	 */
 	JDBC,
-	
+	/**
+	 * Editorinterface.
+	 */
 	EDITORINTERFACE,
 	/**
 	 * Test Fixture.

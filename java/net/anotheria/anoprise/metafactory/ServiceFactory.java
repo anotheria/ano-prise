@@ -6,5 +6,9 @@ package net.anotheria.anoprise.metafactory;
  * @author lrosenberg
  */
 public interface ServiceFactory<T extends Service> {
+	/**
+	 * Creates a new instance of T.
+	 * @return newly created instance.
+	 */
 	T create();
 }
