@@ -31,12 +31,10 @@ public class Mock implements InvocationHandler{
 	
 	private MockeryAndMethod findImplementor(Method method){
 		for (Mockery m : mockeries){
-			System.out.println("checking "+m);
+			//System.out.println("checking "+m);
 			Class<?> mClazz = m.getClass();
 			Method[] methods = mClazz.getDeclaredMethods();
 			for (Method mm : methods){
-				System.out.println(mm);
-				System.out.println(areMethodsEqual(mm, method));
 				if (areMethodsEqual(mm, method))
 					return new MockeryAndMethod(m, mm);
 			}
