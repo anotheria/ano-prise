@@ -35,7 +35,7 @@ public class Mock implements InvocationHandler{
 			return ret;
 		}catch(Exception e){
 			e.printStackTrace();
-			throw e;
+			throw e.getCause();
 		}
 	}
 	
