@@ -2,17 +2,20 @@ package net.anotheria.anoprise.mocking;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Mock implements InvocationHandler{
 	
 	private Class<?> target;
-	private List<Mockery> mockeries;
+	private List<Mocking> mockeries;
+	
+	private Map<Method, MockingAndMethod> cache = new HashMap<Method, MockingAndMethod>();
 
-	Mock(Class<?> aTarget, List<Mockery> someMockeries){
+	Mock(Class<?> aTarget, List<Mocking> someMockeries){
 		target = aTarget;
 		mockeries = someMockeries;
-		
 	}
 
 	@Override
@@ -23,20 +26,34 @@ public class Mock implements InvocationHandler{
 			return method.invoke(this, args);
 		}
 		
-		MockeryAndMethod implementor = findImplementor(method);
+		MockingAndMethod implementor = findImplementor(method);
 		if (implementor==null)
 			throw new IllegalArgumentException("Method: "+method+" is not mocked");
-		return implementor.method.invoke(implementor.mockery, args);
+		
+		try{
+			Object ret = implementor.method.invoke(implementor.getMocking(), args);
+			return ret;
+		}catch(Exception e){
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
-	private MockeryAndMethod findImplementor(Method method){
-		for (Mockery m : mockeries){
-			//System.out.println("checking "+m);
+	private MockingAndMethod findImplementor(Method method){
+		
+		MockingAndMethod fromCache = cache.get(method);
+		if (fromCache!=null)
+			return fromCache;
+		
+		for (Mocking m : mockeries){
 			Class<?> mClazz = m.getClass();
 			Method[] methods = mClazz.getDeclaredMethods();
-			for (Method mm : methods){
-				if (areMethodsEqual(mm, method))
-					return new MockeryAndMethod(m, mm);
+			for (Method aMethod : methods){
+				if (areMethodsEqual(aMethod, method)){
+					MockingAndMethod mam = new MockingAndMethod(m, aMethod);
+					cache.put(method, mam);
+					return mam;
+				}
 			}
 		}
 		return null;
@@ -52,13 +69,21 @@ public class Mock implements InvocationHandler{
 		return true;
 	}
 	
-	private static class MockeryAndMethod{
-		Mockery mockery;
+	private static class MockingAndMethod{
+		Mocking mocking;
 		Method method;
 		
-		MockeryAndMethod(Mockery aMockery, Method aMethod){
-			mockery = aMockery;
+		MockingAndMethod(Mocking aMocking, Method aMethod){
+			mocking = aMocking;
 			method  = aMethod;
+		}
+		
+		Mocking getMocking(){
+			return mocking;
+		}
+		
+		Method getMethod(){
+			return method;
 		}
 	}
 	
