@@ -9,6 +9,12 @@ import net.anotheria.anoprise.mocking.Mocking;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * This test doesn't work, because Mock can't access a public method defined in an anonymous inner class.   
+ * Therefor it's not included in the MockTestSuite.
+ * @author lrosenberg.
+ *
+ */
 public class Test2 {
 
 	private static TestInterface test;
@@ -36,15 +42,5 @@ public class Test2 {
 			test.notImplementedMethod();
 			fail("Test should fail.");
 		}catch(IllegalArgumentException notMocked){}
-	}
-	
-	public static class TestInterfaceMock implements Mocking{
-		public String askService(String param){
-			return "Service said: "+param+" accepted.";
-		}
-		
-		public void foo(String notUsed){
-			
-		}
 	}
 }
