@@ -31,7 +31,7 @@ public class Mock implements InvocationHandler{
 			throw new IllegalArgumentException("Method: "+method+" is not mocked");
 		
 		try{
-			Object ret = implementor.method.invoke(implementor.getMocking(), args);
+			Object ret = implementor.getMethod().invoke(implementor.getMocking(), args);
 			return ret;
 		}catch(Exception e){
 			e.printStackTrace();

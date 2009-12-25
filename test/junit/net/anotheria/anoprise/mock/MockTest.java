@@ -2,6 +2,7 @@ package net.anotheria.anoprise.mock;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import net.anotheria.anoprise.mocking.MockFactory;
 import net.anotheria.anoprise.mocking.Mocking;
@@ -41,6 +42,11 @@ public class MockTest {
 		test.voidDummyMethod();
 		test.voidDummyMethod();
 		test.voidDummyMethod();
+	}
+	
+	@Test public void testUnmocked(){
+		assertNotNull(test.toString());
+		assertFalse(test.equals(new String(".")));
 	}
 	
 	@Ignore
