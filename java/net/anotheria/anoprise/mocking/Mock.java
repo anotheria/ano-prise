@@ -1,6 +1,7 @@
 package net.anotheria.anoprise.mocking;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +34,7 @@ public class Mock implements InvocationHandler{
 		try{
 			Object ret = implementor.getMethod().invoke(implementor.getMocking(), args);
 			return ret;
-		}catch(Exception e){
-			e.printStackTrace();
+		}catch(InvocationTargetException e){
 			throw e.getCause();
 		}
 	}
