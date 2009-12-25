@@ -49,7 +49,7 @@ public class MockTest {
 		assertFalse(test.equals(new String(".")));
 	}
 	
-	@Ignore
+	
 	@Test public void testException(){
 		try{
 			test.throwExceptionOnCall();
