@@ -4,7 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import net.anotheria.anoprise.mocking.MockFactory;
-import net.anotheria.anoprise.mocking.Mockery;
+import net.anotheria.anoprise.mocking.Mocking;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class Test2 {
 	
 	@Before public void initTest(){
 		test = MockFactory.createMock(TestInterface.class, 
-			new Mockery(){
+			new Mocking(){
 				public String askService(String param){
 					return "Service said: "+param+" accepted.";
 				}
@@ -38,7 +38,7 @@ public class Test2 {
 		}catch(IllegalArgumentException notMocked){}
 	}
 	
-	public static class TestInterfaceMock implements Mockery{
+	public static class TestInterfaceMock implements Mocking{
 		public String askService(String param){
 			return "Service said: "+param+" accepted.";
 		}
