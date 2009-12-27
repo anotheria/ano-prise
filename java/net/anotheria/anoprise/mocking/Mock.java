@@ -9,14 +9,27 @@ import java.util.Map;
 
 public class Mock implements InvocationHandler{
 	
+	/**
+	 * Mocked clazz.
+	 */
 	private Class<?> target;
-	private List<Mocking> mockeries;
-	
+	/**
+	 * List of mocking objects which are implementing different methods of the target class.
+	 */
+	private List<Mocking> mockings;
+	/**
+	 * Internal cache to reduce lookups.
+	 */
 	private Map<Method, MockingAndMethod> cache = new HashMap<Method, MockingAndMethod>();
 
-	Mock(Class<?> aTarget, List<Mocking> someMockeries){
+	/**
+	 * Creates a new mock.
+	 * @param aTarget target class.
+	 * @param someMockings list of mockings.
+	 */
+	Mock(Class<?> aTarget, List<Mocking> someMockings){
 		target = aTarget;
-		mockeries = someMockeries;
+		mockings = someMockings;
 	}
 
 	@Override
@@ -39,13 +52,18 @@ public class Mock implements InvocationHandler{
 		}
 	}
 	
+	/**
+	 * Finds an implementation for the given method in the supplied mockings. 
+	 * @param method method to search.
+	 * @return Mocking and Method pair.
+	 */
 	private MockingAndMethod findImplementor(Method method){
 		
 		MockingAndMethod fromCache = cache.get(method);
 		if (fromCache!=null)
 			return fromCache;
 		
-		for (Mocking m : mockeries){
+		for (Mocking m : mockings){
 			Class<?> mClazz = m.getClass();
 			Method[] methods = mClazz.getDeclaredMethods();
 			for (Method aMethod : methods){
@@ -59,6 +77,12 @@ public class Mock implements InvocationHandler{
 		return null;
 	}
 	
+	/**
+	 * Returns true if the both methods have same name, same return type and same parameters.
+	 * @param first first method to compare.
+	 * @param second second method to compare.
+	 * @return true if the methods are equal (even they are declared in different classes).
+	 */
 	private boolean areMethodsEqual(Method first, Method second){
 		if (!(first.getName().equals(second.getName())))
 			return false;
@@ -69,10 +93,26 @@ public class Mock implements InvocationHandler{
 		return true;
 	}
 	
+	/**
+	 * Holder class for a Mocking which implements a method, and the method it implements.
+	 * @author lrosenberg.
+	 *
+	 */
 	private static class MockingAndMethod{
+		/**
+		 * The mocking object.
+		 */
 		Mocking mocking;
+		/**
+		 * Method implementation in the mocking.
+		 */
 		Method method;
 		
+		/**
+		 * Creates a new mockingandmethod pair.
+		 * @param aMocking
+		 * @param aMethod
+		 */
 		MockingAndMethod(Mocking aMocking, Method aMethod){
 			mocking = aMocking;
 			method  = aMethod;
