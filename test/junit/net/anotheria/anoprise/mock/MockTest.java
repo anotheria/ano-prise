@@ -1,14 +1,13 @@
 package net.anotheria.anoprise.mock;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import net.anotheria.anoprise.mocking.MockFactory;
 import net.anotheria.anoprise.mocking.Mocking;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class MockTest {
