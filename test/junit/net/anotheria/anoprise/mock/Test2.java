@@ -11,7 +11,7 @@ import org.junit.Test;
 
 /**
  * This test doesn't work, because Mock can't access a public method defined in an anonymous inner class.   
- * Therefor it's not included in the MockTestSuite.
+ * Therefor it's not included in the MockTestSuite. 
  * @author lrosenberg.
  *
  */
