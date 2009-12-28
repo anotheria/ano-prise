@@ -3,6 +3,7 @@ package net.anotheria.anoprise.mocking;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,9 @@ import java.util.Map;
 public class Mock implements InvocationHandler{
 	
 	/**
-	 * Mocked clazz.
+	 * List of mocked classes. Contains at least one class, the mocked target interface. Contains also all superinterfaces to ensure proper method mapping.
 	 */
-	private Class<?> target;
+	private List<Class<?>> targets;
 	/**
 	 * List of mocking objects which are implementing different methods of the target class.
 	 */
@@ -28,15 +29,25 @@ public class Mock implements InvocationHandler{
 	 * @param someMockings list of mockings.
 	 */
 	Mock(Class<?> aTarget, List<Mocking> someMockings){
-		target = aTarget;
 		mockings = someMockings;
+		targets = findInterfaces(aTarget);
+	}
+	
+	private List<Class<?>> findInterfaces(Class<?> source){
+		ArrayList<Class<?>> ret = new ArrayList<Class<?>>();
+		ret.add(source);
+		Class<?> interfaces[] = source.getInterfaces();
+		for (Class<?> i : interfaces)
+			ret.addAll(findInterfaces(i));
+		return ret;
 	}
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 		
-		if (!method.getDeclaringClass().equals(target)){
+		
+		if (!targets.contains(method.getDeclaringClass())){
 			return method.invoke(this, args);
 		}
 		

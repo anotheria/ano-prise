@@ -58,6 +58,28 @@ public class MockTest {
 		}
 	}
 	
+	@Test public void testInheritance(){
+		
+		InheritingInterface myTest = MockFactory.createMock(InheritingInterface.class, new Mock1(), new InheritedMock());
+		//ensure we can call methods from the super interface.
+		String reply = myTest.askService("TESTPARAM");
+		assertNotNull(reply);
+		assertTrue(reply.indexOf("TESTPARAM")!=-1);
+		//ensure methods from sub-interface are also callable.
+		myTest.inheritedMethod();
+	}
+	
+	@Test public void testInheritedInheritance(){
+		
+		InheritingInheritingInterface myTest = MockFactory.createMock(InheritingInheritingInterface.class, new Mock1(), new InheritedMock());
+		//ensure we can call methods from the super interface.
+		String reply = myTest.askService("TESTPARAM");
+		assertNotNull(reply);
+		assertTrue(reply.indexOf("TESTPARAM")!=-1);
+		//ensure methods from sub-interface are also callable.
+		myTest.inheritedMethod();
+	}
+
 	
 	public static class Mock1 implements Mocking{
 		public String askService(String param){
@@ -80,6 +102,12 @@ public class MockTest {
 	public static class Mock3 implements Mocking{
 		public void throwExceptionOnCall() throws TestException{
 			throw new TestException();
+		}
+	}
+	
+	public static class InheritedMock implements Mocking{
+		public void inheritedMethod(){
+			
 		}
 	}
 }
