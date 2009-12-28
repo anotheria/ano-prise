@@ -118,11 +118,11 @@ public class Mock implements InvocationHandler{
 		/**
 		 * The mocking object.
 		 */
-		Mocking mocking;
+		private Mocking mocking;
 		/**
 		 * Method implementation in the mocking.
 		 */
-		Method method;
+		private Method method;
 		
 		/**
 		 * Creates a new mockingandmethod pair.
