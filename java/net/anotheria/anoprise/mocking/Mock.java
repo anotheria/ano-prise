@@ -104,8 +104,8 @@ public class Mock implements InvocationHandler{
 			return false;
 		}
 		
-		Class<?> firstParameters[] = first.getParameterTypes();
-		Class<?> secondParameters[] = second.getParameterTypes();
+		Class<?>[] firstParameters  = first.getParameterTypes();
+		Class<?>[] secondParameters = second.getParameterTypes();
 		return Arrays.equals(firstParameters, secondParameters);
 	}
 	
