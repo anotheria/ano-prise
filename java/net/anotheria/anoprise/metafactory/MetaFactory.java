@@ -180,6 +180,10 @@ public class MetaFactory {
 		factoryClasses.put(name, factoryClass);
 	}
 	
+	/**
+	 * Used for debug output.
+	 * @param o output.
+	 */
 	private static void out(Object o){
 		
 		//System.out.println("[MetaFactory] "+o);

@@ -8,6 +8,11 @@ import org.configureme.ConfigurationManager;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.SetAll;
 
+/**
+ * Alias resolver that works with factories.json via configureme framework.
+ * @author lrosenberg.
+ *
+ */
 @ConfigureMe(name="factories",allfields=false,watch=true)
 public class ConfigurableResolver implements AliasResolver{
 	private Map<String,String> aliasMap;
