@@ -130,8 +130,8 @@ public class CacheController<K,V> implements Cache<K,V>{
 		}
 	}
 	
-	protected Cache<K,V> createCache(int startSize, int maxSize){
-		return factory.create(configurationName, startSize, maxSize);
+	protected Cache<K,V> createCache(int aStartSize, int aMaxSize){
+		return factory.create(configurationName, aStartSize, aMaxSize);
 	}
 	
 	@Override public void clear() {
