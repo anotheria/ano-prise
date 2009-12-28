@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,13 +96,17 @@ public class Mock implements InvocationHandler{
 	 * @return true if the methods are equal (even they are declared in different classes).
 	 */
 	private boolean areMethodsEqual(Method first, Method second){
-		if (!(first.getName().equals(second.getName())))
+		if (!(first.getName().equals(second.getName()))){
 			return false;
+		}
 		
-		if (!(first.getReturnType().equals(second.getReturnType())))
+		if (!(first.getReturnType().equals(second.getReturnType()))){
 			return false;
+		}
 		
-		return true;
+		Class<?> firstParameters[] = first.getParameterTypes();
+		Class<?> secondParameters[] = second.getParameterTypes();
+		return Arrays.equals(firstParameters, secondParameters);
 	}
 	
 	/**
