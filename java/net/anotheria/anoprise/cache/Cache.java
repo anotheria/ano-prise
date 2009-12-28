@@ -19,7 +19,11 @@ public interface Cache<K,V> {
 	 * @param cacheable the object to cache.
 	 */
 	void put(K id, V cacheable);
-	
+
+	/**
+	 * Removes an object from the cache.
+	 * @param id cache object id.
+	 */
 	void remove(K id);
 	
 	/**
@@ -28,6 +32,10 @@ public interface Cache<K,V> {
 	 */
 	void clear();
 
+	/**
+	 * Returns the cache stats.
+	 * @return
+	 */
 	CacheStats getCacheStats();
 	
 }
