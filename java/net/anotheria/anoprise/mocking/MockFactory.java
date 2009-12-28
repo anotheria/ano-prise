@@ -8,7 +8,7 @@ import java.util.Arrays;
  * @author lrosenberg.
  *
  */
-public class MockFactory {
+public final class MockFactory {
 	/**
 	 * Creates a new Mock of type T.
 	 * @param <T> interface type to mock.
@@ -19,5 +19,9 @@ public class MockFactory {
 	public static <T> T createMock(Class<T> clazz, Mocking ... mockings){
 		Mock mock = new Mock(clazz, Arrays.asList(mockings));
 		return clazz.cast(Proxy.newProxyInstance(MockFactory.class.getClassLoader(), new Class[]{ clazz }, mock)); 		
+	}
+	
+	private MockFactory(){
+		//prevent initialization.
 	}
 }
