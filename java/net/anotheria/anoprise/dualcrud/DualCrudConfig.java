@@ -148,8 +148,9 @@ public class DualCrudConfig {
 			return right;
 		case RIGHTTOLEFT:
 			return left;
+		default:	
+			throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 		}
-		throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 	}
 	
 	public <T extends CrudSaveable> CrudService<T> getSecondaryReader(CrudService<T> left, CrudService<T> right){
@@ -162,8 +163,9 @@ public class DualCrudConfig {
 			return left;
 		case RIGHTTOLEFT:
 			return right;
+		default:	
+			throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 		}
-		throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 	}
 	public <T extends CrudSaveable> CrudService<T> getPrimaryWriter(CrudService<T> left, CrudService<T> right){
 		switch(migrationDirection){
@@ -175,8 +177,9 @@ public class DualCrudConfig {
 			return right;
 		case RIGHTTOLEFT:
 			return left;
+		default:
+			throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 		}
-		throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 	}
 	public <T extends CrudSaveable> CrudService<T> getSecondaryWriter(CrudService<T> left, CrudService<T> right){
 		switch(migrationDirection){
@@ -188,8 +191,9 @@ public class DualCrudConfig {
 			return left;
 		case RIGHTTOLEFT:
 			return right;
+		default:
+			throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 		}
-		throw new AssertionError("Can't happen, migration direction "+migrationDirection+" is not supported.");
 	}
 
 	public boolean readFromBoth() {
