@@ -12,7 +12,9 @@ import net.java.dev.moskito.core.predefined.CacheStats;
  */
 public class BoundedHardwiredCache<K,V> extends AbstractCache implements BoundedCache<K,V> {
 	
-	
+	/**
+	 * Default max size.
+	 */
 	public static final int DEF_MAX_SIZE   = 3000;
 	
 	/**

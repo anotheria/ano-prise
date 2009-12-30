@@ -74,6 +74,9 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 */
 	public static final int DEF_MAX_SIZE     = 5000;
 	
+	/**
+	 * Logger.
+	 */
 	private static Logger log = Logger.getLogger(CacheController.class);
 	
 	/**

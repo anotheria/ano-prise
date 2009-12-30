@@ -19,6 +19,9 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	 * Internal cache delegate.
 	 */
 	private Cache<K, CachedObjectWrapper<V>> cache;
+	/**
+	 * Moskito cache stats of the internal cache delegate. Both caches work on the same cache stats object ( but different values of it).
+	 */
 	private CacheStats moskitoCacheStats;
 	
 	public ExpiringCache(String name, int aStartSize, int aMaxSize, long anExpirationTime, CacheFactory<K, CachedObjectWrapper<V>> underlyingCacheFactory){

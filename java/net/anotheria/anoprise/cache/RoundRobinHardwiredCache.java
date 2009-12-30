@@ -12,8 +12,17 @@ import net.java.dev.moskito.core.predefined.CacheStats;
 public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cache<K,V> {
 	
 	
+	/**
+	 * Default start size of the internal array.
+	 */
 	public static final int DEF_START_SIZE = 1000;
+	/**
+	 * Default max size of the internal array.
+	 */
 	public static final int DEF_MAX_SIZE   = 3000;
+	/**
+	 * Default array size increment.
+	 */
 	public static final float DEF_INCREMENT = 0.5F; 
 	
 	/**
@@ -103,6 +112,13 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	}
 	
 	
+	/**
+	 * Creates a new RoundRobinHardwiredCache.
+	 * @param name name of the cache.
+	 * @param aStartSize start size of the cache.
+	 * @param aMaxSize max size of the cache.
+	 * @param anIncrement increment of the internal array.
+	 */
 	public RoundRobinHardwiredCache(String name, int aStartSize, int aMaxSize, float anIncrement){
 		super(name);
 		startSize = aStartSize;
