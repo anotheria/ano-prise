@@ -2,7 +2,9 @@ package net.anotheria.anoprise.sessiondistributor;
 
 import java.util.List;
 
-public interface SessionDistributorService {
+import net.anotheria.anoprise.metafactory.Service;
+
+public interface SessionDistributorService extends Service{
 	public String createDistributedSession(List<SessionAttribute> attributes) throws SessionDistributorServiceException;
 	
 	public void deleteDistributedSession(String name) throws SessionDistributorServiceException;
