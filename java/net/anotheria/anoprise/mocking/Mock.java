@@ -44,9 +44,7 @@ public class Mock implements InvocationHandler{
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args)
-			throws Throwable {
-		
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		
 		if (!targets.contains(method.getDeclaringClass())){
 			return method.invoke(this, args);
