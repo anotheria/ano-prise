@@ -9,6 +9,9 @@ import net.anotheria.util.IdCodeGenerator;
 
 public class SessionDistributorServiceImpl implements SessionDistributorService{
 	
+	/**
+	 * Internal storage for session holders.
+	 */
 	private ConcurrentMap<String, SessionHolder> sessions;
 	
 	public SessionDistributorServiceImpl() {

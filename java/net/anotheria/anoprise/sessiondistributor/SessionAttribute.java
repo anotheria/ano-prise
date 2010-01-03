@@ -3,7 +3,13 @@ package net.anotheria.anoprise.sessiondistributor;
 import java.io.Serializable;
 
 public class SessionAttribute implements Serializable{
+	/**
+	 * Name of the attribute.
+	 */
 	private String name;
+	/**
+	 * Stored serialized data.
+	 */
 	private byte[] data;
 	
 	public SessionAttribute(String aName, byte[] someData){

@@ -3,8 +3,17 @@ package net.anotheria.anoprise.sessiondistributor;
 import java.util.List;
 
 public class SessionHolder {
+	/**
+	 * Name of the associatted session.
+	 */
 	private String name;
+	/**
+	 * Timestamp of the object creation.
+	 */
 	private long timestamp;
+	/**
+	 * Stored attributes.
+	 */
 	private List<SessionAttribute> attributes;
 	
 	
