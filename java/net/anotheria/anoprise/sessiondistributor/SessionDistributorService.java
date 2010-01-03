@@ -14,4 +14,6 @@ public interface SessionDistributorService extends Service{
 	public List<SessionAttribute> getAndDeleteDistributedSession(String name) throws SessionDistributorServiceException;
 	
 	public List<String> getDistributedSessionNames() throws SessionDistributorServiceException;
+	
+	public void updateDistributedSession(String name, List<SessionAttribute> attributes) throws SessionDistributorServiceException;
 }
