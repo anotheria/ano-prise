@@ -1,31 +1,48 @@
 package net.anotheria.anoprise.sessiondistributor;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SessionHolder {
+/**
+ * SessionHolder used in SessionDestributorService.
+ * 
+ * @author lrosenberg
+ * @version 1.0, 2010/01/03
+ */
+public class SessionHolder implements Serializable {
+
+	/**
+	 * Basic serialVersionUID variable.
+	 */
+	private static final long serialVersionUID = -2764699143075615769L;
+
 	/**
 	 * Name of the associatted session.
 	 */
 	private String name;
+
 	/**
 	 * Timestamp of the object creation.
 	 */
 	private long timestamp;
+
 	/**
 	 * Stored attributes.
 	 */
 	private List<SessionAttribute> attributes;
-	
-	
-	
-	public SessionHolder(String aName, List<SessionAttribute> someAttributes){
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param aName
+	 *            - holder name
+	 * @param someAttributes
+	 *            - attributes
+	 */
+	public SessionHolder(String aName, List<SessionAttribute> someAttributes) {
 		name = aName;
 		attributes = someAttributes;
 		timestamp = System.currentTimeMillis();
-	}
-	
-	@Override public String toString(){
-		return getName()+" with "+getAttributes().size()+" attributes, "+((System.currentTimeMillis()-timestamp)/1000)+" seconds old.";
 	}
 
 	public String getName() {
@@ -50,5 +67,10 @@ public class SessionHolder {
 
 	public void setAttributes(List<SessionAttribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	@Override
+	public String toString() {
+		return getName() + " with " + getAttributes().size() + " attributes, " + ((System.currentTimeMillis() - timestamp) / 1000) + " seconds old.";
 	}
 }
