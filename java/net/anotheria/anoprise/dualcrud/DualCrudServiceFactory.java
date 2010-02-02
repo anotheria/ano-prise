@@ -1,14 +1,33 @@
 package net.anotheria.anoprise.dualcrud;
 
+/**
+ * DualCrudServiceFactory.
+ * 
+ * @author lrosenberg
+ * @version 1.0, 2010/02/02
+ */
 public final class DualCrudServiceFactory {
-	public static final <T extends CrudSaveable> DualCrudService<T> createDualCrudService(CrudService<T> left, CrudService<T> right, DualCrudConfig config){
-		
-		DualCrudServiceImpl<T> instance = new DualCrudServiceImpl<T>(config, left, right);
-		
-		return instance;
+
+	/**
+	 * Create new instance of {@link DualCrudService} with given left and right {@link CrudService} and {@link DualCrudConfig}.
+	 * 
+	 * @param <T>
+	 *            - {@link CrudSaveable} type
+	 * @param left
+	 *            - {@link CrudService}
+	 * @param right
+	 *            - {@link CrudService}
+	 * @param config
+	 *            - {@link DualCrudConfig}
+	 * @return created instance of {@link DualCrudService}
+	 */
+	public static final <T extends CrudSaveable> DualCrudService<T> createDualCrudService(CrudService<T> left, CrudService<T> right, DualCrudConfig config) {
+		return new DualCrudServiceImpl<T>(config, left, right);
 	}
-	
-	private DualCrudServiceFactory(){
-		//prevent initialization.
+
+	/**
+	 * Default constructor.
+	 */
+	private DualCrudServiceFactory() {
 	}
 }
