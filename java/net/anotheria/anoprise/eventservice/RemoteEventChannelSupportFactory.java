@@ -1,0 +1,6 @@
+package net.anotheria.anoprise.eventservice;
+
+public interface RemoteEventChannelSupportFactory {
+	RemoteEventChannelConsumerProxy createRemoteEventChannelConsumerProxy(String channelName);
+	RemoteEventChannelSupplierProxy createRemoteEventChannelSupplierProxy(String channelName);
+}
