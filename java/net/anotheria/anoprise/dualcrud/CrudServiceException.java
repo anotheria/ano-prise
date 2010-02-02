@@ -14,7 +14,7 @@ public class CrudServiceException extends Exception {
 	private static final long serialVersionUID = -1846792906505930875L;
 
 	/**
-	 * Creates a new CrudServiceException with a message.
+	 * Creates a new {@link CrudServiceException} with a message.
 	 * 
 	 * @param message
 	 *            - exception message
@@ -24,7 +24,7 @@ public class CrudServiceException extends Exception {
 	}
 
 	/**
-	 * Creates a new CrudServiceException with a message and a cause.
+	 * Creates a new {@link CrudServiceException} with a message and a cause.
 	 * 
 	 * @param message
 	 *            - exception message
