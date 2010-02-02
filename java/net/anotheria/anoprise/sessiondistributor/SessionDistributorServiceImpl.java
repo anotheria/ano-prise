@@ -1,9 +1,14 @@
 package net.anotheria.anoprise.sessiondistributor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import org.apache.log4j.Logger;
 
 import net.anotheria.util.IdCodeGenerator;
 
@@ -15,6 +20,8 @@ import net.anotheria.util.IdCodeGenerator;
  */
 public class SessionDistributorServiceImpl implements SessionDistributorService {
 
+	private static Logger log = Logger.getLogger(SessionDistributorServiceImpl.class);
+	
 	/**
 	 * Internal storage for session holders.
 	 */
@@ -25,6 +32,18 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	 */
 	public SessionDistributorServiceImpl() {
 		sessions = new ConcurrentHashMap<String, SessionHolder>();
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			
+			@Override
+			public void run() {
+				try{
+					cleanup();
+				}catch(Exception e){
+					log.error("Uncaught exception in cleanup() timer task",e);
+				}
+			}
+		}, 0, 1000L*60*5);
 	}
 
 	@Override
@@ -76,6 +95,20 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		if (holder == null)
 			throw new NoSuchDistributedSessionException(name);
 		holder.setAttributes(attributes);
+	}
+	
+	private void cleanup(){
+		int expiredCount = 0;
+		int sizeBefore = sessions.size();
+		Collection<SessionHolder> holders = new ArrayList<SessionHolder>();
+		holders.addAll(sessions.values());
+		for (SessionHolder h : holders){
+			if (h.isExpired()){
+				expiredCount++;
+				holders.remove(h.getName());
+			}
+		}
+		log.info("Finished session distributor cleanup run, removed sessions: "+expiredCount+", sizeBefore: "+sizeBefore+", sizeAfter: "+holders.size());
 	}
 
 }

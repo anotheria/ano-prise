@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value=Suite.class)
-@SuiteClasses(value={ImplTest.class, SessionAttributeTest.class} )
+@SuiteClasses(value={ImplTest.class, SessionAttributeTest.class, SessionHolderTest.class } )
 public class SessionDistributorTestSuite {
 
 }

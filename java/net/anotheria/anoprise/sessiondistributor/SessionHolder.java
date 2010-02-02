@@ -15,6 +15,8 @@ public class SessionHolder implements Serializable {
 	 * Basic serialVersionUID variable.
 	 */
 	private static final long serialVersionUID = -2764699143075615769L;
+	
+	private static final long MAX_AGE_IN_MILLIS = 1000L*60*10; //10 min.
 
 	/**
 	 * Name of the associatted session.
@@ -72,5 +74,18 @@ public class SessionHolder implements Serializable {
 	@Override
 	public String toString() {
 		return getName() + " with " + getAttributes().size() + " attributes, " + ((System.currentTimeMillis() - timestamp) / 1000) + " seconds old.";
+	}
+	
+	public boolean isExpired(){
+		return isExpiredForAge(MAX_AGE_IN_MILLIS);
+	}
+	
+	/**
+	 * This method is separate for testability.
+	 * @param age
+	 * @return
+	 */
+	boolean isExpiredForAge(long age){
+		return System.currentTimeMillis() - getTimestamp() > age; 
 	}
 }
