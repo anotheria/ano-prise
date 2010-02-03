@@ -35,13 +35,15 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 	
 	
 	@Override
-	public void create(T t) throws CrudServiceException {
+	public T create(T t) throws CrudServiceException {
+		T result = null;
 		CrudService<T> primary = config.getPrimaryWriter(left, right);
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
-		primary.create(t);
+		result = primary.create(t);
 		if (config.writeToBoth() && !(secondary==primary))
-			secondary.create(t);
+			result = secondary.create(t);
 		
+		return result;
 	}
 
 	@Override
@@ -109,10 +111,11 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 	}
 
 	@Override
-	public void save(T t) throws CrudServiceException {
+	public T save(T t) throws CrudServiceException {
+		T result = null;
 		CrudService<T> primary = config.getPrimaryWriter(left, right);
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
-		primary.save(t);
+		result = primary.save(t);
 		if (config.migrateOnWrite()){
 			try{
 				secondary.delete(t);
@@ -122,17 +125,21 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		}
 		
 		if (config.writeToBoth()){
-			secondary.save(t);
+			result = secondary.save(t);
 		}
+		
+		return result;
 	}
 
 	@Override
-	public void update(T t) throws CrudServiceException {
+	public T update(T t) throws CrudServiceException {
+		T result = null;
+		
 		CrudService<T> primary = config.getPrimaryWriter(left, right);
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
 		
 		if (primary.exists(t)){
-			primary.update(t);
+			result = primary.update(t);
 			if (config.migrateOnWrite()){
 				try{
 					secondary.delete(t);
@@ -142,25 +149,25 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			}
 			
 			if (config.writeToBoth()){
-				secondary.update(t);
+				result = secondary.update(t);
 			}
 			
-			return;
+			return result;
 		}
 		
 		if (secondary.exists(t)){
 			if (!config.migrateOnWrite()){
-				secondary.update(t);
-				return;
+				result = secondary.update(t);
+				return result;
 			}
 			//if we are here, it doesnt exist on the primary, but exists on the secondary and we need to migrate on write.
-			primary.create(t);
+			result = primary.create(t);
 			try{
 				secondary.delete(t);
 			}catch(CrudServiceException e){
 				log.warn("delete on secondary writer failed, ignored, save("+t+")",e);
 			}
-			return;
+			return result;
 		}
 		
 		throw new ItemNotFoundException(t.getOwnerId());
