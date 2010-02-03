@@ -41,7 +41,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
 		result = primary.create(t);
 		if (config.writeToBoth() && !(secondary==primary))
-			result = secondary.create(t);
+			secondary.create(t);
 		
 		return result;
 	}
@@ -125,7 +125,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		}
 		
 		if (config.writeToBoth()){
-			result = secondary.save(t);
+			secondary.save(t);
 		}
 		
 		return result;
@@ -149,7 +149,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			}
 			
 			if (config.writeToBoth()){
-				result = secondary.update(t);
+				secondary.update(t);
 			}
 			
 			return result;
@@ -157,8 +157,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		
 		if (secondary.exists(t)){
 			if (!config.migrateOnWrite()){
-				result = secondary.update(t);
-				return result;
+				return secondary.update(t);
 			}
 			//if we are here, it doesnt exist on the primary, but exists on the secondary and we need to migrate on write.
 			result = primary.create(t);
