@@ -4,6 +4,7 @@ import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
 
+import net.anotheria.anoprise.mock.TestService;
 import org.junit.Before;
 import org.junit.Test;
 public class MetaFactoryTest {
@@ -30,7 +31,8 @@ public class MetaFactoryTest {
 		
 	}
 	
-	@Test public void resolveAliasTest(){
+	@Test
+	public void resolveAliasTest(){
 		//Testing configurable aliases (factories.json)
 		assertEquals("foo.bar.XxxService", MetaFactory.resolveAlias("XxxService"));
 		assertEquals("foo.bar.XxxService", MetaFactory.resolveAlias("CmsXxxService"));
@@ -66,5 +68,10 @@ public class MetaFactoryTest {
 		//Testing unregistered alias: must be resolved to itself
 		assertEquals("UnknownService", MetaFactory.resolveAlias("UnknownService"));
 	}
-	
+
+	@Test
+	public void createServiceByFactoryTest() throws MetaFactoryException {
+		//Testing configurable aliases (factories.json)
+		assertEquals(TestService.class, MetaFactory.create(TestService.class).getClass());		
+	}
 }

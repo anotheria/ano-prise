@@ -13,14 +13,29 @@ import org.configureme.annotations.SetAll;
  * @author lrosenberg.
  *
  */
-@ConfigureMe(name="factories",allfields=false,watch=true)
-public class ConfigurableResolver implements AliasResolver{
+@ConfigureMe(name = "aliases", allfields = false, watch = true)
+public class ConfigurableResolver implements AliasResolver {
+	/**
+	 * Factory class dictionary, used service class name as key.
+	 */
 	private Map<String,String> aliasMap;
+
+	/**
+	 * Resolver priority among resolver list.
+	 */
 	private int priority;
-	
-	private static Logger log = Logger.getLogger(ConfigurableResolver.class);
-	
-	public static final ConfigurableResolver create(){
+
+	/**
+	 * Resolver logger.
+	 */
+	private static final Logger log = Logger.getLogger(ConfigurableResolver.class);
+
+	/**
+	 * Static factory creation method.
+	 *
+	 * @return resolver instance configured
+	 */
+	public static ConfigurableResolver create(){
 		ConfigurableResolver resolver = new ConfigurableResolver();
 		try{
 			ConfigurationManager.INSTANCE.configure(resolver);
@@ -29,12 +44,21 @@ public class ConfigurableResolver implements AliasResolver{
 		}
 		return resolver;
 	}
-	
+
+	/**
+	 * Constructor.
+	 */
 	private ConfigurableResolver(){
 		priority = 50;
 		aliasMap = new ConcurrentHashMap<String, String>();
 	}
 
+	/**
+	 * Add configured factory.
+	 *
+	 * @param name service class name
+	 * @param value service factory class name
+	 */
 	@SetAll
 	public void addFactory(String name, String value) {
 		aliasMap.put(name,value);
@@ -45,6 +69,12 @@ public class ConfigurableResolver implements AliasResolver{
 		return priority;
 	}
 
+	/**
+	 * Resolve factory by alias.
+	 *
+	 * @param alias service alias
+	 * @return factory class name
+	 */
 	@Override
 	public String resolveAlias(String alias) {
 		return aliasMap.get(alias);

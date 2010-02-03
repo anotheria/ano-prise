@@ -36,7 +36,14 @@ public class MetaFactory {
 	 * List of additional resolvers for aliases.
 	 */
 	private static List<AliasResolver> resolverList;
-	
+
+	/**
+	 * Factory resolver by service class name
+	 */
+	private static FactoryResolver factoryResolver;
+
+
+
 	static{
 		reset();
 	}
@@ -48,7 +55,7 @@ public class MetaFactory {
 		resolverList = new CopyOnWriteArrayList<AliasResolver>();
 		resolverList.add(new SystemPropertyResolver());
 		resolverList.add(ConfigurableResolver.create());		
-		
+		factoryResolver = ConfigurableFactoryResolver.create();
 		factoryClasses = Storage.createConcurrentHashMapStorage("mf-factoryClasses");
 		factories = Storage.createConcurrentHashMapStorage("mf-factories");
 		aliases = Storage.createConcurrentHashMapStorage("mf-aliases");
@@ -67,13 +74,16 @@ public class MetaFactory {
 ///*
 	@SuppressWarnings("unchecked")
 	private static <T extends Service> T create(String name) throws MetaFactoryException{
-		
 		ServiceFactory<T> factory = (ServiceFactory<T>)factories.get(name);
 		if (factory!=null)
 			return factory.create();
 		
 		Class<? extends ServiceFactory<T>> clazz = (Class<? extends ServiceFactory<T>>)factoryClasses.get(name);
-		if (clazz==null)
+		if (clazz == null) {
+			clazz = (Class<? extends ServiceFactory<T>>) factoryResolver.resolveFactory(name);
+			addFactoryClass(name, clazz);
+		}
+		if (clazz == null)
 			throw new FactoryNotFoundException(name); 
 		
 		synchronized (factories) {
@@ -133,7 +143,7 @@ public class MetaFactory {
 		return instance;
 	}
 	
-	public static final String resolveAlias(String name){
+	public static String resolveAlias(String name){
 		
 		//first check resolvers
 		synchronized(resolverList){
@@ -148,11 +158,11 @@ public class MetaFactory {
 		return alias == null ? name : resolveAlias(alias);
 	}
 	
-	public static final String resolveAlias(Class<? extends Service> clazz){
+	public static String resolveAlias(Class<? extends Service> clazz){
 		return resolveAlias(clazz.getName());
 	}
 
-	public static final void addAlias(String name, String alias){
+	public static void addAlias(String name, String alias){
 		aliases.put(alias, name);
 	}
 	
