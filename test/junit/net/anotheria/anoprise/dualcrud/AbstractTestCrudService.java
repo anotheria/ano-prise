@@ -14,20 +14,24 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 	}
 	
 	@Override
-	public void create(TestCrudsaveable t) throws CrudServiceException{
+	public TestCrudsaveable create(TestCrudsaveable t) throws CrudServiceException{
 		File f = getFile(t.getOwnerId());
 		if (f.exists())
 			throw new CrudServiceException("File already exists for "+t);
 		f.getParentFile().mkdirs();
 		writeOut(t, f);
+		
+		return t;
 	}
 	
 	@Override
-	public void save(TestCrudsaveable t) throws CrudServiceException{
+	public TestCrudsaveable save(TestCrudsaveable t) throws CrudServiceException{
 		File f = getFile(t.getOwnerId());
 		if (!f.exists())
 			f.getParentFile().mkdirs();
 		writeOut(t, f);
+		
+		return t;
 	}
 
 	private void writeOut(TestCrudsaveable object, File target) throws CrudServiceException{
@@ -72,11 +76,13 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 	}
 
 	@Override
-	public void update(TestCrudsaveable t) throws CrudServiceException{
+	public TestCrudsaveable update(TestCrudsaveable t) throws CrudServiceException{
 		File f = getFile(t.getOwnerId());
 		if (!f.exists())
 			throw new ItemNotFoundException(t.getOwnerId());
 		writeOut(t, f);
+		
+		return t;
 	}
 	
 	protected File getFile(String ownerId){
