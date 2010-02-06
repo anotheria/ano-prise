@@ -12,7 +12,7 @@ public interface FactoryResolver {
 	 * @param serviceClass serviceClass
 	 * @return resolved factory class
 	 */
-	Class<? extends ServiceFactory> resolveFactory(String serviceClass);
+	Class<? extends ServiceFactory<? extends Service>> resolveFactory(String serviceClass);
 
 	/**
 	 * Returns the priority of this resolver. The
