@@ -1,5 +1,7 @@
 package net.anotheria.anoprise.dualcrud;
 
+import java.util.List;
+
 public interface CrudService<T extends CrudSaveable> {
 	/**
 	 * Creates a new saved instance of T. Disallows overwriting.
@@ -55,5 +57,15 @@ public interface CrudService<T extends CrudSaveable> {
 	 * @throws CrudServiceException
 	 */
 	boolean exists(T t) throws CrudServiceException;
+
+	/**
+	 * Make query to service.
+	 * 
+	 * @param q
+	 *            - {@link Query}
+	 * @return {@link List} of T
+	 * @throws CrudServiceException
+	 */
+	List<T> query(Query q) throws CrudServiceException;
 
 }
