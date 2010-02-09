@@ -81,7 +81,7 @@ public class MetaFactory {
 		Class<? extends ServiceFactory<T>> clazz = (Class<? extends ServiceFactory<T>>) factoryClasses.get(name);
 		if (clazz == null)
 			clazz = (Class<? extends ServiceFactory<T>>) factoryResolver.resolveFactory(name);
-		if (clazz == null)
+		if (clazz != null)
 			addFactoryClass(name, clazz);
 		
 		if (clazz == null)
