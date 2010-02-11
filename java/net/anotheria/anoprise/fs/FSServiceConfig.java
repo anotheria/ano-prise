@@ -31,6 +31,9 @@ public final class FSServiceConfig implements Serializable {
 	 */
 	public static final String FILE_EXTENSION = ".dat";
 
+	/**
+	 * Text prefix for validation exception message.
+	 */
 	public static final String VALIDATION_ERROR_PREFIX = "Validation error: ";
 
 	/**
