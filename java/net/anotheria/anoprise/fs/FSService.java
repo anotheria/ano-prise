@@ -27,6 +27,6 @@ public interface FSService<T extends FSSaveable> {
 	 * @throws FSServiceException
 	 * @throws FSItemNotFoundException
 	 */
-	T read(String ownerId) throws FSServiceException, FSItemNotFoundException;
+	T read(String ownerId) throws FSServiceException;
 
 }
