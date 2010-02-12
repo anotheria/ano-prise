@@ -105,7 +105,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		for (SessionHolder h : holders){
 			if (h.isExpired()){
 				expiredCount++;
-				holders.remove(h.getName());
+				sessions.remove(h.getName());
 			}
 		}
 		log.info("Finished session distributor cleanup run, removed sessions: "+expiredCount+", sizeBefore: "+sizeBefore+", sizeAfter: "+holders.size());
