@@ -108,7 +108,8 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 				sessions.remove(h.getName());
 			}
 		}
-		log.info("Finished session distributor cleanup run, removed sessions: "+expiredCount+", sizeBefore: "+sizeBefore+", sizeAfter: "+(sizeBefore-expiredCount));
+		log.info("Finished session distributor cleanup run, removed sessions: " + expiredCount + ", sizeBefore: " + sizeBefore + ", sizeAfter: "
+				+ sessions.size());
 	}
 
 }
