@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Main implementation for file system service.
@@ -24,11 +23,6 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	private final FSServiceConfig config;
 
 	/**
-	 * Update locks.
-	 */
-	private final ConcurrentHashMap<String, String> updateLocks;
-
-	/**
 	 * Default constructor.
 	 * 
 	 * @param aConfig
@@ -36,34 +30,22 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	 */
 	public FSServiceImpl(FSServiceConfig aConfig) {
 		this.config = aConfig;
-		this.updateLocks = new ConcurrentHashMap<String, String>();
 	}
 
 	@Override
 	public FSSaveable read(String ownerId) throws FSServiceException {
-		while (updateLocks.containsKey(ownerId)) {
-		}
-
-		return innerRead(ownerId);
-	}
-
-	/**
-	 * Read implementation.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @return {@link FSSaveable} instance
-	 * @throws FSServiceException
-	 */
-	private FSSaveable innerRead(String ownerId) throws FSServiceException {
 		File file = new File(config.getStoringFilePath(ownerId));
 		if (!file.exists())
 			throw new FSItemNotFoundException(ownerId);
 
 		ObjectInputStream in = null;
 		try {
-			in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-			return FSSaveable.class.cast(in.readObject());
+			synchronized (this) {
+				in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+				FSSaveable result = FSSaveable.class.cast(in.readObject());
+				in.close();
+				return result;
+			}
 		} catch (IOException ioe) {
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} catch (ClassNotFoundException cnfe) {
@@ -79,30 +61,17 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 
 	@Override
 	public void save(FSSaveable t) throws FSServiceException {
-		while (updateLocks.containsKey(t.getOwnerId())) {
-		}
-
-		updateLocks.put(t.getOwnerId(), t.getOwnerId());
-		innerSave(t);
-		updateLocks.remove(t.getOwnerId());
-	}
-
-	/**
-	 * Save implementation.
-	 * 
-	 * @param t
-	 *            - instance of {@link FSSaveable}
-	 * @throws FSServiceException
-	 */
-	private void innerSave(FSSaveable t) throws FSServiceException {
 		File file = new File(config.getStoringFolderPath(t.getOwnerId()));
 		file.mkdirs();
 		file = new File(config.getStoringFilePath(t.getOwnerId()));
 
 		ObjectOutputStream out = null;
 		try {
-			out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-			out.writeObject(t);
+			synchronized (this) {
+				out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+				out.writeObject(t);
+				out.close();
+			}
 		} catch (IOException ioe) {
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} finally {
