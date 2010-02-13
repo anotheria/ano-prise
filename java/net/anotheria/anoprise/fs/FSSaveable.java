@@ -5,7 +5,7 @@ import java.io.Serializable;
 public interface FSSaveable extends Serializable {
 
 	/**
-	 * Returns the id of the owner of the FSSaveable object.
+	 * Returns the owner id of the FSSaveable object.
 	 * 
 	 * @return - {@link String}
 	 */

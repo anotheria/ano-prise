@@ -13,10 +13,9 @@ public interface FSService<T extends FSSaveable> {
 	 * 
 	 * @param t
 	 *            - instance of T
-	 * @return instance of T
 	 * @throws FSServiceException
 	 */
-	T save(T t) throws FSServiceException;
+	void save(T t) throws FSServiceException;
 
 	/**
 	 * Returns a saved instance of T.

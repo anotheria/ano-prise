@@ -16,10 +16,10 @@ public class FSItemNotFoundException extends FSServiceException {
 	/**
 	 * Creates a new {@link FSItemNotFoundException} with a item id.
 	 * 
-	 * @param id
-	 *            - item id
+	 * @param ownerId
+	 *            - owner id
 	 */
-	public FSItemNotFoundException(String id) {
-		super("File system item not found: " + id);
+	public FSItemNotFoundException(String ownerId) {
+		super("File system item not found. Owner id: " + ownerId);
 	}
 }

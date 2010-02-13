@@ -53,16 +53,8 @@ public final class FSServiceConfig implements Serializable {
 		this.serviceName = aServiceName;
 	}
 
-	public void setRootFolderPath(String aRootFolderPath) {
-		this.rootFolderPath = aRootFolderPath;
-	}
-
 	public String getRootFolderPath() {
 		return rootFolderPath;
-	}
-
-	public void setServiceName(String aServiceName) {
-		this.serviceName = aServiceName;
 	}
 
 	public String getServiceName() {
