@@ -73,42 +73,45 @@ public final class FSServiceConfig implements Serializable {
 		String id = validateOwnerId(ownerId);
 		String path = rootFolderPath;
 
-		if (!path.substring(path.length() - 1, path.length()).equals(File.separator))
+		int from = path.length() - 1;
+		int to = path.length();
+		String lastChar = path.substring(from, to);
+		if (!lastChar.equals(File.separator))
 			path += File.separator;
 
 		path += serviceName + File.separator;
 
-		if (id.length() <= I3) {
+		if (id.length() <= i3) {
 			return path += "0" + File.separator + "0";
-		} else if (id.length() == I4) {
-			int idx1 = id.length() - I4;
-			int idx2 = id.length() - I3;
+		} else if (id.length() == i4) {
+			int idx1 = id.length() - i4;
+			int idx2 = id.length() - i3;
 			return path += "0" + File.separator + id.substring(idx1, idx2);
 		} else if (id.length() == 5) {
-			int idx1 = id.length() - I5;
-			int idx2 = id.length() - I3;
+			int idx1 = id.length() - i5;
+			int idx2 = id.length() - i3;
 			return path += "0" + File.separator + id.substring(idx1, idx2);
 		} else if (id.length() == 6) {
-			int idx1 = id.length() - I6;
-			int idx2 = id.length() - I3;
+			int idx1 = id.length() - i6;
+			int idx2 = id.length() - i3;
 			return path += "0" + File.separator + id.substring(idx1, idx2);
 		} else if (id.length() == 7) {
-			int idx1 = id.length() - I6;
-			int idx2 = id.length() - I3;
-			int idx3 = id.length() - I7;
-			int idx4 = id.length() - I6;
+			int idx1 = id.length() - i6;
+			int idx2 = id.length() - i3;
+			int idx3 = id.length() - i7;
+			int idx4 = id.length() - i6;
 			return path += id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
 		} else if (id.length() == 8) {
-			int idx1 = id.length() - I6;
-			int idx2 = id.length() - I3;
-			int idx3 = id.length() - I8;
-			int idx4 = id.length() - I6;
+			int idx1 = id.length() - i6;
+			int idx2 = id.length() - i3;
+			int idx3 = id.length() - i8;
+			int idx4 = id.length() - i6;
 			return path += id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
 		} else if (id.length() == 9) {
-			int idx1 = id.length() - I6;
-			int idx2 = id.length() - I3;
-			int idx3 = id.length() - I9;
-			int idx4 = id.length() - I6;
+			int idx1 = id.length() - i6;
+			int idx2 = id.length() - i3;
+			int idx3 = id.length() - i9;
+			int idx4 = id.length() - i6;
 			return path += id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
 		}
 
@@ -126,10 +129,12 @@ public final class FSServiceConfig implements Serializable {
 	public String getStoringFileName(String ownerId) throws FSServiceConfigException {
 		String id = validateOwnerId(ownerId);
 
-		if (id.length() <= 3)
+		if (id.length() <= i3)
 			return id + FILE_EXTENSION;
 
-		return id.substring(id.length() - 3, id.length()) + FILE_EXTENSION;
+		int idx1 = id.length() - i3;
+		int idx2 = id.length();
+		return id.substring(idx1, idx2) + FILE_EXTENSION;
 	}
 
 	/**
@@ -159,7 +164,7 @@ public final class FSServiceConfig implements Serializable {
 		if (ownerId.length() < 1)
 			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Minimum length for ownerId: 1.");
 
-		if (ownerId.length() > 9)
+		if (ownerId.length() > i9)
 			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Maximum length for ownerId: 9. Current length: " + ownerId.length() + ". ownerId: "
 					+ ownerId + ".");
 
@@ -197,36 +202,36 @@ public final class FSServiceConfig implements Serializable {
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I3 = 3;
+	private static final int i3 = 3;
 
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I4 = 4;
+	private static final int i4 = 4;
 
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I5 = 5;
+	private static final int i5 = 5;
 
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I6 = 6;
+	private static final int i6 = 6;
 
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I7 = 7;
+	private static final int i7 = 7;
 
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I8 = 8;
+	private static final int i8 = 8;
 
 	/**
 	 * Workaround variable for MagicNumberCheck in check style warnings.
 	 */
-	private static final int I9 = 9;
+	private static final int i9 = 9;
 
 }

@@ -87,9 +87,9 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 		String filePath = config.getStoringFilePath(t.getOwnerId());
 
 		File file = new File(folderPath);
-		if (file.mkdirs()) {
-			// workaround for FindBug warning
-		}
+		if (!file.exists())
+			if (!file.mkdirs())
+				throw new FSServiceException(SERVICE_LOG_PREFIX + "Can't create needed folder structure");
 
 		file = new File(filePath);
 

@@ -1,9 +1,11 @@
 package net.anotheria.anoprise.fs;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,6 +22,26 @@ public class FSServiceTest {
 		} catch (FSServiceConfigException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
+	}
+
+	@AfterClass
+	public static void deInit() {
+		File file = new File(System.getProperty("user.home") + File.separator + "test");
+		if (file.exists())
+			deleteDir(file);
+	}
+
+	private static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		return dir.delete();
 	}
 
 	@Test
