@@ -5,6 +5,8 @@ package net.anotheria.anoprise.fs;
  * 
  * @author abolbat
  * @version 1.0, 2010/02/11
+ * @param <T>
+ *            - {@link FSSaveable} object type
  */
 public interface FSService<T extends FSSaveable> {
 

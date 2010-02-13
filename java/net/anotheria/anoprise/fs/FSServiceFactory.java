@@ -6,7 +6,7 @@ package net.anotheria.anoprise.fs;
  * @author abolbat
  * @version 1.0, 2010/02/13
  */
-public final class FSServiceFactory {
+public class FSServiceFactory {
 
 	/**
 	 * Create instance of {@link FSService} with given {@link FSServiceConfig}.

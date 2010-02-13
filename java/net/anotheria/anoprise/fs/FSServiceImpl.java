@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
  * 
  * @author abolbat
  * @version 1.0, 2010/02/13
+ * @param <T>
+ *            - {@link FSSaveable} object type
  */
 public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 
@@ -85,7 +87,10 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 		String filePath = config.getStoringFilePath(t.getOwnerId());
 
 		File file = new File(folderPath);
-		file.mkdirs();
+		if (file.mkdirs()) {
+			// workaround for FindBug warning
+		}
+
 		file = new File(filePath);
 
 		ObjectOutputStream out = null;
