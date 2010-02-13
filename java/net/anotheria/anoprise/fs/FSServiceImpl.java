@@ -27,7 +27,7 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(FSServiceImpl.class);
+	private static Logger log = Logger.getLogger(FSServiceImpl.class.getName());
 
 	/**
 	 * Prefix for logging.
