@@ -86,33 +86,33 @@ public final class FSServiceConfig implements Serializable {
 		} else if (id.length() == i4) {
 			int idx1 = id.length() - i4;
 			int idx2 = id.length() - i3;
-			return path += "0" + File.separator + id.substring(idx1, idx2);
-		} else if (id.length() == 5) {
+			return path + "0" + File.separator + id.substring(idx1, idx2);
+		} else if (id.length() == i5) {
 			int idx1 = id.length() - i5;
 			int idx2 = id.length() - i3;
-			return path += "0" + File.separator + id.substring(idx1, idx2);
-		} else if (id.length() == 6) {
+			return path + "0" + File.separator + id.substring(idx1, idx2);
+		} else if (id.length() == i6) {
 			int idx1 = id.length() - i6;
 			int idx2 = id.length() - i3;
-			return path += "0" + File.separator + id.substring(idx1, idx2);
-		} else if (id.length() == 7) {
+			return path + "0" + File.separator + id.substring(idx1, idx2);
+		} else if (id.length() == i7) {
 			int idx1 = id.length() - i6;
 			int idx2 = id.length() - i3;
 			int idx3 = id.length() - i7;
 			int idx4 = id.length() - i6;
-			return path += id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
-		} else if (id.length() == 8) {
+			return path + id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
+		} else if (id.length() == i8) {
 			int idx1 = id.length() - i6;
 			int idx2 = id.length() - i3;
 			int idx3 = id.length() - i8;
 			int idx4 = id.length() - i6;
-			return path += id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
-		} else if (id.length() == 9) {
+			return path + id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
+		} else if (id.length() == i9) {
 			int idx1 = id.length() - i6;
 			int idx2 = id.length() - i3;
 			int idx3 = id.length() - i9;
 			int idx4 = id.length() - i6;
-			return path += id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
+			return path + id.substring(idx3, idx4) + File.separator + id.substring(idx1, idx2);
 		}
 
 		throw new FSServiceConfigException("Unknown path for owner id:" + id);

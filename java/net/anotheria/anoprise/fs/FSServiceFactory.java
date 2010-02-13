@@ -22,6 +22,6 @@ public class FSServiceFactory {
 	/**
 	 * Default constructor.
 	 */
-	public FSServiceFactory() {
+	private FSServiceFactory() {
 	}
 }
