@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.apache.log4j.Logger;
+
 /**
  * Main implementation for file system service.
  * 
@@ -23,6 +25,16 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	private final FSServiceConfig config;
 
 	/**
+	 * Logger.
+	 */
+	private static Logger log = Logger.getLogger(FSServiceImpl.class);
+
+	/**
+	 * Prefix for logging.
+	 */
+	private static final String SERVICE_LOG_PREFIX = "FS_SERVICE: ";
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @param aConfig
@@ -34,9 +46,12 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 
 	@Override
 	public FSSaveable read(String ownerId) throws FSServiceException {
-		File file = new File(config.getStoringFilePath(ownerId));
-		if (!file.exists())
+		String filePath = config.getStoringFolderPath(ownerId);
+		File file = new File(filePath);
+		if (!file.exists()) {
+			log.debug(SERVICE_LOG_PREFIX + "Item not found. Owner id: " + ownerId + ". File path: " + filePath);
 			throw new FSItemNotFoundException(ownerId);
+		}
 
 		ObjectInputStream in = null;
 		try {
@@ -47,23 +62,28 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 				return result;
 			}
 		} catch (IOException ioe) {
+			log.error(SERVICE_LOG_PREFIX + "IOException: " + ioe.getMessage());
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} catch (ClassNotFoundException cnfe) {
+			log.error(SERVICE_LOG_PREFIX + "ClassNotFoundException: " + cnfe.getMessage());
 			throw new FSServiceException(cnfe.getMessage(), cnfe);
 		} finally {
 			if (in != null)
 				try {
 					in.close();
-				} catch (Exception ignored) {
+				} catch (IOException ignored) {
+					log.debug(SERVICE_LOG_PREFIX + "Ignored IOException: " + ignored.getMessage());
 				}
 		}
 	}
 
 	@Override
 	public void save(FSSaveable t) throws FSServiceException {
-		File file = new File(config.getStoringFolderPath(t.getOwnerId()));
+		String folderPath = config.getStoringFolderPath(t.getOwnerId());
+		String filePath = config.getStoringFolderPath(t.getOwnerId());
+		File file = new File(folderPath);
 		file.mkdirs();
-		file = new File(config.getStoringFilePath(t.getOwnerId()));
+		file = new File(filePath);
 
 		ObjectOutputStream out = null;
 		try {
@@ -73,14 +93,28 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 				out.close();
 			}
 		} catch (IOException ioe) {
+			log.error(SERVICE_LOG_PREFIX + "IOException: " + ioe.getMessage());
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} finally {
 			if (out != null)
 				try {
 					out.close();
-				} catch (Exception ignored) {
+				} catch (IOException ignored) {
+					log.debug(SERVICE_LOG_PREFIX + "Ignored IOException: " + ignored.getMessage());
 				}
 		}
+	}
+
+	@Override
+	public void delete(FSSaveable t) throws FSServiceException {
+		String filePath = config.getStoringFolderPath(t.getOwnerId());
+		File f = new File(filePath);
+
+		if (!f.exists())
+			return;
+
+		if (!f.delete())
+			throw new FSServiceException("Deletion filed. Owner id: " + t.getOwnerId() + ". File path: " + filePath);
 	}
 
 }

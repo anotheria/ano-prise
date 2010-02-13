@@ -9,15 +9,6 @@ package net.anotheria.anoprise.fs;
 public interface FSService<T extends FSSaveable> {
 
 	/**
-	 * Saves an instance of T.
-	 * 
-	 * @param t
-	 *            - instance of T
-	 * @throws FSServiceException
-	 */
-	void save(T t) throws FSServiceException;
-
-	/**
 	 * Returns a saved instance of T.
 	 * 
 	 * @param ownerId
@@ -28,4 +19,21 @@ public interface FSService<T extends FSSaveable> {
 	 */
 	T read(String ownerId) throws FSServiceException;
 
+	/**
+	 * Saves an instance of T.
+	 * 
+	 * @param t
+	 *            - instance of T
+	 * @throws FSServiceException
+	 */
+	void save(T t) throws FSServiceException;
+
+	/**
+	 * Delete an instance of T.
+	 * 
+	 * @param t
+	 *            - instance of T
+	 * @throws FSServiceException
+	 */
+	void delete(T t) throws FSServiceException;
 }
