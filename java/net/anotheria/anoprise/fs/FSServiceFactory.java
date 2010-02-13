@@ -15,8 +15,8 @@ public final class FSServiceFactory {
 	 *            - {@link FSServiceConfig}
 	 * @return {@link FSService}
 	 */
-	public static final FSService<FSSaveable> createFSService(FSServiceConfig config) {
-		return new FSServiceImpl(config);
+	public static final <T extends FSSaveable> FSService<T> createFSService(FSServiceConfig config) {
+		return new FSServiceImpl<T>(config);
 	}
 
 	/**

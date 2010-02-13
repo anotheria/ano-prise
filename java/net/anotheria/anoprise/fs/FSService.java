@@ -35,5 +35,5 @@ public interface FSService<T extends FSSaveable> {
 	 *            - instance of T
 	 * @throws FSServiceException
 	 */
-	void delete(T t) throws FSServiceException;
+	void delete(String ownerId) throws FSServiceException;
 }

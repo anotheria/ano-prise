@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * @author abolbat
  * @version 1.0, 2010/02/13
  */
-public class FSServiceImpl implements FSService<FSSaveable> {
+public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 
 	/**
 	 * Configuration.
@@ -45,9 +45,10 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	}
 
 	@Override
-	public FSSaveable read(String ownerId) throws FSServiceException {
-		String filePath = config.getStoringFolderPath(ownerId);
+	public T read(String ownerId) throws FSServiceException {
+		String filePath = config.getStoringFilePath(ownerId);
 		File file = new File(filePath);
+
 		if (!file.exists()) {
 			log.debug(SERVICE_LOG_PREFIX + "Item not found. Owner id: " + ownerId + ". File path: " + filePath);
 			throw new FSItemNotFoundException(ownerId);
@@ -57,7 +58,8 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 		try {
 			synchronized (this) {
 				in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-				FSSaveable result = FSSaveable.class.cast(in.readObject());
+				@SuppressWarnings("unchecked")
+				T result = (T) in.readObject();
 				in.close();
 				return result;
 			}
@@ -78,9 +80,10 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	}
 
 	@Override
-	public void save(FSSaveable t) throws FSServiceException {
+	public void save(T t) throws FSServiceException {
 		String folderPath = config.getStoringFolderPath(t.getOwnerId());
-		String filePath = config.getStoringFolderPath(t.getOwnerId());
+		String filePath = config.getStoringFilePath(t.getOwnerId());
+
 		File file = new File(folderPath);
 		file.mkdirs();
 		file = new File(filePath);
@@ -106,15 +109,15 @@ public class FSServiceImpl implements FSService<FSSaveable> {
 	}
 
 	@Override
-	public void delete(FSSaveable t) throws FSServiceException {
-		String filePath = config.getStoringFolderPath(t.getOwnerId());
+	public void delete(String ownerId) throws FSServiceException {
+		String filePath = config.getStoringFilePath(ownerId);
 		File f = new File(filePath);
 
 		if (!f.exists())
 			return;
 
 		if (!f.delete())
-			throw new FSServiceException("Deletion filed. Owner id: " + t.getOwnerId() + ". File path: " + filePath);
+			throw new FSServiceException("Deletion filed. Owner id: " + ownerId + ". File path: " + filePath);
 	}
 
 }
