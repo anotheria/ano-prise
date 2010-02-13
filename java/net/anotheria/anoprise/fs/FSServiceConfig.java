@@ -82,7 +82,7 @@ public final class FSServiceConfig implements Serializable {
 		path += serviceName + File.separator;
 
 		if (id.length() <= i3) {
-			return path += "0" + File.separator + "0";
+			return path + "0" + File.separator + "0";
 		} else if (id.length() == i4) {
 			int idx1 = id.length() - i4;
 			int idx2 = id.length() - i3;
