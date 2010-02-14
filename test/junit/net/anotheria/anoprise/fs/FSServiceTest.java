@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,7 +49,8 @@ public class FSServiceTest {
 	public void testSaveReadDelete() throws FSServiceException {
 		FSTestObject obj = new FSTestObject(ownerId);
 		service.save(obj);
-		service.read(ownerId);
+		FSTestObject result = service.read(ownerId);
+		Assert.assertTrue(obj.equals(result));
 		service.delete(ownerId);
 	}
 
@@ -79,6 +81,31 @@ public class FSServiceTest {
 			fields.put("ownerId", ownerId);
 
 			oos.writeFields();
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((ownerId == null) ? 0 : ownerId.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (!(obj instanceof FSTestObject))
+				return false;
+			FSTestObject other = (FSTestObject) obj;
+			if (ownerId == null) {
+				if (other.ownerId != null)
+					return false;
+			} else if (!ownerId.equals(other.ownerId))
+				return false;
+			return true;
 		}
 
 	}
