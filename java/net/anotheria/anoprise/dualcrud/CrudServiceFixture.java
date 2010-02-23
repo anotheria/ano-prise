@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CrudServiceFixture implements CrudService<CrudSaveable> {
 
-	private ConcurrentHashMap<String, CrudSaveable> holder;
+	private final ConcurrentHashMap<String, CrudSaveable> holder;
 
 	public CrudServiceFixture() {
 		holder = new ConcurrentHashMap<String, CrudSaveable>();
@@ -22,11 +22,10 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 
 	@Override
 	public CrudSaveable read(String ownerId) throws CrudServiceException, ItemNotFoundException {
-		CrudSaveable result = holder.get(ownerId);
-		if (result == null)
+		if (!exist(ownerId))
 			throw new ItemNotFoundException(ownerId);
 
-		return result;
+		return holder.get(ownerId);
 	}
 
 	@Override
@@ -40,7 +39,6 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 	@Override
 	public void delete(CrudSaveable t) throws CrudServiceException {
 		holder.remove(t.getOwnerId());
-
 	}
 
 	@Override
@@ -50,7 +48,18 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 
 	@Override
 	public boolean exists(CrudSaveable t) throws CrudServiceException {
-		return holder.containsKey(t.getOwnerId());
+		return exist(t.getOwnerId());
+	}
+
+	/**
+	 * Object existence check.
+	 * 
+	 * @param ownerId
+	 *            - owner id
+	 * @return <code>true</code> if object exist or <code>false</code>
+	 */
+	private boolean exist(String ownerId) {
+		return holder.containsKey(ownerId);
 	}
 
 	@Override
