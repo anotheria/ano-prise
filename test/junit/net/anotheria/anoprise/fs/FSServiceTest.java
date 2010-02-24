@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -14,11 +15,13 @@ public class FSServiceTest {
 
 	private static FSService<FSTestObject> service;
 	private static final String ownerId = "123456789";
+	private static long currentTime;
 
 	@BeforeClass
 	public static void init() {
+		currentTime = new Date().getTime();
 		try {
-			FSServiceConfig config = new FSServiceConfig(System.getProperty("user.home"), "test");
+			FSServiceConfig config = new FSServiceConfig(System.getProperty("user.home"), ("test" + currentTime));
 			service = FSServiceFactory.createFSService(config);
 		} catch (FSServiceConfigException e) {
 			throw new RuntimeException(e.getMessage(), e);
@@ -27,7 +30,7 @@ public class FSServiceTest {
 
 	@AfterClass
 	public static void deInit() {
-		File file = new File(System.getProperty("user.home") + File.separator + "test");
+		File file = new File(System.getProperty("user.home") + File.separator + ("test" + currentTime));
 		if (file.exists())
 			deleteDir(file);
 	}
