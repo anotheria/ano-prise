@@ -262,7 +262,7 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 	
-	protected void setRemoteSupportFactory(RemoteEventChannelSupportFactory aFactory){
+	public void setRemoteSupportFactory(RemoteEventChannelSupportFactory aFactory){
 		remoteSupportFactory = aFactory;
 	}
 }
