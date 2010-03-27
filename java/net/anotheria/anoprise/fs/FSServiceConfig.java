@@ -174,8 +174,43 @@ public final class FSServiceConfig implements Serializable {
 			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "NumberFormatException on parsing ownerId argument: " + nfe.getMessage());
 		}
 	}
+	
+	public static final String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength){
+		if (ownerId==null || ownerId.length()==0)
+			throw new IllegalArgumentException("OwnerId is null or empty");
+		
+		while(ownerId.length()<maxOwnerIdLength)
+			ownerId = "0"+ownerId;
+		
+		while(ownerId.length() % fragmentLength !=0)
+			ownerId = "0"+ownerId;
+		
+		int fragmentationDepth = ownerId.length()/fragmentLength;
+		String ret[] = new String[fragmentationDepth-1];
+		for (int i=0; i<fragmentationDepth-1; i++){
+			String fragment = ownerId.substring(i*fragmentLength, i*fragmentLength+fragmentLength);
+			ret[i] = fragment;
+		}
 
-	/**
+		return ret;
+	}
+	
+	public static final String testGetStoreFolderName(String ownerId, int maxOwnerIdLength, int fragmentLength){
+		String[] fragments = fragmentOwnerId(ownerId, maxOwnerIdLength, fragmentLength);
+		StringBuilder ret = new StringBuilder();
+		for (String f:fragments){
+			ret.append(f).append(File.separatorChar);
+		}
+		return ret.toString();
+	}
+
+	public static final String testGetStoreFileName(String ownerId, int maxOwnerIdLength, int fragmentLength, String extension){
+		return testGetStoreFolderName(ownerId, maxOwnerIdLength, fragmentLength) + ownerId+"."+extension;
+	}
+
+		
+		
+		/**
 	 * Validation method.
 	 * 
 	 * @param aRootFolderPath
