@@ -48,7 +48,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 
 	@Override
 	public T read(String ownerId) throws FSServiceException {
-		String filePath = config.getStoringFilePath(ownerId);
+		String filePath = config.getStoreFilePath(ownerId);
 		File file = new File(filePath);
 
 		if (!file.exists()) {
@@ -83,8 +83,8 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 
 	@Override
 	public void save(T t) throws FSServiceException {
-		String folderPath = config.getStoringFolderPath(t.getOwnerId());
-		String filePath = config.getStoringFilePath(t.getOwnerId());
+		String folderPath = config.getStoreFolderPath(t.getOwnerId());
+		String filePath = config.getStoreFilePath(t.getOwnerId());
 
 		File file = new File(folderPath);
 		if (!file.exists())
@@ -115,7 +115,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 
 	@Override
 	public void delete(String ownerId) throws FSServiceException {
-		String filePath = config.getStoringFilePath(ownerId);
+		String filePath = config.getStoreFilePath(ownerId);
 		File f = new File(filePath);
 
 		if (!f.exists())

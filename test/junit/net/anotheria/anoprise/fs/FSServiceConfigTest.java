@@ -20,84 +20,84 @@ public class FSServiceConfigTest {
 	@BeforeClass
 	public static void init() {
 		try {
-			config = new FSServiceConfig("/work/fsstorage/", "test");
+			config = new FSServiceConfig("/work/fsstorage/", "dat");
 		} catch (FSServiceConfigException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
 	@Test
-	public void testStoringFileName() throws FSServiceConfigException {
-		Assert.assertTrue(("1" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId1)));
-		Assert.assertTrue(("12" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId12)));
-		Assert.assertTrue(("123" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId123)));
-		Assert.assertTrue(("234" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId1234)));
-		Assert.assertTrue(("345" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId12345)));
-		Assert.assertTrue(("456" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId123456)));
-		Assert.assertTrue(("567" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId1234567)));
-		Assert.assertTrue(("678" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId12345678)));
-		Assert.assertTrue(("789" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFileName(ownerId123456789)));
+	public void testStoreFileName() throws FSServiceConfigException {
+		Assert.assertEquals("1.dat", config.getStoreFileName(ownerId1));
+		Assert.assertEquals("12.dat", config.getStoreFileName(ownerId12));
+		Assert.assertEquals("123.dat", config.getStoreFileName(ownerId123));
+		Assert.assertEquals("1234.dat", config.getStoreFileName(ownerId1234));
+		Assert.assertEquals("12345.dat", config.getStoreFileName(ownerId12345));
+		Assert.assertEquals("123456.dat", config.getStoreFileName(ownerId123456));
+		Assert.assertEquals("1234567.dat", config.getStoreFileName(ownerId1234567));
+		Assert.assertEquals("12345678.dat", config.getStoreFileName(ownerId12345678));
+		Assert.assertEquals("123456789.dat", config.getStoreFileName(ownerId123456789));
 	}
 
 	@Test
 	public void testStoringFilePath() throws FSServiceConfigException {
-		Assert.assertTrue(("/work/fsstorage/test/0/0/1" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId1)));
-		Assert.assertTrue(("/work/fsstorage/test/0/0/12" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId12)));
-		Assert.assertTrue(("/work/fsstorage/test/0/0/123" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId123)));
-		Assert.assertTrue(("/work/fsstorage/test/0/1/234" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId1234)));
-		Assert.assertTrue(("/work/fsstorage/test/0/12/345" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId12345)));
-		Assert.assertTrue(("/work/fsstorage/test/0/123/456" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId123456)));
-		Assert.assertTrue(("/work/fsstorage/test/1/234/567" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId1234567)));
-		Assert.assertTrue(("/work/fsstorage/test/12/345/678" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId12345678)));
-		Assert.assertTrue(("/work/fsstorage/test/123/456/789" + FSServiceConfig.FILE_EXTENSION).equals(config.getStoringFilePath(ownerId123456789)));
-	}
-
-	@Test
-	public void testStoringFilePathLEON() throws FSServiceConfigException {
-		Assert.assertEquals(("000/000/1.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1, 9, 3, "dat")));
-		Assert.assertEquals(("000/000/12.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12, 9, 3, "dat")));
-		Assert.assertEquals(("000/000/123.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123, 9, 3, "dat")));
-		Assert.assertEquals(("000/001/1234.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1234, 9, 3, "dat")));
-		Assert.assertEquals(("000/012/12345.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12345, 9, 3, "dat")));
-		Assert.assertEquals(("000/123/123456.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123456, 9, 3, "dat")));
-		Assert.assertEquals(("001/234/1234567.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1234567, 9, 3, "dat")));
-		Assert.assertEquals(("012/345/12345678.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12345678, 9, 3, "dat")));
-		Assert.assertEquals(("123/456/123456789.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123456789, 9, 3, "dat")));
-	}
-
-	@Test
-	public void testStoringFilePathLEON2() throws FSServiceConfigException {
-		Assert.assertEquals(("00/00/00/00/1.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1, 10, 2, "dat")));
-		Assert.assertEquals(("00/00/00/00/12.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12, 10, 2, "dat")));
-		Assert.assertEquals(("00/00/00/01/123.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123, 10, 2, "dat")));
-		Assert.assertEquals(("00/00/00/12/1234.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1234, 10, 2, "dat")));
-		Assert.assertEquals(("00/00/01/23/12345.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12345, 10, 2, "dat")));
-		Assert.assertEquals(("00/00/12/34/123456.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123456, 10, 2, "dat")));
-		Assert.assertEquals(("00/01/23/45/1234567.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1234567, 10, 2, "dat")));
-		Assert.assertEquals(("00/12/34/56/12345678.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12345678, 10, 2, "dat")));
-		Assert.assertEquals(("01/23/45/67/123456789.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123456789, 10, 2,  "dat")));
-	}
-
-	@Test
-	public void testStoringFilePathLEON3() throws FSServiceConfigException {
-		Assert.assertEquals(("0/0/0/0/1.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1, 5, 1, "dat")));
-		Assert.assertEquals(("0/0/0/1/12.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12, 5, 1, "dat")));
-		Assert.assertEquals(("0/0/1/2/123.dat"), (FSServiceConfig.testGetStoreFileName(ownerId123, 5, 1, "dat")));
-		Assert.assertEquals(("0/1/2/3/1234.dat"), (FSServiceConfig.testGetStoreFileName(ownerId1234, 5, 1, "dat")));
-		Assert.assertEquals(("1/2/3/4/12345.dat"), (FSServiceConfig.testGetStoreFileName(ownerId12345, 5,1, "dat")));
+		Assert.assertEquals("/work/fsstorage/00/00/00/00/1.dat", config.getStoreFilePath(ownerId1));
+		Assert.assertEquals("/work/fsstorage/00/00/00/00/12.dat", config.getStoreFilePath(ownerId12));
+		Assert.assertEquals("/work/fsstorage/00/00/00/01/123.dat", config.getStoreFilePath(ownerId123));
+		Assert.assertEquals("/work/fsstorage/00/00/00/12/1234.dat", config.getStoreFilePath(ownerId1234));
+		Assert.assertEquals("/work/fsstorage/00/00/01/23/12345.dat", config.getStoreFilePath(ownerId12345));
+		Assert.assertEquals("/work/fsstorage/00/00/12/34/123456.dat", config.getStoreFilePath(ownerId123456));
+		Assert.assertEquals("/work/fsstorage/00/01/23/45/1234567.dat", config.getStoreFilePath(ownerId1234567));
+		Assert.assertEquals("/work/fsstorage/00/12/34/56/12345678.dat", config.getStoreFilePath(ownerId12345678));
+		Assert.assertEquals("/work/fsstorage/01/23/45/67/123456789.dat", config.getStoreFilePath(ownerId123456789));
 	}
 
 	@Test
 	public void testStoringFolderPath() throws FSServiceConfigException {
-		Assert.assertTrue("/work/fsstorage/test/0/0".equals(config.getStoringFolderPath(ownerId1)));
-		Assert.assertTrue("/work/fsstorage/test/0/0".equals(config.getStoringFolderPath(ownerId12)));
-		Assert.assertTrue("/work/fsstorage/test/0/0".equals(config.getStoringFolderPath(ownerId123)));
-		Assert.assertTrue("/work/fsstorage/test/0/1".equals(config.getStoringFolderPath(ownerId1234)));
-		Assert.assertTrue("/work/fsstorage/test/0/12".equals(config.getStoringFolderPath(ownerId12345)));
-		Assert.assertTrue("/work/fsstorage/test/0/123".equals(config.getStoringFolderPath(ownerId123456)));
-		Assert.assertTrue("/work/fsstorage/test/1/234".equals(config.getStoringFolderPath(ownerId1234567)));
-		Assert.assertTrue("/work/fsstorage/test/12/345".equals(config.getStoringFolderPath(ownerId12345678)));
-		Assert.assertTrue("/work/fsstorage/test/123/456".equals(config.getStoringFolderPath(ownerId123456789)));
+		Assert.assertEquals("/work/fsstorage/00/00/00/00/", config.getStoreFolderPath(ownerId1));
+		Assert.assertEquals("/work/fsstorage/00/00/00/00/", config.getStoreFolderPath(ownerId12));
+		Assert.assertEquals("/work/fsstorage/00/00/00/01/", config.getStoreFolderPath(ownerId123));
+		Assert.assertEquals("/work/fsstorage/00/00/00/12/", config.getStoreFolderPath(ownerId1234));
+		Assert.assertEquals("/work/fsstorage/00/00/01/23/", config.getStoreFolderPath(ownerId12345));
+		Assert.assertEquals("/work/fsstorage/00/00/12/34/", config.getStoreFolderPath(ownerId123456));
+		Assert.assertEquals("/work/fsstorage/00/01/23/45/", config.getStoreFolderPath(ownerId1234567));
+		Assert.assertEquals("/work/fsstorage/00/12/34/56/", config.getStoreFolderPath(ownerId12345678));
+		Assert.assertEquals("/work/fsstorage/01/23/45/67/", config.getStoreFolderPath(ownerId123456789));
+	}
+
+	@Test
+	public void testStoringFilePathLEON() throws FSServiceConfigException {
+		Assert.assertEquals(("000/000/1.dat"), (FSServiceConfig.getStoreFilePath(ownerId1, 9, 3, "dat")));
+		Assert.assertEquals(("000/000/12.dat"), (FSServiceConfig.getStoreFilePath(ownerId12, 9, 3, "dat")));
+		Assert.assertEquals(("000/000/123.dat"), (FSServiceConfig.getStoreFilePath(ownerId123, 9, 3, "dat")));
+		Assert.assertEquals(("000/001/1234.dat"), (FSServiceConfig.getStoreFilePath(ownerId1234, 9, 3, "dat")));
+		Assert.assertEquals(("000/012/12345.dat"), (FSServiceConfig.getStoreFilePath(ownerId12345, 9, 3, "dat")));
+		Assert.assertEquals(("000/123/123456.dat"), (FSServiceConfig.getStoreFilePath(ownerId123456, 9, 3, "dat")));
+		Assert.assertEquals(("001/234/1234567.dat"), (FSServiceConfig.getStoreFilePath(ownerId1234567, 9, 3, "dat")));
+		Assert.assertEquals(("012/345/12345678.dat"), (FSServiceConfig.getStoreFilePath(ownerId12345678, 9, 3, "dat")));
+		Assert.assertEquals(("123/456/123456789.dat"), (FSServiceConfig.getStoreFilePath(ownerId123456789, 9, 3, "dat")));
+	}
+
+	@Test
+	public void testStoringFilePathLEON2() throws FSServiceConfigException {
+		Assert.assertEquals(("00/00/00/00/1.dat"), (FSServiceConfig.getStoreFilePath(ownerId1, 10, 2, "dat")));
+		Assert.assertEquals(("00/00/00/00/12.dat"), (FSServiceConfig.getStoreFilePath(ownerId12, 10, 2, "dat")));
+		Assert.assertEquals(("00/00/00/01/123.dat"), (FSServiceConfig.getStoreFilePath(ownerId123, 10, 2, "dat")));
+		Assert.assertEquals(("00/00/00/12/1234.dat"), (FSServiceConfig.getStoreFilePath(ownerId1234, 10, 2, "dat")));
+		Assert.assertEquals(("00/00/01/23/12345.dat"), (FSServiceConfig.getStoreFilePath(ownerId12345, 10, 2, "dat")));
+		Assert.assertEquals(("00/00/12/34/123456.dat"), (FSServiceConfig.getStoreFilePath(ownerId123456, 10, 2, "dat")));
+		Assert.assertEquals(("00/01/23/45/1234567.dat"), (FSServiceConfig.getStoreFilePath(ownerId1234567, 10, 2, "dat")));
+		Assert.assertEquals(("00/12/34/56/12345678.dat"), (FSServiceConfig.getStoreFilePath(ownerId12345678, 10, 2, "dat")));
+		Assert.assertEquals(("01/23/45/67/123456789.dat"), (FSServiceConfig.getStoreFilePath(ownerId123456789, 10, 2, "dat")));
+	}
+
+	@Test
+	public void testStoringFilePathLEON3() throws FSServiceConfigException {
+		Assert.assertEquals(("0/0/0/0/1.dat"), (FSServiceConfig.getStoreFilePath(ownerId1, 5, 1, "dat")));
+		Assert.assertEquals(("0/0/0/1/12.dat"), (FSServiceConfig.getStoreFilePath(ownerId12, 5, 1, "dat")));
+		Assert.assertEquals(("0/0/1/2/123.dat"), (FSServiceConfig.getStoreFilePath(ownerId123, 5, 1, "dat")));
+		Assert.assertEquals(("0/1/2/3/1234.dat"), (FSServiceConfig.getStoreFilePath(ownerId1234, 5, 1, "dat")));
+		Assert.assertEquals(("1/2/3/4/12345.dat"), (FSServiceConfig.getStoreFilePath(ownerId12345, 5, 1, "dat")));
 	}
 
 	@Test
@@ -117,28 +117,28 @@ public class FSServiceConfigTest {
 		}
 
 		try {
-			config.getStoringFileName(null);
+			config.getStoreFileName(null);
 			Assert.assertTrue(false);
 		} catch (FSServiceConfigException fsse) {
 			Assert.assertTrue(true);
 		}
 
 		try {
-			config.getStoringFileName("");
+			config.getStoreFileName("");
 			Assert.assertTrue(false);
 		} catch (FSServiceConfigException fsse) {
 			Assert.assertTrue(true);
 		}
 
 		try {
-			config.getStoringFileName("1234567890");
+			config.getStoreFileName("12345678900");
 			Assert.assertTrue(false);
 		} catch (FSServiceConfigException fsse) {
 			Assert.assertTrue(true);
 		}
 
 		try {
-			config.getStoringFileName("abcd123");
+			config.getStoreFileName("abcd123");
 			Assert.assertTrue(false);
 		} catch (FSServiceConfigException fsse) {
 			Assert.assertTrue(true);
