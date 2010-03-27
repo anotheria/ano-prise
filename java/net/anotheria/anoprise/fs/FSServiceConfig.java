@@ -118,7 +118,7 @@ public final class FSServiceConfig implements Serializable {
 	 * @return file name
 	 * @throws FSServiceConfigException
 	 */
-	public static final String getStoreFileName(String ownerId, String aFileExtension) throws FSServiceConfigException {
+	public static String getStoreFileName(String ownerId, String aFileExtension) throws FSServiceConfigException {
 		return validateOwnerId(ownerId) + "." + aFileExtension;
 	}
 
@@ -145,7 +145,7 @@ public final class FSServiceConfig implements Serializable {
 	 *            - fragment length
 	 * @return fragments
 	 */
-	private static final String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength) {
+	private static String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength) {
 		if (ownerId == null || ownerId.length() == 0)
 			throw new IllegalArgumentException("OwnerId is null or empty");
 
@@ -156,7 +156,7 @@ public final class FSServiceConfig implements Serializable {
 			ownerId = "0" + ownerId;
 
 		int fragmentationDepth = ownerId.length() / fragmentLength;
-		String ret[] = new String[fragmentationDepth - 1];
+		String[] ret = new String[fragmentationDepth - 1];
 		for (int i = 0; i < fragmentationDepth - 1; i++) {
 			String fragment = ownerId.substring(i * fragmentLength, i * fragmentLength + fragmentLength);
 			ret[i] = fragment;
@@ -177,7 +177,7 @@ public final class FSServiceConfig implements Serializable {
 	 * @return folder name
 	 * @throws FSServiceConfigException
 	 */
-	public static final String getStoreFolderPath(String ownerId, int maxOwnerIdLength, int fragmentLength) throws FSServiceConfigException {
+	public static String getStoreFolderPath(String ownerId, int maxOwnerIdLength, int fragmentLength) throws FSServiceConfigException {
 		String id = validateOwnerId(ownerId);
 		String[] fragments = fragmentOwnerId(id, maxOwnerIdLength, fragmentLength);
 		StringBuilder ret = new StringBuilder();
@@ -213,13 +213,12 @@ public final class FSServiceConfig implements Serializable {
 	 *            - max owner id length
 	 * @param fragmentLength
 	 *            - fragments length
-	 * @param extension
+	 * @param aFileExtension
 	 *            - file extension
 	 * @return storing file path with file name
 	 * @throws FSServiceConfigException
 	 */
-	public static final String getStoreFilePath(String ownerId, int maxOwnerIdLength, int fragmentLength, String aFileExtension)
-			throws FSServiceConfigException {
+	public static String getStoreFilePath(String ownerId, int maxOwnerIdLength, int fragmentLength, String aFileExtension) throws FSServiceConfigException {
 		return getStoreFolderPath(ownerId, maxOwnerIdLength, fragmentLength) + getStoreFileName(ownerId, aFileExtension);
 	}
 
