@@ -21,7 +21,7 @@ public class FSServiceTest {
 	public static void init() {
 		currentTime = new Date().getTime();
 		try {
-			FSServiceConfig config = new FSServiceConfig(System.getProperty("user.home"), ("test" + currentTime));
+			FSServiceConfig config = new FSServiceConfig(System.getProperty("user.home") + File.separator + ("test" + currentTime));
 			service = FSServiceFactory.createFSService(config);
 		} catch (FSServiceConfigException e) {
 			throw new RuntimeException(e.getMessage(), e);
