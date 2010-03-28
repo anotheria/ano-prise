@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import net.anotheria.util.IOUtils;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -62,7 +64,6 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 				in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
 				@SuppressWarnings("unchecked")
 				T result = (T) in.readObject();
-				in.close();
 				return result;
 			}
 		} catch (IOException ioe) {
@@ -72,12 +73,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 			log.error(SERVICE_LOG_PREFIX + "ClassNotFoundException: " + cnfe.getMessage());
 			throw new FSServiceException(cnfe.getMessage(), cnfe);
 		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException ignored) {
-					log.debug(SERVICE_LOG_PREFIX + "Ignored IOException: " + ignored.getMessage());
-				}
+			IOUtils.closeIgnoringException(in);
 		}
 	}
 
@@ -98,18 +94,13 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 			synchronized (this) {
 				out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 				out.writeObject(t);
-				out.close();
+				out.flush();
 			}
 		} catch (IOException ioe) {
 			log.error(SERVICE_LOG_PREFIX + "IOException: " + ioe.getMessage());
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} finally {
-			if (out != null)
-				try {
-					out.close();
-				} catch (IOException ignored) {
-					log.debug(SERVICE_LOG_PREFIX + "Ignored IOException: " + ignored.getMessage());
-				}
+			IOUtils.closeIgnoringException(out);
 		}
 	}
 

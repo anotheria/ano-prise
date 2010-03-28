@@ -17,14 +17,29 @@ public final class FSServiceConfig implements Serializable {
 	private static final long serialVersionUID = -2629878661534470687L;
 
 	/**
-	 * Root folder in file system for storing service files.
-	 */
-	private String rootFolderPath;
-
-	/**
 	 * File extension for storing files.
 	 */
 	public static final String DEFAULT_FILE_EXTENSION = "dat";
+
+	/**
+	 * Default maximum owner id length.
+	 */
+	public static final int DEFAULT_MAX_OWNER_ID_LENGTH = 10;
+	
+	/**
+	 * Default fragment length.
+	 */
+	public static final int DEFAULT_FRAGMENT_LENGTH = 2;
+	
+	/**
+	 * Text prefix for validation exception message.
+	 */
+	public static final String VALIDATION_ERROR_PREFIX = "Validation error: ";
+	
+	/**
+	 * Root folder in file system for storing service files.
+	 */
+	private String rootFolderPath;
 
 	/**
 	 * Configurable file Extension.
@@ -32,29 +47,14 @@ public final class FSServiceConfig implements Serializable {
 	private String fileExtension;
 
 	/**
-	 * Default maximum owner id length.
-	 */
-	public static final int DEFAULT_MAX_OWNER_ID_LENGTH = 10;
-
-	/**
 	 * Maximum owner id length.
 	 */
 	private int maxOwnerIdLength;
 
 	/**
-	 * Default fragment length.
-	 */
-	public static final int DEFAULT_FRAGMENT_LENGTH = 2;
-
-	/**
 	 * Fragment length.
 	 */
 	private int fragmetLegth;
-
-	/**
-	 * Text prefix for validation exception message.
-	 */
-	public static final String VALIDATION_ERROR_PREFIX = "Validation error: ";
 
 	/**
 	 * Default constructor.
