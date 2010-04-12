@@ -1,6 +1,7 @@
 package net.anotheria.anoprise.dataspace;
 
 import net.anotheria.anoprise.cache.Cache;
+import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.dataspace.persistence.DataspaceNotFoundException;
 import net.anotheria.anoprise.dataspace.persistence.DataspacePersistenceService;
 import net.anotheria.anoprise.dataspace.persistence.DataspacePersistenceServiceException;
@@ -22,6 +23,16 @@ public class DataspaceServiceImpl implements DataspaceService {
 	private Cache<DataspaceKey, Dataspace> cache;
 
 	/**
+	 * Cache start size constant.
+	 */
+	private static final int CACHE_START_SIZE = 5000;
+
+	/**
+	 * Cache max size constant.
+	 */
+	private static final int CACHE_MAX_SIZE = 50000;
+
+	/**
 	 * Dataspace persistence service.
 	 */
 	private DataspacePersistenceService persistenceService;
@@ -36,6 +47,13 @@ public class DataspaceServiceImpl implements DataspaceService {
 	 */
 	public DataspaceServiceImpl() {
 		persistenceService = DataspacePersistenceServiceFactory.getInstance();
+
+		try {
+			cache = Caches.createConfigurableHardwiredCache("dataspacecache");
+		} catch (IllegalArgumentException e) {
+			log.fatal("Can't find cache configuration for dataspacecache, falling back to min cache.");
+			cache = Caches.createHardwiredCache("userprofileobjects", CACHE_START_SIZE, CACHE_MAX_SIZE);
+		}
 	}
 
 	@Override
