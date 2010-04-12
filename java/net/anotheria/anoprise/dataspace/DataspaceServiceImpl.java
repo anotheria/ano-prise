@@ -51,7 +51,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 		try {
 			cache = Caches.createConfigurableHardwiredCache("dataspacecache");
 		} catch (IllegalArgumentException e) {
-			log.fatal("Can't find cache configuration for dataspacecache, falling back to min cache.");
+			log.warn("Can't find cache configuration for dataspacecache, falling back to min cache.");
 			cache = Caches.createHardwiredCache("dataspacecache", CACHE_START_SIZE, CACHE_MAX_SIZE);
 		}
 	}
