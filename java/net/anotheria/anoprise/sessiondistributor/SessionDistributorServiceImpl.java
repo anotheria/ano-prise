@@ -97,6 +97,9 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		holder.setAttributes(attributes);
 	}
 	
+	/**
+	 * 
+	 */
 	private void cleanup(){
 		int expiredCount = 0;
 		int sizeBefore = sessions.size();
