@@ -9,6 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This object presents the on-the-fly created implementation of an interface by the mock factory.
+ * @author lrosenberg.
+ *
+ */
 public class Mock implements InvocationHandler{
 	
 	/**
