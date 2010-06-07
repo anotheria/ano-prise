@@ -43,7 +43,7 @@ public class PersistenceTestClient {
 		log.info(System.currentTimeMillis() + " SCRIPT: Start executing");
 
 		final String userId = "XX1XX";
-		final DataspaceType dataspaceType = DataspaceType.BANNER;
+		final DataspaceType dataspaceType = new BannerDataspaceType();
 
 		Dataspace dataspace = new Dataspace(userId, dataspaceType);
 		final int firstCount = 10;
@@ -92,6 +92,25 @@ public class PersistenceTestClient {
 			log.fatal("DataspacePersistenceService exception: ", dpse);
 		}
 		log.info(System.currentTimeMillis() + " SCRIPT: Executed");
+	}
+
+	/**
+	 * Test dataspace type.
+	 * 
+	 * @author abolbat
+	 */
+	private static final class BannerDataspaceType implements DataspaceType {
+
+		@Override
+		public int getId() {
+			return 1;
+		}
+
+		@Override
+		public String getName() {
+			return "BANNER";
+		}
+
 	}
 
 	/**

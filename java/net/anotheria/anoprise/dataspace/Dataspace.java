@@ -14,7 +14,7 @@ import net.anotheria.util.BasicComparable;
  * 
  * @author lrosenberg
  */
-public class Dataspace implements Serializable {
+public class Dataspace implements Serializable, Cloneable {
 
 	/**
 	 * Basic serialVersionUID variable.
@@ -109,21 +109,27 @@ public class Dataspace implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Dataspace [attributes=" + attributes + ", dataspaceId=" + dataspaceType + ", userId=" + userId + "]";
+		return "Dataspace [attributes=" + attributes + ", dataspaceTypeId=" + dataspaceType.getId() + ", userId=" + userId + "]";
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		return o instanceof Dataspace ? BasicComparable.compareString(userId, ((Dataspace) o).userId) == 0
-				&& dataspaceType.getTypeId() == ((Dataspace) o).dataspaceType.getTypeId() : false;
+				&& dataspaceType.getId() == ((Dataspace) o).dataspaceType.getId() : false;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + dataspaceType.getTypeId();
+		result = prime * result + dataspaceType.getId();
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 }

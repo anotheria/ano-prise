@@ -42,7 +42,7 @@ public class DataspacePersistenceServiceImpl extends BasePersistenceServiceJDBCI
 			conn = getConnection();
 			st = conn.prepareStatement(DataspacePersistenceConstants.SQL_GET_DATASPACE_1);
 			st.setString(1, userId);
-			st.setInt(2, dataspaceType.getTypeId());
+			st.setInt(2, dataspaceType.getId());
 			rs = st.executeQuery();
 
 			while (rs.next()) {
@@ -77,7 +77,7 @@ public class DataspacePersistenceServiceImpl extends BasePersistenceServiceJDBCI
 			// remove old dataspace from persistence
 			st = conn.prepareStatement(DataspacePersistenceConstants.SQL_REMOVE_DATASPACE_1);
 			st.setString(1, dataspace.getUserId());
-			st.setInt(2, dataspace.getDataspaceType().getTypeId());
+			st.setInt(2, dataspace.getDataspaceType().getId());
 			st.executeUpdate();
 
 			// create new dataspace in persistence
@@ -93,7 +93,7 @@ public class DataspacePersistenceServiceImpl extends BasePersistenceServiceJDBCI
 			if (conn.getMetaData().supportsBatchUpdates()) {
 				for (Attribute attribute : dataspace.getAttributes()) {
 					st2.setString(f1, dataspace.getUserId());
-					st2.setInt(f2, dataspace.getDataspaceType().getTypeId());
+					st2.setInt(f2, dataspace.getDataspaceType().getId());
 					st2.setString(f3, attribute.getName());
 					st2.setInt(f4, attribute.getType().getTypeId());
 					st2.setString(f5, attribute.getValueAsString());
@@ -105,7 +105,7 @@ public class DataspacePersistenceServiceImpl extends BasePersistenceServiceJDBCI
 				for (Attribute attribute : dataspace.getAttributes()) {
 					st2.clearParameters();
 					st2.setString(f1, dataspace.getUserId());
-					st2.setInt(f2, dataspace.getDataspaceType().getTypeId());
+					st2.setInt(f2, dataspace.getDataspaceType().getId());
 					st2.setString(f3, attribute.getName());
 					st2.setInt(f4, attribute.getType().getTypeId());
 					st2.setString(f5, attribute.getValueAsString());

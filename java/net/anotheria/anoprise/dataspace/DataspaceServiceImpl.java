@@ -66,7 +66,11 @@ public class DataspaceServiceImpl implements DataspaceService {
 		DataspaceKey key = new DataspaceKey(userId, dataspaceType);
 		Dataspace fromCache = cache.get(key);
 		if (fromCache != null)
-			return fromCache;
+			try {
+				return Dataspace.class.cast(fromCache.clone());
+			} catch (CloneNotSupportedException e) {
+				throw new DataspaceServiceException(e.getMessage());
+			}
 
 		Dataspace fromPersistence = null;
 		try {
@@ -81,7 +85,12 @@ public class DataspaceServiceImpl implements DataspaceService {
 		}
 
 		cache.put(key, fromPersistence);
-		return fromPersistence;
+
+		try {
+			return Dataspace.class.cast(fromPersistence.clone());
+		} catch (CloneNotSupportedException e) {
+			throw new DataspaceServiceException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -128,7 +137,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 		 */
 		public DataspaceKey(String aUserId, DataspaceType aDataspaceType) {
 			this.userId = aUserId;
-			this.dataspaceId = aDataspaceType.getTypeId();
+			this.dataspaceId = aDataspaceType.getId();
 		}
 
 		@Override

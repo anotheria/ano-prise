@@ -1,55 +1,24 @@
 package net.anotheria.anoprise.dataspace;
 
 /**
- * DataspaceType used in DataspaceService.
+ * DataspaceType interface used in DataspaceService.
  * 
  * @author abolbat
  */
-public enum DataspaceType {
+public interface DataspaceType {
 
 	/**
-	 * This type used for storing banners statistic data.
-	 */
-	BANNER(1),
-
-	/**
-	 * This type used for storing tracking data.
-	 */
-	TRACKING(2);
-
-	/**
-	 * Dataspace type id.
-	 */
-	private int typeId;
-
-	/**
-	 * Default private constructor.
+	 * Get dataspace type id.
 	 * 
-	 * @param aTypeId
-	 *            - a dataspace type id
+	 * @return id
 	 */
-	private DataspaceType(int aTypeId) {
-		this.typeId = aTypeId;
-	}
-
-	public int getTypeId() {
-		return typeId;
-	}
+	int getId();
 
 	/**
-	 * Get {@link DataspaceType} type by given id.
+	 * Get dataspace type name.
 	 * 
-	 * @param aTypeId
-	 *            - id
-	 * @return {@link DataspaceType} type or {@link RuntimeException} if type id is unknown
+	 * @return id
 	 */
-	public static DataspaceType getTypeById(int aTypeId) {
-		for (DataspaceType obj : DataspaceType.values()) {
-			if (obj.getTypeId() == aTypeId)
-				return obj;
-		}
-
-		throw new RuntimeException("UNKNOWN DATASPACE TYPE ID: " + aTypeId);
-	}
+	String getName();
 
 }
