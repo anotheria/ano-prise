@@ -30,11 +30,7 @@ public class DataspaceServiceFixtureImpl implements DataspaceService {
 			if (dataspace.getDataspaceType().getId() == dataspaceType.getId())
 				result = dataspace;
 
-		try {
-			return Dataspace.class.cast(result.clone());
-		} catch (CloneNotSupportedException e) {
-			throw new DataspaceServiceException(e.getMessage());
-		}
+		return result;
 	}
 
 	@Override
@@ -43,7 +39,11 @@ public class DataspaceServiceFixtureImpl implements DataspaceService {
 		if (datapaces == null)
 			datapaces = new ArrayList<Dataspace>();
 
-		datapaces.add(dataspace);
-		dataspaceStore.put(dataspace.getUserId(), datapaces);
+		try {
+			datapaces.add(Dataspace.class.cast(dataspace.clone()));
+			dataspaceStore.put(dataspace.getUserId(), datapaces);
+		} catch (CloneNotSupportedException e) {
+			throw new DataspaceServiceException(e.getMessage());
+		}
 	}
 }
