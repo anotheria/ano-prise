@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CrudServiceFixture implements CrudService<CrudSaveable> {
+public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T> {
 
-	private final ConcurrentHashMap<String, CrudSaveable> holder;
+	private final ConcurrentHashMap<String, T> holder;
 
 	public CrudServiceFixture() {
-		holder = new ConcurrentHashMap<String, CrudSaveable>();
+		holder = new ConcurrentHashMap<String, T>();
 	}
 
 	@Override
-	public CrudSaveable create(CrudSaveable t) throws CrudServiceException {
+	public T create(T t) throws CrudServiceException {
 		if (exists(t))
 			throw new CrudServiceException("Object already exist. Owner id: " + t.getOwnerId());
 
@@ -21,7 +21,7 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 	}
 
 	@Override
-	public CrudSaveable read(String ownerId) throws CrudServiceException, ItemNotFoundException {
+	public T read(String ownerId) throws CrudServiceException, ItemNotFoundException {
 		if (!exist(ownerId))
 			throw new ItemNotFoundException(ownerId);
 
@@ -29,7 +29,7 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 	}
 
 	@Override
-	public CrudSaveable update(CrudSaveable t) throws CrudServiceException {
+	public T update(T t) throws CrudServiceException {
 		if (!exists(t))
 			throw new ItemNotFoundException(t.getOwnerId());
 
@@ -37,17 +37,17 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 	}
 
 	@Override
-	public void delete(CrudSaveable t) throws CrudServiceException {
+	public void delete(T t) throws CrudServiceException {
 		holder.remove(t.getOwnerId());
 	}
 
 	@Override
-	public CrudSaveable save(CrudSaveable t) throws CrudServiceException {
+	public T save(T t) throws CrudServiceException {
 		return holder.put(t.getOwnerId(), t);
 	}
 
 	@Override
-	public boolean exists(CrudSaveable t) throws CrudServiceException {
+	public boolean exists(T t) throws CrudServiceException {
 		return exist(t.getOwnerId());
 	}
 
@@ -63,8 +63,8 @@ public class CrudServiceFixture implements CrudService<CrudSaveable> {
 	}
 
 	@Override
-	public List<CrudSaveable> query(Query q) throws CrudServiceException {
-		return new ArrayList<CrudSaveable>();
+	public List<T> query(Query q) throws CrudServiceException {
+		return new ArrayList<T>();
 	}
 
 }
