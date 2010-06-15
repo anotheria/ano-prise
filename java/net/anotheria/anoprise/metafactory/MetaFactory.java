@@ -62,7 +62,7 @@ public class MetaFactory {
 	}
 
 	/**
-	 * Performs reset of created instances.
+	 * Performs reset of created instances for some service.
 	 */
 	public static <T extends Service> void resetInstance(Class<T> pattern) {
 		String className = pattern.getName();
