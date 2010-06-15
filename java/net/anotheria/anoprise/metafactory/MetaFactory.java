@@ -64,8 +64,11 @@ public class MetaFactory {
 	/**
 	 * Performs reset of created instances.
 	 */
-	public static void resetInstances() {
-		instances = Storage.createConcurrentHashMapStorage("mf-instances");
+	public static <T extends Service> void resetInstance(Class<T> pattern) {
+		String className = pattern.getName();
+		for (String key : instances.keySet())
+			if (key.contains(className))
+				instances.remove(key);
 	}
 
 	public static <T extends Service> T create(Class<T> pattern, Extension extension) throws MetaFactoryException {
