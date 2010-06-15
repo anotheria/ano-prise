@@ -65,7 +65,7 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 		try {
 			factoryMap.put(name, (Class<? extends ServiceFactory<? extends Service>>) Class.forName(value));
 		} catch (ClassNotFoundException e) {
-			LOG.error(e);
+			LOG.error("addFactory("+name+", "+value+")", e);
 		}
 	}
 
