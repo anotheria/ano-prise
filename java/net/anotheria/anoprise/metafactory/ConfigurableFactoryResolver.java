@@ -40,7 +40,7 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 		try {
 			ConfigurationManager.INSTANCE.configure(resolver);
 		} catch (IllegalArgumentException e) {
-			LOG.error("create() - no factory config found, configurable resolver remains unused", e);
+			LOG.warn("create() - no factory config found, configurable resolver remains unused.");
 		}
 		return resolver;
 	}

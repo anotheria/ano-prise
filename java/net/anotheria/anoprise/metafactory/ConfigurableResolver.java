@@ -40,7 +40,7 @@ public class ConfigurableResolver implements AliasResolver {
 		try{
 			ConfigurationManager.INSTANCE.configure(resolver);
 		}catch(IllegalArgumentException e){
-			log.error("create() - no factory config found, configurable resolver remains unused", e);
+			log.warn("create() - no factory config found, configurable resolver remains unused.");
 		}
 		return resolver;
 	}
