@@ -4,13 +4,13 @@ import java.rmi.RemoteException;
 
 import org.apache.log4j.Logger;
 
-public class RemoteEventPushServiceConsumerProxy implements EventServicePushConsumer {
+public class RemoteEventServicePushConsumerProxy implements EventServicePushConsumer {
 
 	private RemoteEventServicePushConsumer consumer;
 
-	private Logger logger = Logger.getLogger(RemoteEventPushServiceConsumerProxy.class.getName());
+	private Logger logger = Logger.getLogger(RemoteEventServicePushConsumerProxy.class.getName());
 
-	public RemoteEventPushServiceConsumerProxy(RemoteEventServicePushConsumer aConsumer) {
+	public RemoteEventServicePushConsumerProxy(RemoteEventServicePushConsumer aConsumer) {
 		this.consumer = aConsumer;
 	}
 
