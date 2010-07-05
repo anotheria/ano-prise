@@ -5,7 +5,7 @@ import java.util.List;
 import net.anotheria.anoprise.eventserviceV2.remote.RemoteProxy;
 import net.anotheria.anoprise.metafactory.Service;
 
-import org.distributeme.annotation.DistributeMe;
+//import org.distributeme.annotation.DistributeMe;
 
 
 /**
@@ -14,9 +14,9 @@ import org.distributeme.annotation.DistributeMe;
  * 
  * @author vkazhdan
  */
-@DistributeMe(
-		initcode={"MetaFactory.addFactoryClass(net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistry.class, Extension.LOCAL, net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistryFactory.class);"}
-)
+//@DistributeMe(
+//		initcode={"MetaFactory.addFactoryClass(net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistry.class, Extension.LOCAL, net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistryFactory.class);"}
+//)
 public interface EventServiceRegistry extends Service {
 
 	/**
