@@ -8,11 +8,12 @@ import net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistryFixtur
 import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class EventServiceImplTest {
+public class EventServiceImplRemoteTest {
 
 	@BeforeClass
 	public static void initClass() throws Exception {
@@ -29,7 +30,7 @@ public class EventServiceImplTest {
 		MetaFactory.reset();
 		MetaFactory.addFactoryClass(EventServiceRegistry.class, Extension.REMOTE, EventServiceRegistryFixtureFactory.class);		
 		
-		// Get ting event channel
+		// Getting event channel
 		EventChannelForRemotePushConsumer ecForConsumer;		
 		try {
 			ecForConsumer = esForConsumer.obtainEventChannelForRemotePushConsumer("TestEC");
@@ -40,8 +41,9 @@ public class EventServiceImplTest {
 		}
 		
 		// Add push consumer
+		TestPushConsumer consumer1 = new TestPushConsumer("PushConsumer_1");
 		try {
-			ecForConsumer.remoteAdd(new TestPushConsumer("PushConsumer_1"));
+			ecForConsumer.remoteAdd(consumer1);
 		} catch (RemoteException ignored) {	}
 				
 		//
@@ -60,10 +62,19 @@ public class EventServiceImplTest {
 			System.err.println("Can't obtain event channel for remote push supplier. Cause: " + e.getMessage());
 			return;
 		}
-			
+		
+		//
+		// Test pushes
+		//
 		try {
 			ecForSupplier.remotePush(new Event("TestEvent_1 from Supplier1"));
-			ecForSupplier.remotePush(new Event("TestEvent_2 from Supplier1"));
+			ecForSupplier.remotePush(new Event("TestEvent_2 from Supplier1"));			
+			assertEquals(2, consumer1.getPushCount());
+			ecForSupplier.remotePush(new Event("TestEvent_3 from Supplier1"));
+			ecForSupplier.remotePush(new Event("TestEvent_4 from Supplier1"));
+			ecForSupplier.remotePush(new Event("TestEvent_5 from Supplier1"));
+			assertEquals(5, consumer1.getPushCount());
+			
 		} catch (RemoteException e) {			
 			System.err.println("Can't push event to remote push supplier channel. Cause: " + e.getMessage());
 			return;
@@ -77,7 +88,8 @@ public class EventServiceImplTest {
 	private static class TestPushConsumer implements LocalPushConsumer {
 		
 		private final String name;
-				
+		private int pushCount = 0;
+		
 		public TestPushConsumer(String name) {
 			this.name = name;
 		}
@@ -85,6 +97,11 @@ public class EventServiceImplTest {
 		@Override
 		public void push(Event e) {
 			System.out.println("==== PushConsumer get event push(). consumerName: " + this.name + " event data: " + e.getData());
+			pushCount++;
+		}
+		
+		public int getPushCount() {
+			return pushCount;
 		}
 		
 	}

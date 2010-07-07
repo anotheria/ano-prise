@@ -11,10 +11,7 @@ import net.anotheria.util.Date;
  * 
  */
 public class Event implements Serializable, Cloneable{
-	
-	/**
-	 * 
-	 */
+		
 	private static final long serialVersionUID = -956595007030617361L;
 
 	public static final String NO_ORIGINATOR = "Unknown";
@@ -41,45 +38,46 @@ public class Event implements Serializable, Cloneable{
 	}
 	
 	public Event(Serializable data){
+		this.data = data; 
 	}
 	
-	public Event(String anOriginator, Serializable aData){
-		timestamp = System.currentTimeMillis();
-		originator = anOriginator;
-		data      = aData;
-		nonExistent = false;
+	public Event(String originator, Serializable data){
+		this.timestamp = System.currentTimeMillis();
+		this.originator = originator;
+		this.data = data;
+		this.nonExistent = false;
 	}
 	
 	/**
-	 * @return
+	 * Get event data
 	 */
 	public Serializable getData() {
 		return data;
 	}
 
 	/**
-	 * @return
+	 * Get originator of the event, i.e. the creator or sender.
 	 */
 	public String getOriginator() {
 		return originator;
 	}
 
 	/**
-	 * @return
+	 * Get event createion timestamp
 	 */
 	public long getTimestamp() {
 		return timestamp;
 	}
 
 	/**
-	 * @param serializable
+	 * Set event data
 	 */
 	public void setData(Serializable serializable) {
 		data = serializable;
 	}
 
 	/**
-	 * @param string
+	 * Set event originator
 	 */
 	public void setOriginator(String string) {
 		originator = string;

@@ -2,11 +2,14 @@ package net.anotheria.anoprise.eventserviceV2;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.anotheria.anoprise.eventserviceV2.local.LocalPushConsumerProxy;
+import net.anotheria.anoprise.eventserviceV2.local.LocalPushSupplierProxy;
+import net.anotheria.anoprise.eventserviceV2.local.LocalSupportFactory;
 import net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistry;
 import net.anotheria.anoprise.eventserviceV2.registry.EventServiceRegistryException;
 import net.anotheria.anoprise.eventserviceV2.remote.RemoteProxy;
@@ -34,24 +37,34 @@ public class EventServiceImpl implements EventService {
 
 	private static Logger log = Logger.getLogger(EventServiceImpl.class);
 
-	//private ConcurrentMap<String, EventChannelPushConsumerProxy>	pushConsumerProxies;
-	//private ConcurrentMap<String, EventChannelPushSupplierProxy>	pushSupplierProxies;
-	private ConcurrentMap<String, RemotePushConsumerProxy>	remotePushConsumerProxies;
-	private ConcurrentMap<String, RemotePushSupplierProxy>	remotePushSupplierProxies;
+	/*
+	* Maps synchronized by modifying only from synchronized methods.
+	*/
+	private Map<String, LocalPushConsumerProxy> localPushConsumerProxies;
+	private Map<String, LocalPushSupplierProxy> localPushSupplierProxies;
+	private Map<String, RemotePushConsumerProxy> remotePushConsumerProxies;
+	private Map<String, RemotePushSupplierProxy> remotePushSupplierProxies;
 
+	/*
+	 * Listeners synchronized with help of CopyOnWriteArrayList impl.
+	 */
 	private List<EventServiceListener> listeners;
 		
+	/**
+	 * Single instance of EventServiceRegistry. 
+	 * Inited after the first remote channel obtainment or channel unavailability notification.
+	 */
 	private EventServiceRegistry eventServiceRegistry = null;
 
 	/**
 	 * Protected constructor for EventServiceFactory and unit tests. 
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // For adding registry factory class
 	protected EventServiceImpl() {
-		//pushConsumerProxies = new ConcurrentHashMap<String, EventChannelPushConsumerProxy>(10);
-		//pushSupplierProxies = new ConcurrentHashMap<String, EventChannelPushSupplierProxy>(10);
-		remotePushConsumerProxies = new ConcurrentHashMap<String, RemotePushConsumerProxy>(10);
-		remotePushSupplierProxies = new ConcurrentHashMap<String, RemotePushSupplierProxy>(10);
+		localPushConsumerProxies = new HashMap<String, LocalPushConsumerProxy>();
+		localPushSupplierProxies = new HashMap<String, LocalPushSupplierProxy>();
+		remotePushConsumerProxies = new HashMap<String, RemotePushConsumerProxy>();
+		remotePushSupplierProxies = new HashMap<String, RemotePushSupplierProxy>();
 
 		listeners = new CopyOnWriteArrayList<EventServiceListener>();
 		
@@ -75,23 +88,60 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 	}
-	
+			
 	@Override
-	public synchronized EventChannelForRemotePushSupplier obtainEventChannelForRemotePushSupplier(String channelName) 
+	public EventChannelForLocalPushSupplier obtainEventChannelForLocalPushSupplier(String channelName) {
+		// Local push supplier need only access RemotePushSupporter part of LocalPushSupplierProxy
+		LocalPushSupplierProxy proxy = localPushSupplierProxies.get(channelName);
+		if (proxy == null) {
+			// Now call synchronized method.
+			proxy = obtainLocalPushSupplierProxy(channelName);	
+		}
+		
+		return /*(EventChannelForLocalPushSupplier)*/ proxy;
+	}
+
+	@Override
+	public EventChannelForLocalPushConsumer obtainEventChannelForLocalPushConsumer(String channelName) {
+		// Local push consumer need only access LocalParticipantsCollector<LocalPushConsumer> part of LocalPushConsumerProxy
+		LocalPushConsumerProxy proxy = localPushConsumerProxies.get(channelName);
+		if (proxy == null) {
+			// Now call synchronized method.
+			proxy = obtainLocalPushConsumerProxy(channelName);	
+		}
+		
+		return /*(EventChannelForLocalPushConsumer)*/ proxy;
+	}
+
+	@Override
+	public EventChannelForRemotePushSupplier obtainEventChannelForRemotePushSupplier(String channelName) 
 		throws EventServiceException {
 		// Remote push supplier need only access RemotePushSupporter part of RemotePushConsumerProxy
-		return (EventChannelForRemotePushSupplier) obtainRemotePushConsumerProxy(channelName);
+		RemotePushConsumerProxy proxy = remotePushConsumerProxies.get(channelName);
+		if (proxy == null) {
+			// Now call synchronized method.
+			proxy = obtainRemotePushConsumerProxy(channelName);	
+		}
+		
+		return /*(EventChannelForRemotePushSupplier)*/ proxy;
 	}
 
 	@Override
-	public synchronized EventChannelForRemotePushConsumer obtainEventChannelForRemotePushConsumer(
-			String channelName) 
+	public EventChannelForRemotePushConsumer obtainEventChannelForRemotePushConsumer(String channelName) 
 		throws EventServiceException {
-		// Remote push consumer need only access LocalParticipantsCollector<LocalPushConsumer> part of RemotePushSupplierProxy
-		return (EventChannelForRemotePushConsumer) obtainRemotePushSupplierProxy(channelName);
+		// Remote push consumer need only access RemoteParticipantsCollector<LocalPushConsumer> part of RemotePushSupplierProxy
+		RemotePushSupplierProxy proxy = remotePushSupplierProxies.get(channelName);
+		if (proxy == null) {
+			// Now call synchronized method.
+			proxy = obtainRemotePushSupplierProxy(channelName);	
+		}
+		
+		return /*(EventChannelForRemotePushConsumer)*/ proxy;		
 	}
 
-		
+	/*
+	 * Synchronized method.
+	 */	
 	@Override
 	public synchronized void notifyEventChannelUnavailable(EventChannelForRemotePushConsumer eventChannel, String channelName) {
 		log.info("Notifying event channel for remote push consumer unavailable: " + eventChannel);
@@ -130,7 +180,10 @@ public class EventServiceImpl implements EventService {
 		}
 		
 	}
-
+	
+	/*
+	 * Synchronized method.
+	 */
 	@Override
 	public synchronized void notifyEventChannelUnavailable(EventChannelForRemotePushSupplier eventChannel, String channelName) {
 		log.info("Notifying event channel for remote push supplier unavailable: " + eventChannel);
@@ -152,20 +205,94 @@ public class EventServiceImpl implements EventService {
 	}
 
 	/**
-	 * Obtain RemotePushConsumerProxy. New will be created and connected if not exists one.
+	 * Obtain LocalPushConsumerProxy. New will be created and connected if not exists one.
+	 * Synchronized method.
 	 * 
 	 * @param channelName
 	 * @return
 	 */
-	private RemotePushConsumerProxy obtainRemotePushConsumerProxy(String channelName) 
+	private synchronized LocalPushConsumerProxy obtainLocalPushConsumerProxy(String channelName) {		
+		// Try to get existed proxy
+		LocalPushConsumerProxy proxy = localPushConsumerProxies.get(channelName);
+		if (proxy != null) {
+			return proxy;
+		}
+		
+		// Create new one if absent
+		proxy = LocalSupportFactory.createLocalPushConsumerProxy(channelName);
+		
+		// Add new push consumer proxy to supplier proxy of the same channel
+		LocalPushSupplierProxy supplierProxy = localPushSupplierProxies.get(channelName);
+		if (supplierProxy != null) {
+			supplierProxy.add(proxy);
+		}
+				
+		// Add new proxy to local storage
+		localPushConsumerProxies.put(channelName, proxy);
+
+		// Notify new channel creation
+		notifyChannelCreation(channelName, ProxyType.LOCAL_PUSH_CONSUMER_PROXY);
+		
+		// Print logs
+		log.info("New local push consumer proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
+		logDump();
+		
+		return proxy;
+	}
+	
+	/**
+	 * Obtain LocalPushSupplierProxy. New will be created and connected if not exists one.
+	 * Synchronized method.
+	 * 
+	 * @param channelName
+	 * @return
+	 */
+	private synchronized LocalPushSupplierProxy obtainLocalPushSupplierProxy(String channelName) {		
+		// Try to get existed proxy
+		LocalPushSupplierProxy proxy = localPushSupplierProxies.get(channelName);
+		if (proxy != null) {
+			return proxy;
+		}
+		
+		// Create new one if absent
+		proxy = LocalSupportFactory.createLocalPushSupplierProxy(channelName);
+		
+		// Add all existed push push consumer proxy of the same channel to new supplier proxy
+		LocalPushConsumerProxy consumerProxy = localPushConsumerProxies.get(channelName);
+		if (consumerProxy != null) {
+			proxy.add(consumerProxy);
+		}
+				
+		// Add new proxy to local storage
+		localPushSupplierProxies.put(channelName, proxy);
+
+		// Notify new channel creation
+		notifyChannelCreation(channelName, ProxyType.LOCAL_PUSH_SUPPLIER_PROXY);
+		
+		// Print logs
+		log.info("New local push supplier proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
+		logDump();
+		
+		return proxy;
+	}
+	
+	/**
+	 * Obtain RemotePushConsumerProxy. New will be created and connected if not exists one.
+	 * Synchronized method.
+	 * 
+	 * @param channelName
+	 * @return
+	 */
+	private synchronized RemotePushConsumerProxy obtainRemotePushConsumerProxy(String channelName) 
 		throws EventServiceException {
+		// Try to get existed proxy
+		RemotePushConsumerProxy proxy = remotePushConsumerProxies.get(channelName);
+		if (proxy != null) {
+			return proxy;	
+		}
+
 		// Init eventServiceRegistry if it is not inited yet.
 		initRegistry();
-		
-		// Try to get existed proxy
-		RemotePushConsumerProxy proxy = (RemotePushConsumerProxy) remotePushConsumerProxies.get(channelName);
-		if (proxy != null)
-			return proxy;			
 		
 		// Create new one if absent
 		proxy = RemoteSupportFactory.createRemotePushConsumerProxy(channelName, this);
@@ -211,7 +338,7 @@ public class EventServiceImpl implements EventService {
 		notifyChannelCreation(channelName, ProxyType.REMOTE_PUSH_CONSUMER_PROXY);
 		
 		// Print logs
-		log.info("New push consumer proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
+		log.info("New lremote push consumer proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
 		logDump();
 		
 		return proxy;
@@ -219,19 +346,21 @@ public class EventServiceImpl implements EventService {
 	
 	/**
 	 * Obtain RemotePushSupplierProxy. New will be created and connected if not exists one.
+	 * Synchronized method.
 	 * 
 	 * @param channelName
 	 * @throws EventServiceException
 	 */
-	private RemotePushSupplierProxy obtainRemotePushSupplierProxy(String channelName) 
+	private synchronized RemotePushSupplierProxy obtainRemotePushSupplierProxy(String channelName) 
 		throws EventServiceException {
+		// Try to get existed proxy
+		RemotePushSupplierProxy proxy = remotePushSupplierProxies.get(channelName);
+		if (proxy != null) {
+			return proxy;	
+		}
+		
 		// Init eventServiceRegistry if it is not inited yet.
 		initRegistry();
-		
-		// Try to get existed proxy
-		RemotePushSupplierProxy proxy = (RemotePushSupplierProxy) remotePushSupplierProxies.get(channelName);
-		if (proxy != null)
-			return proxy;			
 		
 		// Create new one if absent
 		proxy = RemoteSupportFactory.createRemotePushSupplierProxy(channelName);		
@@ -288,7 +417,7 @@ public class EventServiceImpl implements EventService {
 		
 		
 		// Print logs
-		log.info("New push supplier proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
+		log.info("New remote push supplier proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
 		logDump();
 		
 		return proxy;
@@ -299,8 +428,8 @@ public class EventServiceImpl implements EventService {
 	 */
 	private void logDump() {
 		log.debug("============ EventService Dump: ===================");
-		//log.debug("Push consumer proxies: " + pushConsumerProxies);
-		//log.debug("Push supplier proxies: " + pushSupplierProxies);
+		log.debug("Local push consumer proxies: " + localPushConsumerProxies);
+		log.debug("Local push supplier proxies: " + localPushSupplierProxies);
 		log.debug("Remote push consumer proxies: " + remotePushConsumerProxies);
 		log.debug("Remote push supplier proxies: " + remotePushSupplierProxies);
 	}
@@ -323,311 +452,4 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 		
-	/*
-	public RemoteEventChannel obtainEventChannel(String channelName, EventChannelParticipant participant) {
-
-		ProxyType type = ProxyType.NONE;
-		if (participant instanceof LocalPushConsumer)
-			type = ProxyType.PUSH_CONSUMER_PROXY;
-		if (participant instanceof EventServicePushSupplier)
-			type = ProxyType.PUSH_SUPPLIER_PROXY;
-
-		if (participant instanceof RemoteEventServiceConsumer)
-			type = ProxyType.REMOTE_PUSH_CONSUMER_PROXY;
-
-		if (participant instanceof RemoteEventServiceSupplier)
-			type = ProxyType.REMOTE_PUSH_SUPPLIER_PROXY;
-
-		if (type == ProxyType.NONE)
-			throw new RuntimeException("Unsupported participant type: " + participant);
-
-		return obtainEventChannel(channelName, type);
-	}
-
-	public synchronized RemoteEventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
-		RemoteEventChannel ret = null;
-		log.debug("Creating event channel: " + channelName + " of type " + proxyType);
-		int triesNotifyChannelCreationCount = 10;
-		switch (proxyType) {
-			case PUSH_CONSUMER_PROXY:
-				ret = _obtainPushConsumerProxy(channelName);
-				triesNotifyChannelCreationCount = 10;
-				while (triesNotifyChannelCreationCount > 0) {
-					try {
-						notifyChannelCreation(channelName, proxyType);
-						triesNotifyChannelCreationCount = 0;
-					} catch (RuntimeException e) {
-						log.warn("obtainEventChannel : failed to obtain channel: "+channelName +", tries: " + triesNotifyChannelCreationCount );
-						if (e.getMessage().startsWith("Service failed: client timeout reached")) {
-							triesNotifyChannelCreationCount--;
-						} else {
-							throw e;
-						}
-						if (triesNotifyChannelCreationCount == 0) {
-							throw e;
-						}
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e1) {
-
-						}
-					}
-				}
-				break;
-			case PUSH_SUPPLIER_PROXY:
-				ret = _obtainPushSupplierProxy(channelName);
-				triesNotifyChannelCreationCount = 10;
-				while (triesNotifyChannelCreationCount > 0) {
-					try {
-						notifyChannelCreation(channelName, proxyType);
-						triesNotifyChannelCreationCount = 0;
-					} catch (RuntimeException e) {
-						log.warn("obtainEventChannel : failed to obtain channel: "+channelName +", tries: " + triesNotifyChannelCreationCount );
-						if (e.getMessage().startsWith("Service failed: client timeout reached")) {
-							triesNotifyChannelCreationCount--;
-						} else {
-							throw e;
-						}
-						if (triesNotifyChannelCreationCount == 0) {
-							throw e;
-						}
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e1) {
-
-						}
-					}
-				}
-				break;
-			case REMOTE_PUSH_CONSUMER_PROXY:
-				//ret = _obtainRemoteConsumerProxy(channelName);
-				break;
-			case REMOTE_PUSH_SUPPLIER_PROXY:
-				//ret = _obtainRemoteSupplierProxy(channelName);
-				break;
-			default:
-				throw new RuntimeException("Unsupported proxy type: " + proxyType);
-		}
-		dump();
-		return ret;
-	}
-	*/
-	
-	/*
-	 * New, separately for remote 
-	 *
-	public synchronized RemoteProxy obtainRemoteEventChannelProxy(
-			String channelName, ProxyType proxyType) {
-		RemoteProxy ret = null;
-		switch (proxyType) {
-		case REMOTE_PUSH_CONSUMER_PROXY:
-			ret = _obtainRemoteConsumerProxy(channelName);
-			break;
-		case REMOTE_PUSH_SUPPLIER_PROXY:
-			ret = _obtainRemoteSupplierProxy(channelName);
-			break;
-		default:
-			throw new RuntimeException("Unsupported remote proxy type: " + proxyType);
-		}
-		logDump();
-		return ret;
-	}
-	
-	private RemoteProxy _obtainRemoteConsumerProxy(String channelName) {
-		RemotePushConsumerProxy proxy = (RemotePushConsumerProxy) remotePushConsumerProxies.get(channelName);
-		if (proxy != null)
-			return proxy;			
-		
-		proxy = RemoteSupportFactory.createRemotePushConsumerProxy(channelName);
-		
-		// Add remote suppliers proxys from registry
-		List<RemoteProxy> remoteSupplierProxys;		
-		try {
-			remoteSupplierProxys = eventServiceRegistry.getSuppliersForChannel(channelName);
-		} catch (EventServiceException e) {
-			log.error("Can't get supplier proxys for channel: " + channelName, e);
-			throw new RuntimeException("Can't get supplier proxys for channel: " + channelName);
-		}
-		for(RemoteProxy remoteProxy : remoteSupplierProxys) {
-			try {
-				proxy.remoteAdd((RemotePushSupplierProxy) remoteProxy);
-			} catch (RemoteException e) {
-				log.warn("Skip adding remote supplier proxy for the new remote consumer for channel: " + channelName, e);
-			}
-		}
-		
-		// Export remote proxy		
-		RemotePushConsumerProxy exportedProxy;
-		try {
-			exportedProxy = (RemotePushConsumerProxy) UnicastRemoteObject.exportObject(proxy, 0);
-		} catch (RemoteException e) {
-			log.error("Can't export consumer proxy for channel: " + channelName, e);
-			throw new RuntimeException("Can't export consumer proxy for channel: " + channelName);
-		}
-		
-		// Register new proxy in Reg
-		try {
-			eventServiceRegistry.registerConsumer(channelName, exportedProxy);
-		} catch (EventServiceException e) {
-			log.error("Can't register new consumer proxy in registry for channel: " + channelName, e);
-			throw new RuntimeException("Can't register new consumer proxy in registry for channel: " + channelName);
-		}
-		
-		// Add new remote proxy to local storage
-		remotePushConsumerProxies.put(channelName, proxy);
-		
-//		proxy = createRemoteConsumerProxy(channelName);		
-		return proxy;
-	}
-
-	private RemoteProxy _obtainRemoteSupplierProxy(String channelName) {
-		RemotePushSupplierProxy proxy = (RemotePushSupplierProxy) remotePushSupplierProxies.get(channelName);
-		if (proxy != null)
-			return proxy;			
-		
-		proxy = remoteSupportFactory.createRemotePushSupplierProxy(channelName);		
-		
-		// Export remote proxy		
-		RemotePushSupplierProxy exportedProxy;
-		try {
-			exportedProxy = (RemotePushSupplierProxy) UnicastRemoteObject.exportObject(proxy, 0);
-		} catch (RemoteException e) {
-			log.error("Can't export supplier proxy for channel: " + channelName, e);
-			throw new RuntimeException("Can't export supplier proxy for channel: " + channelName);
-		}
-		
-		// Add new supplier proxy for existed consumer proxys
-		List<RemoteProxy> remoteConsumerProxys;		
-		try {
-			remoteConsumerProxys = eventServiceRegistry.getConsumersForChannel(channelName);
-		} catch (EventServiceException e) {
-			log.error("Can't get consumer proxys for channel: " + channelName, e);
-			throw new RuntimeException("Can't get consumer proxys for channel: " + channelName);
-		}
-		for(RemoteProxy remoteProxy : remoteConsumerProxys) {
-			try {
-				((RemotePushConsumerProxy) remoteProxy).addRemoteSupplierProxy(exportedProxy);
-			} catch (RemoteException e) {
-				log.warn("Skip adding new supplier proxy for existed consumer proxy for channel: " + channelName, e);
-			}
-		}
-		
-		// Register new proxy in Reg
-		try {
-			eventServiceRegistry.registerSupplier(channelName, exportedProxy);
-		} catch (EventServiceException e) {
-			log.error("Can't register new supplier proxy in registry for channel: " + channelName, e);
-			throw new RuntimeException("Can't register new supplier proxy in registry for channel: " + channelName);
-		}
-		
-		// Add new remote proxy to local storage
-		remotePushSupplierProxies.put(channelName, proxy);
-		
-//		proxy = createRemoteSuppliserProxy(channelName);		
-		return proxy;
-	}
-	
-	private RemoteEventChannel _obtainPushConsumerProxy(String channelName) {
-		EventChannelPushConsumerProxy proxy = (EventChannelPushConsumerProxy) pushConsumerProxies.get(channelName);
-		if (proxy != null)
-			return proxy;
-		proxy = createPushConsumerProxy(channelName);
-		pushConsumerProxies.put(channelName, proxy);
-		return proxy;
-	}
-
-	private RemoteEventChannel _obtainPushSupplierProxy(String channelName) {
-		EventChannelPushSupplierProxy proxy = (EventChannelPushSupplierProxy) pushSupplierProxies.get(channelName);
-		if (proxy != null)
-			return proxy;
-		proxy = createPushSupplierProxy(channelName);
-		pushSupplierProxies.put(channelName, proxy);
-		return proxy;
-	}
-
-	
-
-//	private RemotePushSupplierProxy createRemoteSupplierProxy(String channelName) {
-//		RemotePushSupplierProxy proxy = remoteSupportFactory.createRemoteEventChannelSupplierProxy(channelName);
-//		log.debug("Created " + proxy);
-//		connectSupplierProxy(channelName, proxy);
-//		return proxy;
-//	}
-
-	private EventChannelPushSupplierProxy createPushSupplierProxy(String channelName) {
-		EventChannelPushSupplierProxy proxy = new EventChannelPushSupplierProxy(channelName);
-		log.debug("Created " + proxy);
-		connectSupplierProxy(channelName, proxy);
-		return proxy;
-	}
-
-	private void connectSupplierProxy(String channelName, EventChannelSupplierProxy proxy) {
-		List<EventChannelConsumerProxy> consumers = getConsumerProxies(channelName);
-		log.debug("Connecting " + consumers + " to " + proxy);
-		for (int i = 0, n = consumers.size(); i < n; i++) {
-			log.debug("connecting " + consumers.get(i));
-			proxy.addConsumerProxy(consumers.get(i));
-		}
-	}
-
-	private EventChannelPushConsumerProxy createPushConsumerProxy(String channelName) {
-		EventChannelPushConsumerProxy proxy = new EventChannelPushConsumerProxy(channelName);
-		log.debug("created " + proxy);
-		connectConsumerProxy(channelName, proxy);
-		return proxy;
-	}
-
-//	private RemotePushConsumerProxy createRemoteConsumerProxy(String channelName) {
-//		RemotePushConsumerProxy proxy = remoteSupportFactory.createRemoteEventChannelConsumerProxy(channelName);
-//		log.debug("Created " + proxy);
-//		connectRemoteConsumerProxy(channelName, proxy);
-//		return proxy;
-//	}
-
-//	private void connectRemoteConsumerProxy(String channelName, RemotePushConsumerProxy proxy) {
-//		List<EventChannelSupplierProxy> suppliers = getSupplierProxies(channelName);
-//		log.debug("connecting " + proxy + " to " + suppliers);
-//		for (int i = 0, n = suppliers.size(); i < n; i++) {
-//			log.debug("connecting " + proxy + " to " + suppliers.get(i));
-//			suppliers.get(i).addConsumerProxy(proxy);
-//		}
-//	}
-	
-	private void connectConsumerProxy(String channelName, EventChannelConsumerProxy proxy) {
-		List<EventChannelSupplierProxy> suppliers = getSupplierProxies(channelName);
-		log.debug("connecting " + proxy + " to " + suppliers);
-		for (int i = 0, n = suppliers.size(); i < n; i++) {
-			log.debug("connecting " + proxy + " to " + suppliers.get(i));
-			suppliers.get(i).addConsumerProxy(proxy);
-		}
-	}
-
-	private List<EventChannelConsumerProxy> getConsumerProxies(String channelName) {
-		List<EventChannelConsumerProxy> ret = new ArrayList<EventChannelConsumerProxy>();
-		EventChannelConsumerProxy pushConsumerProxy = (EventChannelConsumerProxy) pushConsumerProxies.get(channelName);
-		if (pushConsumerProxy != null)
-			ret.add(pushConsumerProxy);
-
-		EventChannelConsumerProxy remoteConsumerProxy = (EventChannelConsumerProxy) remotePushConsumerProxies.get(channelName);
-		if (remoteConsumerProxy != null)
-			ret.add(remoteConsumerProxy);
-
-		return ret;
-	}
-
-	private List<EventChannelSupplierProxy> getSupplierProxies(String channelName) {
-		List<EventChannelSupplierProxy> ret = new ArrayList<EventChannelSupplierProxy>();
-		EventChannelSupplierProxy pushSupplierProxy = (EventChannelSupplierProxy) pushSupplierProxies.get(channelName);
-		if (pushSupplierProxy != null)
-			ret.add(pushSupplierProxy);
-
-		EventChannelSupplierProxy remoteSupplierProxy = (EventChannelSupplierProxy) remotePushSupplierProxies.get(channelName);
-		if (remoteSupplierProxy != null)
-			ret.add(remoteSupplierProxy);
-
-		return ret;
-	}
-*/
-	
-	
 }

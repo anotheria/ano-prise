@@ -25,12 +25,12 @@ public class RemotePushSupplierProxyImpl extends AbstractRemoteEventChannel
 		
 	@Override
 	public void remotePush(Event e) throws RemoteException {
-		log.debug("Get remote push. Deliver it for all local pushConsumers. Event Data:" + e.getData());
+		log.debug("Get remote push. Deliver it for all local pushConsumers. Event Data: " + e.getData());
 		for (LocalPushConsumer consumer : pushConsumers) {
 			try {
 				consumer.push(e);
 			} catch (Exception ex) {
-				log.error("Error was during pushing event to local consumer: " + consumer, ex);
+				log.warn("Error was during pushing event to local consumer: " + consumer + ". Cause: " + ex.getMessage() );
 			}
 		}
 	}

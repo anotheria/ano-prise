@@ -14,9 +14,28 @@ package net.anotheria.anoprise.eventserviceV2;
  * For remote events, service internally use distributed EventServiceRegistry, that SHOULD BE up and ready before any remote channel obtaining.
  * EventServiceRegistry is used only for new remote consumer or registration, after that, consumer and supplier virtual/physical machines communicates 
  * directly with each other, without registry mediator, that is important for traffic understanding.
+ * 
+ * To remove local consumer impl, simply remove it from obtained EventChannelForXxxPushConsumer.
+ * 
+ * Internal remote proxies will be removed from the registry automatically when the first time it's unavailability detected
+ * (during remotePush or remote channel obtainment, depending on proxy type).  
  */
 public interface EventService {
 		
+	/**
+	 * Obtain event channel for using by local push supplier.
+	 * 
+	 * @param channelName Name for one type events channel, usually related to supplier service name.
+	 */
+	EventChannelForLocalPushSupplier obtainEventChannelForLocalPushSupplier(String channelName);
+	
+	/**
+	 * Obtain event channel for using by local push consumer.
+	 * 
+	 * @param channelName Name for one type events channel, usually related to supplier service name.
+	 */
+	EventChannelForLocalPushConsumer obtainEventChannelForLocalPushConsumer(String channelName);
+	
 	/**
 	 * Obtain event channel for using by remote push supplier.
 	 * 
