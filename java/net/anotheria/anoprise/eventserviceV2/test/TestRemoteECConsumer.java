@@ -17,7 +17,7 @@ import org.apache.log4j.BasicConfigurator;
  * 
  * @author vkazhdan
  */
-public class TestECConsumer {
+public class TestRemoteECConsumer {
 
 	/**
 	 * @param args
