@@ -55,7 +55,7 @@ public class EventServiceImpl implements EventService {
 			type = ProxyType.REMOTE_SUPPLIER_PROXY;
 
 		if (type == ProxyType.NONE)
-			throw new RuntimeException("Unsupported participant type: " + participant);
+			throw new IllegalArgumentException("Unsupported participant type: " + participant);
 
 		return obtainEventChannel(channelName, type);
 	}
@@ -67,53 +67,9 @@ public class EventServiceImpl implements EventService {
 		switch (proxyType) {
 			case PUSH_CONSUMER_PROXY:
 				ret = _obtainPushConsumerProxy(channelName);
-				triesNotifyChannelCreationCount = 10;
-				while (triesNotifyChannelCreationCount > 0) {
-					try {
-						notifyChannelCreation(channelName, proxyType);
-						triesNotifyChannelCreationCount = 0;
-					} catch (RuntimeException e) {
-						log.warn("obtainEventChannel : failed to obtain channel: "+channelName +", tries: " + triesNotifyChannelCreationCount );
-						if (e.getMessage().startsWith("Service failed: client timeout reached")) {
-							triesNotifyChannelCreationCount--;
-						} else {
-							throw e;
-						}
-						if (triesNotifyChannelCreationCount == 0) {
-							throw e;
-						}
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e1) {
-
-						}
-					}
-				}
 				break;
 			case PUSH_SUPPLIER_PROXY:
 				ret = _obtainPushSupplierProxy(channelName);
-				triesNotifyChannelCreationCount = 10;
-				while (triesNotifyChannelCreationCount > 0) {
-					try {
-						notifyChannelCreation(channelName, proxyType);
-						triesNotifyChannelCreationCount = 0;
-					} catch (RuntimeException e) {
-						log.warn("obtainEventChannel : failed to obtain channel: "+channelName +", tries: " + triesNotifyChannelCreationCount );
-						if (e.getMessage().startsWith("Service failed: client timeout reached")) {
-							triesNotifyChannelCreationCount--;
-						} else {
-							throw e;
-						}
-						if (triesNotifyChannelCreationCount == 0) {
-							throw e;
-						}
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e1) {
-
-						}
-					}
-				}
 				break;
 			case REMOTE_CONSUMER_PROXY:
 				ret = _obtainRemoteConsumerProxy(channelName);
@@ -122,7 +78,7 @@ public class EventServiceImpl implements EventService {
 				ret = _obtainRemoteSupplierProxy(channelName);
 				break;
 			default:
-				throw new RuntimeException("Unsupported proxy type: " + proxyType);
+				throw new IllegalArgumentException("Unsupported proxy type: " + proxyType);
 		}
 		dump();
 		return ret;
@@ -143,6 +99,7 @@ public class EventServiceImpl implements EventService {
 			return proxy;
 		proxy = createPushConsumerProxy(channelName);
 		pushConsumerProxies.put(channelName, proxy);
+		notifyChannelCreation(channelName, ProxyType.PUSH_CONSUMER_PROXY);
 		return proxy;
 	}
 
@@ -152,6 +109,7 @@ public class EventServiceImpl implements EventService {
 			return proxy;
 		proxy = createPushSupplierProxy(channelName);
 		pushSupplierProxies.put(channelName, proxy);
+		notifyChannelCreation(channelName, ProxyType.PUSH_SUPPLIER_PROXY);
 		return proxy;
 	}
 
