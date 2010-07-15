@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<project name="ano-prise" default="dist" basedir=".">
+	<import file="../build/basic-project.xml"/>	
+	
+	<property name="ivy.organisation" value="anotheria.net"/>
+	<property name="ivy.module" value="ano-prise"/>
+	
+	<target name="clean" depends="basic-project.clean">
+		<delete dir="generated/java"></delete>
+                <delete dir="${classes.dir}"></delete>
+                <delete file="${dist.dir}/${target.jar.name}"></delete>
+	</target>
+
+	<target name="prepare" depends="basic-project.prepare">
+		<mkdir dir="generated/java"/>
+	</target>
+
+	<target name="compile" depends="prepare">
+		<apt compile="true" 
+			factory="org.distributeme.processors.GeneratorProcessorFactory" 
+			srcdir="${src}" 
+			destdir="${classes.dir}"			
+			preprocessdir="generated/java"
+			debug="on" deprecation="off" optimize="on" encoding="UTF-8">
+			<option name="includescript" value="../../../service-env.sh"/>
+			<classpath>
+				<fileset dir="${lib.project}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</apt>
+	</target>
+
+	
+	
+	<!-- 
+		checkout svn://svn.anotheria.net/opensource/build/trunk as ../build 
+		in order for this build script to work.
+	-->
+
+
+</project>  

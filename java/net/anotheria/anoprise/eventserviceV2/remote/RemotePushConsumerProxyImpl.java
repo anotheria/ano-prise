@@ -16,6 +16,11 @@ public class RemotePushConsumerProxyImpl extends AbstractRemoteEventChannel
 	private transient static final long serialVersionUID = 2462748225750279040L;
 	private transient static Logger log = Logger.getLogger(RemotePushConsumerProxyImpl.class);
 	
+	/**
+	 * Time in mills before request repeating.
+	 */
+	private static final long REPEAT_REMOTE_CALL_SLEEP = 200;
+	
 	private transient final EventService parentEventService;
 	private transient List<RemotePushSupplierProxy> remoteSupplierProxys;
 	
@@ -33,10 +38,10 @@ public class RemotePushConsumerProxyImpl extends AbstractRemoteEventChannel
 				remoteSupplierProxy.remotePush(e);
 			} catch (RemoteException ex) {
 				// Double check and then notify proxy unavailable
-				log.warn("Error was during remotely pushing event to remote supplier proxy. Try to repeat call in 2 sec. proxy: " + remoteSupplierProxy 
+				log.warn("Error was during remotely pushing event to remote supplier proxy. Try to repeat call in" + REPEAT_REMOTE_CALL_SLEEP + " mills. proxy: " + remoteSupplierProxy 
 						+ ". Cause: " + ex.getMessage());				
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(REPEAT_REMOTE_CALL_SLEEP);
 				} catch (InterruptedException ignored) { }
 				
 				try {					

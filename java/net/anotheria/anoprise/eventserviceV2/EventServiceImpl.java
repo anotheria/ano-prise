@@ -37,6 +37,10 @@ public class EventServiceImpl implements EventService {
 
 	private static Logger log = Logger.getLogger(EventServiceImpl.class);
 
+	/**
+	 * Time in mills before request repeating.
+	 */
+	private static final long REPEAT_REMOTE_CALL_SLEEP = 200; 
 	/*
 	* Maps synchronized by modifying only from synchronized methods.
 	*/
@@ -387,10 +391,10 @@ public class EventServiceImpl implements EventService {
 				((RemotePushConsumerProxy) remoteProxy).remoteAdd(exportedProxy);
 			} catch (RemoteException ex) {
 				// Double check and then notify proxy unavailable
-				log.warn("Error was during remotely adding new supplier proxy to existed consumer proxy. Try to repeat call in 2 sec. proxy: " + remoteProxy 
+				log.warn("Error was during remotely adding new supplier proxy to existed consumer proxy. Try to repeat call in " + REPEAT_REMOTE_CALL_SLEEP + " mills. proxy: " + remoteProxy 
 						+ ". Cause: " + ex.getMessage());				
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(REPEAT_REMOTE_CALL_SLEEP);
 				} catch (InterruptedException ignored) { }
 				
 				try {					
