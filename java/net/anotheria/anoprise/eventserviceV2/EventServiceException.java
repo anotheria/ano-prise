@@ -1,7 +1,7 @@
 package net.anotheria.anoprise.eventserviceV2;
 
 /**
- * Exception, thrown by EventService
+ * Exception, thrown by EventService.
  * 
  * @author vkazhdan
  */

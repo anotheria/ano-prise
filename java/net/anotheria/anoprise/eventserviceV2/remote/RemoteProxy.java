@@ -2,7 +2,7 @@ package net.anotheria.anoprise.eventserviceV2.remote;
 
 
 /**
- * Interface for remote proxys (reference)
+ * Interface for remote proxys (used as reference).
  * 
  * @author vkazhdan
  */

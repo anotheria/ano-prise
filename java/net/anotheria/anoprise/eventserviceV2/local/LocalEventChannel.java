@@ -9,7 +9,7 @@ package net.anotheria.anoprise.eventserviceV2.local;
 public interface LocalEventChannel {
 
 	/**
-	 * Get channel name
+	 * Get channel name.
 	 * 
 	 * @return Channel name
 	 */

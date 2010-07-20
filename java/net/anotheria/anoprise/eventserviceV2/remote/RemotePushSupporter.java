@@ -7,7 +7,7 @@ import net.anotheria.anoprise.eventserviceV2.Event;
 
 
 /**
- * Interface for remote event pushing supporters
+ * Interface for remote event pushing supporters.
  * 
  * @author vkazhdan
  */

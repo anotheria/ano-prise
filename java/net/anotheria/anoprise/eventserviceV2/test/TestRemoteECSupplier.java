@@ -12,7 +12,7 @@ import org.apache.log4j.BasicConfigurator;
 
 
 /**
- * Test event channel supplier
+ * Test event channel remote supplier.
  * 
  * @author vkazhdan
  */
@@ -25,11 +25,11 @@ public class TestRemoteECSupplier {
 		BasicConfigurator.configure();
 		
 		// ============ Supplier ================
-		EventService esForSupplier = EventServiceFactory.getEventServiceInstance();
+		EventService eventService = EventServiceFactory.getEventServiceInstance();
 
-		EventChannelForRemotePushSupplier ecForSupplier;
+		EventChannelForRemotePushSupplier eventChannelForSupplier;
 		try {
-			ecForSupplier = esForSupplier.obtainEventChannelForRemotePushSupplier("TestEC");
+			eventChannelForSupplier = eventService.obtainEventChannelForRemotePushSupplier("TestEC");
 		} catch (EventServiceException e) {
 			System.err.println("Can't obtain event channel for remote push supplier. Cause: " + e.getMessage());
 			return;
@@ -39,7 +39,7 @@ public class TestRemoteECSupplier {
 		
 		for (int i = 0; i < 80; i++) {
 			try {
-				ecForSupplier.remotePush(new Event("TestEvent: " + i + " from Supplier_" + supplierId));
+				eventChannelForSupplier.remotePush(new Event("TestEvent: " + i + " from Supplier_" + supplierId));
 				Thread.sleep(8000);
 			} catch (RemoteException e) {			
 				System.err.println("Can't push event to remote push supplier channel. Cause: " + e.getMessage());

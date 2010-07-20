@@ -3,7 +3,7 @@ package net.anotheria.anoprise.eventserviceV2.local;
 
 
 /**
- * Local support factory, to create local proxy objects
+ * Local support factory, to create local proxy objects.
  * 
  * @author vkazhdan
  */
@@ -13,7 +13,7 @@ public class LocalSupportFactory {
 	}
 
 	/**
-	 * Create new LocalPushConsumerProxy implementation for given channel
+	 * Create new LocalPushConsumerProxy implementation for given channel.
 	 * @param channelName
 	 */
 	public static final LocalPushConsumerProxy createLocalPushConsumerProxy(String channelName) {
@@ -21,7 +21,7 @@ public class LocalSupportFactory {
 	}
 	
 	/**
-	 * Create new LocalPushSupplierProxy implementation for given channel
+	 * Create new LocalPushSupplierProxy implementation for given channel.
 	 * @param channelName
 	 */
 	public static final LocalPushSupplierProxy createLocalPushSupplierProxy(String channelName) {

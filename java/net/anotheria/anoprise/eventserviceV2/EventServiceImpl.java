@@ -154,14 +154,16 @@ public class EventServiceImpl implements EventService {
 		initRegistry();
 		
 		if (eventChannel instanceof RemotePushSupplierProxy) {
+			RemotePushSupplierProxy remotePushSupplierProxy = (RemotePushSupplierProxy) eventChannel;
+			
 			// Notify registry
 			try {
-				eventServiceRegistry.notifyRemoteSupplierProxyUnavailable((RemotePushSupplierProxy)eventChannel);
+				eventServiceRegistry.notifyRemoteSupplierProxyUnavailable(remotePushSupplierProxy);
 			} catch (EventServiceRegistryException e) {
 				log.warn("Can't notify registry about RemoteSupplierProxy unavailable. Cause: " + e.getMessage());
 			}
 			
-			// Remote supplier proxy from existed consumer proxys
+			// Remove supplier proxy from existed consumer proxys
 			List<RemoteProxy> remoteConsumerProxies;		
 			try {
 				remoteConsumerProxies = eventServiceRegistry.getRemotePushConsumerProxys(channelName);
@@ -172,7 +174,7 @@ public class EventServiceImpl implements EventService {
 			}
 			for(RemoteProxy remoteProxy : remoteConsumerProxies) {
 				try {
-					((RemotePushConsumerProxy) remoteProxy).remoteRemove((RemotePushSupplierProxy)eventChannel);
+					((RemotePushConsumerProxy) remoteProxy).remoteRemove(remotePushSupplierProxy);
 				} catch (RemoteException e) {
 					log.warn("Can't remove unavailable supplier proxy from existed consumer proxy for channel: " + channelName
 							+ ". Cause: " + e.getMessage());
@@ -180,8 +182,9 @@ public class EventServiceImpl implements EventService {
 			}
 			
 			// Remove proxy locally if exists
-			remotePushSupplierProxies.remove((RemotePushSupplierProxy)eventChannel);
-		}
+			remotePushSupplierProxies.remove(remotePushSupplierProxy);
+			
+		} // if 
 		
 	}
 	
@@ -196,15 +199,35 @@ public class EventServiceImpl implements EventService {
 		initRegistry();
 		
 		if (eventChannel instanceof RemotePushConsumerProxy) {
+			RemotePushConsumerProxy remotePushConsumerProxy = (RemotePushConsumerProxy) eventChannel;
+			
 			// Notify registry
 			try {
-				eventServiceRegistry.notifyRemoteConsumerProxyUnavailable((RemotePushConsumerProxy)eventChannel);
+				eventServiceRegistry.notifyRemoteConsumerProxyUnavailable(remotePushConsumerProxy);
 			} catch (EventServiceRegistryException e) {
 				log.warn("Can't notify registry about RemoteConsumerProxy unavailable. Cause: " + e.getMessage());
 			}
 			
+			// Remove existed supplier proxys from unavailable consumer proxy
+			List<RemoteProxy> remoteSupplierProxies;		
+			try {
+				remoteSupplierProxies = eventServiceRegistry.getRemotePushSupplierProxys(channelName);
+			} catch (EventServiceRegistryException e) {
+				log.warn("Can't remove supplier proxys form unavailable consumer proxy, because can't get supplier proxys for channel: " + channelName
+						+ ". Cause: " + e.getMessage());
+				return;
+			}
+			for(RemoteProxy remoteProxy : remoteSupplierProxies) {
+				try {
+					remotePushConsumerProxy.remoteRemove((RemotePushSupplierProxy) remoteProxy);
+				} catch (RemoteException e) {
+					log.warn("Can't remove supplier proxys form unavailable consumer proxy for channel: " + channelName
+							+ ". This is normal if consumer proxy is physically unavailable. Cause: " + e.getMessage());
+				}
+			}
+			
 			// Remove proxy locally if exists
-			remotePushConsumerProxies.remove((RemotePushConsumerProxy)eventChannel);
+			remotePushConsumerProxies.remove(remotePushConsumerProxy);
 		}
 	}
 
@@ -419,9 +442,8 @@ public class EventServiceImpl implements EventService {
 		// Add new remote proxy to local storage
 		remotePushSupplierProxies.put(channelName, proxy);
 		
-		
 		// Print logs
-		log.info("New remote push supplier proxy for channel created and connected. channelName: " + channelName + " proxy: " + proxy);
+		log.info("New remote push supplier proxy for channel created and connected. channelName: " + channelName + " proxy: " + exportedProxy);
 		logDump();
 		
 		return proxy;

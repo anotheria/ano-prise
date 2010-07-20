@@ -17,7 +17,7 @@ package net.anotheria.anoprise.eventserviceV2;
  * 
  * To remove local consumer impl, simply remove it from obtained EventChannelForXxxPushConsumer.
  * 
- * Internal remote proxies will be removed from the registry automatically when the first time it's unavailability detected
+ * Internal remote proxies will be removed from the registry automatically after the first time it's unavailability will be detected
  * (during remotePush or remote channel obtainment, depending on proxy type).  
  */
 public interface EventService {
@@ -56,11 +56,19 @@ public interface EventService {
 	
 	/**
 	 * Notify that event channel is unavailable anymore.
+	 * 
+	 * It is possible, but not really necessary for remote clients manually use this method to detach thyself,
+	 * because it will be done automatically after the first time it's unavailability will be detected.  
+	 * @param eventChannel EventChannelForRemotePushConsumer
 	 */
 	void notifyEventChannelUnavailable(EventChannelForRemotePushConsumer eventChannel, String channelName);
 	
 	/**
 	 * Notify that event channel is unavailable anymore.
+	 * 
+	 * It is possible, but not really necessary for remote clients manually use this method to detach thyself,
+	 * because it will be done automatically after the first time it's unavailability will be detected.
+	 * @param eventChannel EventChannelForRemotePushSupplier
 	 */
 	void notifyEventChannelUnavailable(EventChannelForRemotePushSupplier eventChannel, String channelName);
 	

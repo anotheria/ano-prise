@@ -13,7 +13,7 @@ import org.apache.log4j.BasicConfigurator;
 
 
 /**
- * Test event channel consumer
+ * Test event channel remote consumer.
  * 
  * @author vkazhdan
  */
@@ -26,12 +26,12 @@ public class TestRemoteECConsumer {
 		BasicConfigurator.configure();
 		
 		// ============ Consumer ================
-		EventService es = EventServiceFactory.getEventServiceInstance();
+		EventService eventService = EventServiceFactory.getEventServiceInstance();
 		
-		EventChannelForRemotePushConsumer eventChannel;
+		EventChannelForRemotePushConsumer eventChannelForConsumer;
 		
 		try {
-			eventChannel = es.obtainEventChannelForRemotePushConsumer("TestEC");
+			eventChannelForConsumer = eventService.obtainEventChannelForRemotePushConsumer("TestEC");
 		} catch (EventServiceException e) {
 			System.err.println("Can't obtain event channel for remote push consumer. Cause: " + e.getMessage());
 			e.printStackTrace();
@@ -41,10 +41,8 @@ public class TestRemoteECConsumer {
 		long consumerId = System.currentTimeMillis();
 		
 		try {
-			eventChannel.remoteAdd(new TestEventServicePushConsumer("PushConsumer_" + consumerId));
+			eventChannelForConsumer.remoteAdd(new TestEventServicePushConsumer("PushConsumer_" + consumerId));
 		} catch (RemoteException ignored) { }			
-		
-		
 	}
 	
 	

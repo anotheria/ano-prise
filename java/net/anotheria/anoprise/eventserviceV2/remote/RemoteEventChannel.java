@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 public interface RemoteEventChannel extends Remote, Serializable {
 
 	/**
-	 * Get channel name
+	 * Get channel name.
 	 * 
 	 * @return Channel name
 	 * @throws RemoteException

@@ -1,7 +1,7 @@
 package net.anotheria.anoprise.eventserviceV2;
 
 /**
- * Proxy types
+ * Proxy types.
  * 
  * @author lrosenberg, vkazhdan
  */

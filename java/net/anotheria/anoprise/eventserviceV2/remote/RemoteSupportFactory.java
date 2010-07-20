@@ -4,7 +4,7 @@ import net.anotheria.anoprise.eventserviceV2.EventService;
 
 
 /**
- * Remote support factory, to create remote proxy objects
+ * Remote support factory, to create remote proxy objects.
  * 
  * @author vkazhdan
  */

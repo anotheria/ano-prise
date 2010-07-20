@@ -3,7 +3,7 @@ package net.anotheria.anoprise.eventserviceV2.registry;
 import net.anotheria.anoprise.metafactory.ServiceFactory;
 
 /**
- * EventService registry factory
+ * EventService registry factory.
  * 
  * @author vkazhdan
  */
