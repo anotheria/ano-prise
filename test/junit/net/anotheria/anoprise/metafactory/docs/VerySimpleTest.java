@@ -23,12 +23,13 @@ public class VerySimpleTest {
 		assertEquals("Expected 4", 4, service.plus(2, 2));
 	}
 	
-	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
+	
+	@org.junit.Test public void testWithMock() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Mock", CalculatorService.class.getName());
 		test();
 	}
 
-	@org.junit.Test public void testWithMock() throws MetaFactoryException{
+	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Impl", CalculatorService.class.getName());
 		test();
 	}
