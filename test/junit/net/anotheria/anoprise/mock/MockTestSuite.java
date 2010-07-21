@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value=Suite.class)
-@SuiteClasses(value={MockTest.class, MockErrorsTest.class} )
+@SuiteClasses(value={MockTest.class, MockErrorsTest.class, SimpleTest.class} )
 public class MockTestSuite {
 
 }

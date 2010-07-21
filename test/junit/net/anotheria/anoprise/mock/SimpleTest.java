@@ -15,18 +15,18 @@ import org.junit.Test;
  * @author lrosenberg.
  *
  */
-public class Test2 {
+public class SimpleTest {
 
+	public static class MyMocking implements Mocking{
+		public String askService(String param){
+			return "Service said: "+param+" accepted.";
+		}
+	}
+	
 	private static TestInterface test;
 	
 	@Before public void initTest(){
-		test = MockFactory.createMock(TestInterface.class, 
-			new Mocking(){
-				public String askService(String param){
-					return "Service said: "+param+" accepted.";
-				}
-			}
-		);
+		test = MockFactory.createMock(TestInterface.class, new MyMocking());
 
 	}
 	
