@@ -1,4 +1,0 @@
-{
-	registryContainerPort: 9229,
-	registryContainerHost: "localhost",
-} 
