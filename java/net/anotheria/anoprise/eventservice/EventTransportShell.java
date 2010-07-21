@@ -39,5 +39,9 @@ public class EventTransportShell implements Serializable{
 	public void setData(byte[] bs) {
 		data = bs;
 	}
+	
+	@Override public String toString(){
+		return (data == null ? "no" : ""+data.length) + " bytes for "+channelName;
+	}
 
 }
