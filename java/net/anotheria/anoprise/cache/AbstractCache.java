@@ -43,7 +43,7 @@ public abstract class AbstractCache implements IStatsProducer{
 		name = aName;
 		
 		stats = new ArrayList<IStats>();
-		cacheStats = new CacheStats(name, Constants.DEFAULT_INTERVALS);
+		cacheStats = new CacheStats(name, Constants.getDefaultIntervals());
 		stats.add(cacheStats);
 		
 		//This block of code is potentially unsafe, but since caches aren't created all the time but only at the start, 
