@@ -19,7 +19,9 @@ public final class DataspacePersistenceConstants {
 	
 	/**
 	 * Table owner.
+	 * @deprecated this constant should be replaced by a setting. 
 	 */
+	@Deprecated
 	public static final String DATASPACE_TABLE_OWNER = "affairo";
 	
 	/**
