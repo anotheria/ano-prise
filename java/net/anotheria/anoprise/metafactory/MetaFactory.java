@@ -189,6 +189,11 @@ public class MetaFactory {
 		addAlias(nameExt.toName(pattern), aliasExtension.toName(pattern));
 	}
 
+	public static <T extends Service> void createOnTheFlyFactory(Class<T> service, Extension extension, T serviceInstance) {
+		OnTheFlyFactory<T> factory = new OnTheFlyFactory<T>(serviceInstance);
+		factories.put(extension.toName(service), factory);
+	}
+
 	public static <T extends Service> void addFactoryClass(Class<T> service, Extension extension, Class<? extends ServiceFactory<T>> factoryClass) {
 		addFactoryClass(extension.toName(service), factoryClass);
 	}
