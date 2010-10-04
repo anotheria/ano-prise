@@ -7,7 +7,6 @@ import net.anotheria.anoprise.eventservice.ProxyType;
 import net.anotheria.util.queue.IQueue;
 import net.anotheria.util.queue.QueueOverflowException;
 import net.anotheria.util.queue.StandardQueueFactory;
-import net.anotheria.util.queue.UnrecoverableQueueOverflowException;
 
 import org.apache.log4j.Logger;
 

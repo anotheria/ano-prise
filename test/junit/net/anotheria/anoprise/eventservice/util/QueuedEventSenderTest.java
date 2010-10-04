@@ -39,11 +39,11 @@ public class QueuedEventSenderTest {
 		
 		while(sender.hasUnsentElements()){
 			System.out.println("Sender "+sender.getStatsString());
-			Thread.currentThread().sleep(100);
+			Thread.sleep(100);
 		}
 		
 		assertEquals(sum, consumer.sum);
-		
+		 
 	}
 	
 	@Ignore @Test public void testForUnrunningQueueOverflow() throws QueueFullException{

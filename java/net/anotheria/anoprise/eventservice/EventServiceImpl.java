@@ -63,7 +63,6 @@ public class EventServiceImpl implements EventService {
 	public synchronized EventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
 		EventChannel ret = null;
 		log.debug("Creating event channel: " + channelName + " of type " + proxyType);
-		int triesNotifyChannelCreationCount = 10;
 		switch (proxyType) {
 			case PUSH_CONSUMER_PROXY:
 				ret = _obtainPushConsumerProxy(channelName);
@@ -85,7 +84,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private EventChannel _obtainRemoteConsumerProxy(String channelName) {
-		RemoteEventChannelConsumerProxy proxy = (RemoteEventChannelConsumerProxy) remoteConsumerProxies.get(channelName);
+		RemoteEventChannelConsumerProxy proxy = remoteConsumerProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
 		proxy = createRemoteConsumerProxy(channelName);
@@ -94,7 +93,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private EventChannel _obtainPushConsumerProxy(String channelName) {
-		EventChannelPushConsumerProxy proxy = (EventChannelPushConsumerProxy) pushConsumerProxies.get(channelName);
+		EventChannelPushConsumerProxy proxy = pushConsumerProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
 		proxy = createPushConsumerProxy(channelName);
@@ -104,7 +103,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private EventChannel _obtainPushSupplierProxy(String channelName) {
-		EventChannelPushSupplierProxy proxy = (EventChannelPushSupplierProxy) pushSupplierProxies.get(channelName);
+		EventChannelPushSupplierProxy proxy = pushSupplierProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
 		proxy = createPushSupplierProxy(channelName);
@@ -170,24 +169,24 @@ public class EventServiceImpl implements EventService {
 
 	private List<EventChannelConsumerProxy> getConsumerProxies(String channelName) {
 		List<EventChannelConsumerProxy> ret = new ArrayList<EventChannelConsumerProxy>();
-		EventChannelConsumerProxy pushConsumerProxy = (EventChannelConsumerProxy) pushConsumerProxies.get(channelName);
-		if (pushConsumerProxy != null)
+		EventChannelConsumerProxy pushConsumerProxy = pushConsumerProxies.get(channelName);
+		if (pushConsumerProxy != null) 
 			ret.add(pushConsumerProxy);
 
-		EventChannelConsumerProxy remoteConsumerProxy = (EventChannelConsumerProxy) remoteConsumerProxies.get(channelName);
+		EventChannelConsumerProxy remoteConsumerProxy = remoteConsumerProxies.get(channelName);
 		if (remoteConsumerProxy != null)
 			ret.add(remoteConsumerProxy);
-
+ 
 		return ret;
 	}
 
 	private List<EventChannelSupplierProxy> getSupplierProxies(String channelName) {
 		List<EventChannelSupplierProxy> ret = new ArrayList<EventChannelSupplierProxy>();
-		EventChannelSupplierProxy pushSupplierProxy = (EventChannelSupplierProxy) pushSupplierProxies.get(channelName);
+		EventChannelSupplierProxy pushSupplierProxy = pushSupplierProxies.get(channelName);
 		if (pushSupplierProxy != null)
 			ret.add(pushSupplierProxy);
 
-		EventChannelSupplierProxy remoteSupplierProxy = (EventChannelSupplierProxy) remoteSupplierProxies.get(channelName);
+		EventChannelSupplierProxy remoteSupplierProxy = remoteSupplierProxies.get(channelName);
 		if (remoteSupplierProxy != null)
 			ret.add(remoteSupplierProxy);
 
