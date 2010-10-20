@@ -50,7 +50,7 @@ public class QueuedEventSender extends Thread {
 	 * Default queue size if not specified in constructor.
 	 */
 	public static final int DEF_QUEUE_SIZE = 1000;
-	private long sleepTime;
+//	private long sleepTime;
 	/**
 	 * Number of queue overflows.
 	 */
@@ -75,7 +75,7 @@ public class QueuedEventSender extends Thread {
 			defLogger.warn("Tried to assign null logger, switching to defLogger");
 			log = defLogger;
 		}
-		sleepTime = aSleepTime;
+//		sleepTime = aSleepTime;
 	}
 
 	public QueuedEventSender(String aName, String channelName, int queueSize, long aSleepTime, Logger aLog ){
