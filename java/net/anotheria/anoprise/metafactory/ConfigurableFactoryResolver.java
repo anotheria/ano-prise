@@ -41,7 +41,10 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 			ConfigurationManager.INSTANCE.configure(resolver);
 		} catch (IllegalArgumentException e) {
 			LOG.warn("create() - no factory config found, configurable resolver remains unused.");
+		}catch(RuntimeException e){
+			LOG.warn("create() - couldn't find factories.json file, probably packed in a jar, ignored.", e);
 		}
+		
 		return resolver;
 	}
 

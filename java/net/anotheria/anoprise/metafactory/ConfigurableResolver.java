@@ -1,5 +1,6 @@
 package net.anotheria.anoprise.metafactory;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +42,8 @@ public class ConfigurableResolver implements AliasResolver {
 			ConfigurationManager.INSTANCE.configure(resolver);
 		}catch(IllegalArgumentException e){
 			log.warn("create() - no factory config found, configurable resolver remains unused.");
+		}catch(RuntimeException e){
+			log.warn("create() - couldn't find aliases.json file, probably packed in a jar, ignored.", e);
 		}
 		return resolver;
 	}
