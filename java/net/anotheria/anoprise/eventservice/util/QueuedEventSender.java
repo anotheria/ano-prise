@@ -50,7 +50,8 @@ public class QueuedEventSender extends Thread {
 	 * Default queue size if not specified in constructor.
 	 */
 	public static final int DEF_QUEUE_SIZE = 1000;
-//	private long sleepTime;
+	
+	private long sleepTime;
 	/**
 	 * Number of queue overflows.
 	 */
@@ -75,7 +76,7 @@ public class QueuedEventSender extends Thread {
 			defLogger.warn("Tried to assign null logger, switching to defLogger");
 			log = defLogger;
 		}
-//		sleepTime = aSleepTime;
+		sleepTime = aSleepTime;
 	}
 
 	public QueuedEventSender(String aName, String channelName, int queueSize, long aSleepTime, Logger aLog ){
@@ -103,20 +104,20 @@ public class QueuedEventSender extends Thread {
 		try{
 			queue.putElement(event);
 		}catch(QueueOverflowException e1){
-//			overflowCount++;
-//			//ok, first exception, we try to recover
-//			synchronized (this){
-//				try{
-//					Thread.sleep(sleepTime);
-//				}catch(Exception ignored){}
-//			}
-//			try{
-//				queue.putElement(event);
-//			}catch(QueueOverflowException e2){
+			overflowCount++;
+			//ok, first exception, we try to recover
+			synchronized (this){
+				try{
+					Thread.sleep(sleepTime);
+				}catch(Exception ignored){}
+			}
+			try{
+				queue.putElement(event);
+			}catch(QueueOverflowException e2){
 				throwAwayCount++;
 				log.error("couldn't recover from queue overflow, throwing away "+event);
 				throw new QueueFullException(event,"Stats:"+getStatsString());
-//			}
+			}
 			
 		}
 	}
