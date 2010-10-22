@@ -18,7 +18,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	/**
 	 * Logger.
 	 */
-	private Logger logger = DEFAULT_LOGGER;
+	private Logger logger;
 
 	/**
 	 * Default queue size.
@@ -28,7 +28,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	/**
 	 * Queue size.
 	 */
-	private int queueSize = DEF_QUEUE_SIZE;
+	private int queueSize;
 
 	/**
 	 * Default sleep time.
@@ -38,7 +38,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	/**
 	 * Queue sleep time.
 	 */
-	private long sleepTime = DEF_SLEEP_TIME;
+	private long sleepTime;
 
 	/**
 	 * Receiver name.
@@ -81,19 +81,9 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	 *            - receiver name
 	 * @param aChannelName
 	 *            - event channel name
-	 * @param aQueueSize
-	 *            - queue size
-	 * @param aSleepTime
-	 *            - queue sleep time
-	 * @param aLog
-	 *            - logger
 	 */
-	public QueuedEventReceiver(String aName, String aChannelName, EventServicePushConsumer aEventConsumer, int aQueueSize, long aSleepTime, Logger aLogger) {
-		this(aName, aChannelName, aEventConsumer, aQueueSize, aSleepTime);
-		if (aLogger == null)
-			throw new IllegalArgumentException("Logger must be not null");
-
-		this.logger = aLogger;
+	public QueuedEventReceiver(String aName, String aChannelName, EventServicePushConsumer aEventConsumer) {
+		this(aName, aChannelName, aEventConsumer, DEF_QUEUE_SIZE, DEF_SLEEP_TIME);
 	}
 
 	/**
@@ -109,9 +99,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	 *            - queue sleep time
 	 */
 	public QueuedEventReceiver(String aName, String aChannelName, EventServicePushConsumer aEventConsumer, int aQueueSize, long aSleepTime) {
-		this(aName, aChannelName, aEventConsumer);
-		this.queueSize = aQueueSize;
-		this.sleepTime = aSleepTime;
+		this(aName, aChannelName, aEventConsumer, aQueueSize, aSleepTime, DEFAULT_LOGGER);
 	}
 
 	/**
@@ -121,8 +109,14 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	 *            - receiver name
 	 * @param aChannelName
 	 *            - event channel name
+	 * @param aQueueSize
+	 *            - queue size
+	 * @param aSleepTime
+	 *            - queue sleep time
+	 * @param aLog
+	 *            - logger
 	 */
-	public QueuedEventReceiver(String aName, String aChannelName, EventServicePushConsumer aEventConsumer) {
+	public QueuedEventReceiver(String aName, String aChannelName, EventServicePushConsumer aEventConsumer, int aQueueSize, long aSleepTime, Logger aLogger) {
 		super(aName);
 		setDaemon(true);
 		if (aName == null)
@@ -134,9 +128,15 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 		if (aEventConsumer == null)
 			throw new IllegalArgumentException("Event consumer name must be not null");
 
+		if (aLogger == null)
+			throw new IllegalArgumentException("Logger must be not null");
+
 		this.name = aName;
 		this.channelName = aChannelName;
 		this.eventConsumer = aEventConsumer;
+		this.queueSize = aQueueSize;
+		this.sleepTime = aSleepTime;
+		this.logger = aLogger;
 		this.queue = new StandardQueueFactory<Event>().createQueue(queueSize);
 	}
 
