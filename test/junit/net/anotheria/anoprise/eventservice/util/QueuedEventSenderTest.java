@@ -22,7 +22,7 @@ public class QueuedEventSenderTest {
 		}
 	}
 	
-	@Test public void testSimplePushOperations() throws QueueFullException, InterruptedException{
+	@Ignore @Test public void testSimplePushOperations() throws QueueFullException, InterruptedException{
 		//init consumer
 		String channelName = IdCodeGenerator.generateCode();
 		QueuedEventSenderConsumer consumer = new QueuedEventSenderConsumer();
