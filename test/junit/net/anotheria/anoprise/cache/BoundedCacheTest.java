@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import static net.anotheria.anoprise.cache.CacheTestSuite.MAX_SIZE;
+import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -9,8 +9,11 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Test;
+
 
 public class BoundedCacheTest {
+	@Test
 	public static void testBasicFunctionality(BoundedCache<Integer, String> cache) throws Exception{
 		
 		for (int i=0; i<MAX_SIZE; i++){
@@ -47,6 +50,7 @@ public class BoundedCacheTest {
 		
 	}
 	
+	@Test
 	public static void testOverwrite(BoundedCache<Integer, String> cache) throws Exception{
 		for (int i=0; i<MAX_SIZE; i++){
 			cache.offer(i,""+i);
@@ -70,9 +74,10 @@ public class BoundedCacheTest {
 
 	}
 
+	@Test
 	public static void tryToCorruptInternalStructures(final BoundedCache<Integer, String> cache) throws Exception{
-		final int parallelThreadCount = CacheTestSuite.PARALLEL_THREAD_COUNT;
-		final int operationCount = CacheTestSuite.REPETITION_COUNT;
+		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
+		final int operationCount = CacheTestSettings.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
 		final CountDownLatch stopLatch = new CountDownLatch(parallelThreadCount);
 		
@@ -160,8 +165,8 @@ public class BoundedCacheTest {
 	}
 	
 	public static void writeCompetion(final BoundedCache<Integer, String> cache) throws Exception{
-		final int parallelThreadCount = CacheTestSuite.PARALLEL_THREAD_COUNT;
-		final int operationCount = CacheTestSuite.REPETITION_COUNT;
+		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
+		final int operationCount = CacheTestSettings.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
 		final CountDownLatch stopLatch = new CountDownLatch(parallelThreadCount);
 		

@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import static net.anotheria.anoprise.cache.CacheTestSuite.MAX_SIZE;
+import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
 
 import org.apache.log4j.BasicConfigurator;
 import org.junit.BeforeClass;

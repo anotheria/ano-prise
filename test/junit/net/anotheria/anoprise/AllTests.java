@@ -1,6 +1,6 @@
 package net.anotheria.anoprise;
 
-import net.anotheria.anoprise.cache.CacheTestSuite;
+import net.anotheria.anoprise.cache.CacheTestSettings;
 import net.anotheria.anoprise.dataspace.fixture.DataspaceServiceFixtureImplTest;
 import net.anotheria.anoprise.dualcrud.DualCrudTestSuite;
 import net.anotheria.anoprise.eventservice.EventServiceTestSuite;
@@ -15,7 +15,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value={
-		CacheTestSuite.class,
+		CacheTestSettings.class,
 		DualCrudTestSuite.class,
 		EventServiceTestSuite.class,
 		FSServiceTestSuite.class, 
