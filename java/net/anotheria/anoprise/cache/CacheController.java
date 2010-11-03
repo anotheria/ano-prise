@@ -33,6 +33,11 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * Cache max size.
 	 */
 	@Configure private int maxSize;
+	
+	/**
+	 * Class for the configuration factory.
+	 */
+	@Configure private String factoryClazz;
 	 
 	/**
 	 * CacheOn value previous to a reconfigure.
@@ -94,6 +99,14 @@ public class CacheController<K,V> implements Cache<K,V>{
 	}
 	
 	/**
+	 * Creates a new CacheController with a configuration name and a cache factory.
+	 * @param aConfigurationName the name to configure with.
+	 */
+	public CacheController(String aConfigurationName){
+		this(aConfigurationName, null);
+	}
+
+	/**
 	 * Called before first configuration.
 	 */
 	@BeforeInitialConfiguration public void preInit(){
@@ -104,6 +117,22 @@ public class CacheController<K,V> implements Cache<K,V>{
 	
 	
 	private void init(){
+		
+		if (factory==null){
+			try{
+				factory = (CacheFactory<K,V>)Class.forName(factoryClazz).newInstance();
+			}catch(ClassNotFoundException e){
+				log.fatal("can't init cache", e);
+				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());
+			} catch (InstantiationException e) {
+				log.fatal("can't init cache", e);
+				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());
+			} catch (IllegalAccessException e) {
+				log.fatal("can't init cache", e);
+				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());
+			}
+		}
+		
 		log.debug("reiniting cache for "+configurationName);
 		if (!cacheOn){
 			if (prevCacheOn){
@@ -124,6 +153,8 @@ public class CacheController<K,V> implements Cache<K,V>{
 					}else{
 						log.warn("Cache is null, when it shouldn't be.");
 					}
+					if (factory==null)
+						throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 					cache = factory.create(configurationName, startSize, maxSize);
 				}
 			}else{
@@ -134,6 +165,8 @@ public class CacheController<K,V> implements Cache<K,V>{
 	}
 	
 	protected Cache<K,V> createCache(int aStartSize, int aMaxSize){
+		if (factory==null)
+			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		return factory.create(configurationName, aStartSize, aMaxSize);
 	}
 	
@@ -229,5 +262,9 @@ public class CacheController<K,V> implements Cache<K,V>{
 	
 	protected int getMaxSize(){
 		return maxSize;
+	}
+
+	public void setFactoryClazz(String factoryClazz) {
+		this.factoryClazz = factoryClazz;
 	}
 }

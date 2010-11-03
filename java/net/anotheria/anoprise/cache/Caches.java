@@ -64,6 +64,13 @@ public final class Caches {
 		return controller;
 	}
 	
+	public static final <K,V> Cache<K,V> createConfigurableCache(String name){
+		CacheController<K, V> controller = new CacheController<K, V>(name);
+		ConfigurationManager.INSTANCE.configureAs(controller, name);
+		return controller;
+		
+	}
+	
 	/*
 	public static final <K,V> Cache<K,V> createConfigurableHardwiredExpiringCache(String name){
 		Cache<K,CachedObjectWrapper<V>> underlyingCache = createHardwiredCache(name, startSize, maxSize);
