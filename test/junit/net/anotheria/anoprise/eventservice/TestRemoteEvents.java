@@ -1,7 +1,7 @@
 package net.anotheria.anoprise.eventservice;
 
 import static org.junit.Assert.assertEquals;
-import net.anotheria.anoprise.eventservice.TestLocalEvents.TestConsumer;
+import net.anotheria.anoprise.eventservice.LocalEventsTest.TestConsumer;
 import net.anotheria.anoprise.eventservice.remote.RemoteSupplierFactory;
 
 import org.junit.Test;

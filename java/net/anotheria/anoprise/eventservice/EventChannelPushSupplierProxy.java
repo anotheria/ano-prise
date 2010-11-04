@@ -36,7 +36,7 @@ public class EventChannelPushSupplierProxy extends AbstractEventChannel
 			if (localOnly && (!proxy.isLocal())){
 				log.debug("Skiping proxy: "+proxy);
 			}else{
-				log.debug("delivering to proxy: "+proxy);
+				//log.debug("delivering to proxy: "+proxy);
 				try{
 					proxy.pushEvent(e); 
 				}catch(Exception ex){

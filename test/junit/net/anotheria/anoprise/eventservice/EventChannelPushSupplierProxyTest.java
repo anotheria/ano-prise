@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TestEventChannelPushSupplierProxy {
+public class EventChannelPushSupplierProxyTest {
 	@Test public void testOmmitedFunctionallity(){
 		EventChannelPushSupplierProxy p = new EventChannelPushSupplierProxy("foo");
 		try{

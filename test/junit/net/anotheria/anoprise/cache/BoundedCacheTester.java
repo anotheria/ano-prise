@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
-public class BoundedCacheTest {
-	@Test
+public class BoundedCacheTester {
 	public static void testBasicFunctionality(BoundedCache<Integer, String> cache) throws Exception{
 		
 		for (int i=0; i<MAX_SIZE; i++){
@@ -50,7 +50,6 @@ public class BoundedCacheTest {
 		
 	}
 	
-	@Test
 	public static void testOverwrite(BoundedCache<Integer, String> cache) throws Exception{
 		for (int i=0; i<MAX_SIZE; i++){
 			cache.offer(i,""+i);
@@ -74,7 +73,6 @@ public class BoundedCacheTest {
 
 	}
 
-	@Test
 	public static void tryToCorruptInternalStructures(final BoundedCache<Integer, String> cache) throws Exception{
 		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
 		final int operationCount = CacheTestSettings.REPETITION_COUNT;

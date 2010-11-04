@@ -6,7 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TestLocalEvents {
+public class LocalEventsTest {
+	
+	private String CHANNEL_NAME = "localTestPush";
 	
 	@Test public void testPush(){
 		EventService service = EventServiceFactory.createEventService();
@@ -14,7 +16,7 @@ public class TestLocalEvents {
 		TestConsumer t1 = new TestConsumer();
 		TestConsumer t2 = new TestConsumer();
 		
-		EventChannel testPushForSupplier = service.obtainEventChannel("testPush", ProxyType.PUSH_SUPPLIER_PROXY);
+		EventChannel testPushForSupplier = service.obtainEventChannel(CHANNEL_NAME, ProxyType.PUSH_SUPPLIER_PROXY);
 		for (int i=0; i<10; i++){
 			Event e = new Event(""+i);
 			testPushForSupplier.push(e);
@@ -23,7 +25,7 @@ public class TestLocalEvents {
 		assertEquals(0, t1.getEventCount());
 		assertEquals(0, t2.getEventCount());
 		
-		service.obtainEventChannel("testPush", t1).addConsumer(t1);
+		service.obtainEventChannel(CHANNEL_NAME, t1).addConsumer(t1);
 		
 		for (int i=0; i<10; i++){
 			Event e = new Event(""+i);
@@ -33,7 +35,7 @@ public class TestLocalEvents {
 		assertEquals(10, t1.getEventCount());
 		assertEquals(0, t2.getEventCount());
 
-		service.obtainEventChannel("testPush", t2).addConsumer(t2);
+		service.obtainEventChannel(CHANNEL_NAME, t2).addConsumer(t2);
 		
 		for (int i=0; i<10; i++){
 			Event e = new Event(""+i);
@@ -56,14 +58,14 @@ public class TestLocalEvents {
 		TestConsumer t2 = new TestConsumer();
 		final TestSupplier[] suppliers = new TestSupplier[parallelThreadCount];
 		
-		service.obtainEventChannel("testPush", t1).addConsumer(t1);
-		service.obtainEventChannel("testPush", t2).addConsumer(t2);
+		service.obtainEventChannel(CHANNEL_NAME, t1).addConsumer(t1);
+		service.obtainEventChannel(CHANNEL_NAME, t2).addConsumer(t2);
 		
 		final CountDownLatch startLatch = new CountDownLatch(1);
 		final CountDownLatch stopLatch = new CountDownLatch(parallelThreadCount);
 
 		for (int i=0; i<parallelThreadCount; i++){
-			final TestSupplier ts = new TestSupplier(service, "testPush", numberOfEvents);; 
+			final TestSupplier ts = new TestSupplier(service, CHANNEL_NAME, numberOfEvents);; 
 			suppliers[i] = ts;
 			Thread t = new Thread(){
 				public void run(){

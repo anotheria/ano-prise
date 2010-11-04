@@ -4,7 +4,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static junit.framework.Assert.*;
 
-public class ConfigurableResolverTest {
+public class ConfigurableResolverStTst {
 	
 	private static ConfigurableResolver resolver;
 	

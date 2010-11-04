@@ -7,7 +7,7 @@ import java.util.List;
 import net.anotheria.anoprise.mock.TestService;
 import org.junit.Before;
 import org.junit.Test;
-public class MetaFactoryTest {
+public class MetaFactoryStTst {
 	
 	@Before public void reinit(){
 		MetaFactory.reset();

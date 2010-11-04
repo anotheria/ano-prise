@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value=Suite.class)
-@SuiteClasses(value={MetaFactoryTest.class, ConfigurableResolverTest.class, VerySimpleTest.class, VerySimpleTestWithExtensions.class} )
+@SuiteClasses(value={MetaFactoryStTst.class, ConfigurableResolverStTst.class, VerySimpleTest.class, VerySimpleTestWithExtensions.class} )
 public class MetaFactoryTestSuite {
 	@BeforeClass public static void setConfigureMe(){
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "junit"));

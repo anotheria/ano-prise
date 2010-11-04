@@ -3,7 +3,7 @@ package net.anotheria.anoprise.eventservice;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TestEventChannelPushConsumerProxy {
+public class EventChannelPushConsumerProxyTest {
 	 @Test public void addWrongConsumer(){
 		 EventChannelPushConsumerProxy proxy = new EventChannelPushConsumerProxy("foo");
 		 try{
@@ -60,7 +60,9 @@ public class TestEventChannelPushConsumerProxy {
 		 try{
 			 proxy.push(new Event());
 			 fail("exception expected");
-		 }catch(Exception e){}
+		 }catch(Exception e){
+			 e.printStackTrace();
+		 }
 	 }
 
 	 public static class Consumer implements EventServiceConsumer{
