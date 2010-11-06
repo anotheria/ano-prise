@@ -1,6 +1,5 @@
 package net.anotheria.anoprise.metafactory;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +21,7 @@ public class ConfigurableResolver implements AliasResolver {
 	private Map<String,String> aliasMap;
 
 	/**
-	 * Resolver priority among resolver list.
+	 * Resolver priority among resolver list. 
 	 */
 	private int priority;
 

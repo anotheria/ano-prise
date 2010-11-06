@@ -9,10 +9,6 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-
 public class BoundedCacheTester {
 	public static void testBasicFunctionality(BoundedCache<Integer, String> cache) throws Exception{
 		

@@ -115,12 +115,13 @@ public class CacheController<K,V> implements Cache<K,V>{
 		prevMaxSize = -1;
 	}
 	
-	
 	private void init(){
 		
 		if (factory==null){
 			try{
-				factory = (CacheFactory<K,V>)Class.forName(factoryClazz).newInstance();
+				@SuppressWarnings("unchecked")
+				CacheFactory<K,V> newFactory = (CacheFactory<K,V>)Class.forName(factoryClazz).newInstance(); 
+				factory = newFactory;
 			}catch(ClassNotFoundException e){
 				log.fatal("can't init cache", e);
 				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());

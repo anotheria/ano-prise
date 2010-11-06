@@ -205,7 +205,7 @@ public class MetaFactory {
 
 	public static <T extends Service> void addFactoryClass(String name, Class<? extends ServiceFactory<T>> factoryClass) {
 		factoryClasses.put(name, factoryClass);
-	}
+	} 
 
 	/**
 	 * Used for debug output.

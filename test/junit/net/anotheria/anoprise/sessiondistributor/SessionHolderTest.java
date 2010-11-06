@@ -9,7 +9,7 @@ public class SessionHolderTest {
 	@Test public void testExpiry() throws Exception{
 		SessionHolder h = new SessionHolder(null, null);
 		assertFalse(h.isExpiredForAge(100));
-		Thread.currentThread().sleep(200);
+		Thread.sleep(200);
 		assertTrue(h.isExpiredForAge(100));
 	}
 }

@@ -28,7 +28,7 @@ public class MetaFactoryStTst {
 		
 		System.setProperty(SystemPropertyResolver.PROPERTY_PREFIX+"test", "a_system_property");
 		assertEquals("a_system_property.91", MetaFactory.resolveAlias("test"));
-		
+	 	
 	}
 	
 	@Test

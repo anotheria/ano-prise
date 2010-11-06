@@ -20,3 +20,4 @@ public interface AliasResolver {
 	 */
 	int getPriority();
 }
+ 
