@@ -15,11 +15,6 @@
   <dependencies>
 	<dependency>
 		<groupId>net.anotheria</groupId>
-		<artifactId>ano-util</artifactId>
-		<version>1.0.0</version>
-	</dependency>
-	<dependency>
-		<groupId>net.anotheria</groupId>
 		<artifactId>ano-db</artifactId>
 		<version>1.0.0</version>
 	</dependency>
@@ -37,6 +32,12 @@
 	  <groupId>net.anotheria</groupId>
 	  <artifactId>moskito-util</artifactId>
 	  <version>1.0.0</version>
+	</dependency>
+	<dependency>
+		<groupId>net.anotheria</groupId>
+		<artifactId>ano-util</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+		<scope>compile</scope>
 	</dependency>
   </dependencies>
 
