@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 /**
  * Processor to perform same type work under elements that arrives in non
  * deterministic time intervals. Each new element added the queue where it will
- * wait until until processor channel is available.
+ * wait until processor async channel is available to perform the work.
  * 
  * This is the implementation of QueueingSystem model.
  * 
