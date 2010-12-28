@@ -72,6 +72,19 @@ public class DualCrudConfig {
 		return config;
 	}
 	
+	public static final DualCrudConfig migrateOnTheFlyButMaintainBoth(){
+		DualCrudConfig config = new DualCrudConfig();
+
+		config.migrationDirection = Direction.LEFTTORIGHT;
+		config.readFromBoth = true;
+		config.migrateOnRead = true;
+		config.migrateOnWrite = false;
+		config.writeToBoth = true;
+		config.deleteUponMigration = false;
+		
+		return config;
+	}
+
 	public static final DualCrudConfig migrateBackOnTheFly(){
 		DualCrudConfig config = migrateOnTheFly();
 		config.migrationDirection = Direction.RIGHTTOLEFT;
