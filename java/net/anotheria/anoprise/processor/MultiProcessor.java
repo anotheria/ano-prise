@@ -9,6 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+/**
+ * @author denis
+ *
+ * @param <T>
+ */
 public class MultiProcessor<T>{
 	
 	/**
@@ -28,9 +33,19 @@ public class MultiProcessor<T>{
 	 */
 	private PackageWorker<T> worker;
 	
-	List<WorkProcessingListener<T>> listeners;
+	private List<WorkProcessingListener<T>> listeners;
+
+	
+	/**
+	 * Logger for errors caught from worker.
+	 */
+	private Logger packageProcessErrorsLog = Logger.getLogger(MultiProcessor.class);
 	
 	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker){
+		this(aChannelsNumber, aWorker, null);
+	}
+	
+	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker, Logger aPackageProcessErrorsLog){
 		channelsNumber = aChannelsNumber;
 		executorsPool = new ThreadPoolExecutor(aChannelsNumber, aChannelsNumber, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(aChannelsNumber * 2){
 			private static final long serialVersionUID = 1L;
@@ -47,11 +62,12 @@ public class MultiProcessor<T>{
 		});
 		worker = aWorker; 
 		listeners = new CopyOnWriteArrayList<WorkProcessingListener<T>>();
+		packageProcessErrorsLog = aPackageProcessErrorsLog;
 	}
 	
 	
 	public void process(final List<T> elementsPackage){
-		
+
 		executorsPool.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -60,10 +76,14 @@ public class MultiProcessor<T>{
 					long workingStart = System.nanoTime();
 					worker.doWork(elementsPackage);
 					fireWorkFinished(elementsPackage, System.nanoTime() - workingStart);
-				} catch (Exception e) {
-					fireWorkInterrupted(elementsPackage);
-//					stats.addError();
-					log.error("Failure while working under element: ", e);
+				} catch (Throwable t) {
+					try {
+						fireWorkInterrupted(elementsPackage);
+						log.error("Failure while working under element: ", t);
+					} catch (Exception e) {
+						System.out.println(QueuedMultiProcessor.class + " Can't log!!!");
+						t.printStackTrace();
+					}
 				}
 			}
 		});

@@ -1,7 +1,7 @@
 package net.anotheria.anoprise.queue;
 
 /**
- * A factory for a queue.
+ * The factory interface for a queue.
  * @author lrosenberg
  *
  * @param <T>

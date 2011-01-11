@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import net.anotheria.anoprise.queue.BoundedFifoQueueFactory;
 import net.anotheria.anoprise.queue.EnterpriseQueue;
 import net.anotheria.anoprise.queue.EnterpriseQueueFactory;
-import net.anotheria.anoprise.queue.UnrecoverableQueueOverflowException;
 import net.anotheria.util.ThreadUtils;
 import net.java.dev.moskito.core.predefined.QueueStats;
 import net.java.dev.moskito.core.predefined.QueuingSystemStats;
@@ -30,8 +29,8 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * The log for this processor.
 	 */
-	private static final Logger log = Logger.getLogger(QueuedMultiProcessor.class);
-
+	private Logger log;
+	
 	/**
 	 * The factory for creating queues.
 	 */
@@ -66,6 +65,9 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * Creates a new QueuedProcessor. This is the standard constructor used by
 	 * all other constructors.
 	 * 
+	 * NOTE: instead of direct call of this constructor it is recommended to use
+	 * QueuedMultiProcessorBuilder to create new QueuedProcessor
+	 * 
 	 * @param aName
 	 *            name of the processor.
 	 * @param aWorker
@@ -77,12 +79,14 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * @param aSleepTime
 	 *            sleep time in case of an overflow.
 	 * @param aLog
-	 *            logger for output.
+	 *            logger for output. If null default will be used.
 	 */
-	QueuedMultiProcessor(String aName, PackageWorker<T> aWorker, EnterpriseQueueFactory<T> aQueueFactory, int aQueueSize, int aProcessingChannels, long aSleepTime) {
+	public QueuedMultiProcessor(String aName, PackageWorker<T> aWorker, EnterpriseQueueFactory<T> aQueueFactory, int aQueueSize, int aProcessingChannels, long aSleepTime, Logger aLog) {
 		super(aName);
 		setDaemon(true);
 
+		log = aLog != null? aLog: Logger.getLogger(QueuedMultiProcessor.class);
+		
 		stats = new QueuingSystemStats(aName);
 		stats.setServersSize(aProcessingChannels);
 		stats.setQueueSize(aQueueSize);

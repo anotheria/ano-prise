@@ -1,7 +1,8 @@
 package net.anotheria.anoprise.queue;
 
 /**
- * TODO please remind dmetelin to comment this class
+ * Means that at the moment of trying to dequeue an element from a queue it was
+ * empty
  * 
  * @author dmetelin
  */

@@ -11,7 +11,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.anotheria.anoprise.queue.UnrecoverableQueueOverflowException;
 import net.anotheria.util.ThreadUtils;
 
 import org.apache.log4j.BasicConfigurator;
@@ -48,7 +47,7 @@ public class QueuedMultiProcessorTest {
 		CountDownLatch worksDoneLatch = new CountDownLatch(REQUESTS);
 		TestWorker worker = new TestWorker(worksDoneLatch);
 		
-		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder().setQueueSize(QUEUE_SIZE).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("dontWaitTest", worker);
+		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder<Integer>().setQueueSize(QUEUE_SIZE).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("dontWaitTest", worker);
 		processor.start();
 		
 		int fails = 0;
@@ -66,14 +65,14 @@ public class QueuedMultiProcessorTest {
 		assertTrue(fails > 0);
 		assertEquals(REQUESTS - fails, elementCount.get());
 		assertEquals(0, worksRegression.size());
-		System.out.println("STATS dontWaitTest: " + processor.getStatsString());
+//		System.out.println("STATS dontWaitTest: " + processor.getStatsString());
 	} 
 	
 	@Test public void waitTest() throws Exception{
 		CountDownLatch worksDoneLatch = new CountDownLatch(REQUESTS);
 		TestWorker worker = new TestWorker(worksDoneLatch);
 		
-		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder().setQueueSize(10).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("waitTest", worker);
+		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder<Integer>().setQueueSize(10).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("waitTest", worker);
 		processor.start();
 		
 		for(int i = 0; i < REQUESTS; i++){
@@ -84,7 +83,7 @@ public class QueuedMultiProcessorTest {
 		worksDoneLatch.await(30, TimeUnit.SECONDS);
 		assertEquals(REQUESTS, elementCount.get());
 		assertEquals(0, worksRegression.size());
-		System.out.println("STATS waitTest: " + processor.getStatsString());
+//		System.out.println("STATS waitTest: " + processor.getStatsString());
 	} 
 	
 	
@@ -98,7 +97,7 @@ public class QueuedMultiProcessorTest {
 			}
 		};		
 		
-		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder().setQueueSize(10).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("queueOverflowTest", worker);
+		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder<Integer>().setQueueSize(10).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("queueOverflowTest", worker);
 		processor.start();
 		
 		for(int i = 0; i < 200; i++){

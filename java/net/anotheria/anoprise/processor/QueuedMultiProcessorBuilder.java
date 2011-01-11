@@ -5,6 +5,8 @@ import java.util.List;
 import net.anotheria.anoprise.queue.BoundedFifoQueueFactory;
 import net.anotheria.anoprise.queue.EnterpriseQueueFactory;
 
+import org.apache.log4j.Logger;
+
 /**
  * 
  * Use this class to build new QueuedMultiProcessor. If some processor
@@ -20,7 +22,7 @@ import net.anotheria.anoprise.queue.EnterpriseQueueFactory;
  * @author dmetelin
  * 
  */
-public class QueuedMultiProcessorBuilder {
+public class QueuedMultiProcessorBuilder<E>{
 
 	/**
 	 * Default time to sleep.
@@ -31,19 +33,20 @@ public class QueuedMultiProcessorBuilder {
 	 */
 	public static final int DEF_QUEUE_SIZE = 1000;
 
-	@SuppressWarnings("unchecked")
-	public static final Class<? extends EnterpriseQueueFactory> DEF_QUEUE_FACTORY_CLASS = BoundedFifoQueueFactory.class;
+	public static final Class<?> DEF_QUEUE_FACTORY_CLASS = BoundedFifoQueueFactory.class;
 
 	public static final int DEF_PROCESSOR_CHANNELS = 10;
 
+	private long sleepTime;
+
 	private int queueSize;
 
-	@SuppressWarnings("unchecked")
-	private Class<EnterpriseQueueFactory> queueFactoryClass;
+	private Class<EnterpriseQueueFactory<E>> queueFactoryClass;
 
 	private int processorChannels;
+	
+	private Logger processingLog;
 
-	private long sleepTime;
 
 	/**
 	 * Creates new builder
@@ -53,7 +56,8 @@ public class QueuedMultiProcessorBuilder {
 		queueSize = DEF_QUEUE_SIZE;
 		processorChannels = DEF_PROCESSOR_CHANNELS;
 		sleepTime = DEF_SLEEP_TIME;
-		queueFactoryClass = (Class<EnterpriseQueueFactory>) DEF_QUEUE_FACTORY_CLASS;
+		queueFactoryClass = (Class<EnterpriseQueueFactory<E>>) DEF_QUEUE_FACTORY_CLASS;
+		processingLog = null;
 	}
 
 	/**
@@ -67,8 +71,8 @@ public class QueuedMultiProcessorBuilder {
 	 *            for the package of elements
 	 * @return processor
 	 */
-	public <T> QueuedMultiProcessor<T> build(String name, ElementWorker<T> worker) {
-		return build(name, new PackageWorkerAdapter<T>(worker));
+	public QueuedMultiProcessor<E> build(String name, ElementWorker<E> worker) {
+		return build(name, new PackageWorkerAdapter<E>(worker));
 	}
 
 	/**
@@ -83,11 +87,10 @@ public class QueuedMultiProcessorBuilder {
 	 *            for the package of elements
 	 * @return processor
 	 */
-	public <T> QueuedMultiProcessor<T> build(String name, PackageWorker<T> worker) {
+	public QueuedMultiProcessor<E> build(String name, PackageWorker<E> worker) {
 		try {
-			@SuppressWarnings("unchecked")
-			EnterpriseQueueFactory<T> queueFactory = queueFactoryClass.newInstance();
-			return new QueuedMultiProcessor<T>(name, worker, queueFactory, queueSize, processorChannels, sleepTime);
+			EnterpriseQueueFactory<E> queueFactory = queueFactoryClass.newInstance();
+			return new QueuedMultiProcessor<E>(name, worker, queueFactory, queueSize, processorChannels, sleepTime, processingLog);
 		} catch (Exception e) {
 			throw new RuntimeException("Could not build QueuedMultiProcessor with name " + name + ": ", e);
 		}
@@ -99,7 +102,7 @@ public class QueuedMultiProcessorBuilder {
 	 * @param queueSize
 	 * @return
 	 */
-	public QueuedMultiProcessorBuilder setQueueSize(int queueSize) {
+	public QueuedMultiProcessorBuilder<E> setQueueSize(int queueSize) {
 		this.queueSize = queueSize;
 		return this;
 	}
@@ -110,8 +113,7 @@ public class QueuedMultiProcessorBuilder {
 	 * @param queueFactoryClass
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public QueuedMultiProcessorBuilder setQueueFactoryClass(Class<EnterpriseQueueFactory> queueFactoryClass) {
+	public QueuedMultiProcessorBuilder<E> setQueueFactoryClass(Class<EnterpriseQueueFactory<E>> queueFactoryClass) {
 		this.queueFactoryClass = queueFactoryClass;
 		return this;
 	}
@@ -122,8 +124,13 @@ public class QueuedMultiProcessorBuilder {
 	 * @param processorChannels
 	 * @return builder
 	 */
-	public QueuedMultiProcessorBuilder setProcessorChannels(int processorChannels) {
+	public QueuedMultiProcessorBuilder<E> setProcessorChannels(int processorChannels) {
 		this.processorChannels = processorChannels;
+		return this;
+	}
+	
+	public QueuedMultiProcessorBuilder<E>  setProcessingLog(Logger processingLog) {
+		this.processingLog = processingLog;
 		return this;
 	}
 
@@ -133,7 +140,7 @@ public class QueuedMultiProcessorBuilder {
 	 * @param sleepTime
 	 * @return builder
 	 */
-	public QueuedMultiProcessorBuilder setSleepTime(long sleepTime) {
+	public QueuedMultiProcessorBuilder<E> setSleepTime(long sleepTime) {
 		this.sleepTime = sleepTime;
 		return this;
 	}
@@ -164,4 +171,5 @@ public class QueuedMultiProcessorBuilder {
 		}
 
 	}
+
 }

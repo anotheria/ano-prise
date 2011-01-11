@@ -1,7 +1,8 @@
 package net.anotheria.anoprise.queue;
 
 /**
- * TODO please remind another to comment this class
+ * Means that at the moment of trying to enqueue an element to a queue it was
+ * full.
  * 
  * @author another
  */

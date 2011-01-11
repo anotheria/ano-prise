@@ -1,7 +1,7 @@
-package net.anotheria.anoprise.queue;
+package net.anotheria.anoprise.processor;
 
 /**
- * TODO please remind another to comment this class
+ * Thrown when an element was failed to add to a queued processor.
  * 
  * @author another
  */
