@@ -19,7 +19,7 @@ public class MultiProcessor<T>{
 	/**
 	 * The log for this processor.
 	 */
-	private static final Logger log = Logger.getLogger(MultiProcessor.class);
+	private Logger log;
 	
 	/**
 	 * Number of processors.
@@ -36,16 +36,18 @@ public class MultiProcessor<T>{
 	private List<WorkProcessingListener<T>> listeners;
 
 	
+//	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker){
+//		this(aChannelsNumber, aWorker, null);
+//	}
+	
 	/**
-	 * Logger for errors caught from worker.
+	 * @param aChannelsNumber
+	 * @param aWorker
+	 * @param aLog
+	 *            logger for output. If null default will be used.
 	 */
-	private Logger packageProcessErrorsLog = Logger.getLogger(MultiProcessor.class);
-	
-	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker){
-		this(aChannelsNumber, aWorker, null);
-	}
-	
-	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker, Logger aPackageProcessErrorsLog){
+	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker, Logger aLog){
+		log = aLog != null? aLog: Logger.getLogger(MultiProcessor.class);
 		channelsNumber = aChannelsNumber;
 		executorsPool = new ThreadPoolExecutor(aChannelsNumber, aChannelsNumber, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(aChannelsNumber * 2){
 			private static final long serialVersionUID = 1L;
@@ -62,7 +64,6 @@ public class MultiProcessor<T>{
 		});
 		worker = aWorker; 
 		listeners = new CopyOnWriteArrayList<WorkProcessingListener<T>>();
-		packageProcessErrorsLog = aPackageProcessErrorsLog;
 	}
 	
 	

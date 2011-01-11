@@ -98,7 +98,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 
 		packageCapacity = aWorker.packageCapacity();
 
-		processor = new MultiProcessor<T>(aProcessingChannels, aWorker);
+		processor = new MultiProcessor<T>(aProcessingChannels, aWorker, aLog);
 		processor.addListener(new WorkProcessingListener<T>() {
 			@Override
 			public void workStarted(List<T> workingPackage) {
