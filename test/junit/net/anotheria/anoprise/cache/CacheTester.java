@@ -87,9 +87,6 @@ public class CacheTester {
 	}
 	
 	public static void tryToCorruptInternalStructures(final Cache<Integer, String> cache) throws Exception{
-		
-		System.out.println("CACHE: "+cache);
-		
 		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
 		final int operationCount = CacheTestSettings.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
@@ -178,7 +175,6 @@ public class CacheTester {
 	}
 	
 	public static void writeCompetion(final Cache<Integer, String> cache) throws Exception{
-		System.out.println("CACHE: "+cache);
 		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
 		final int operationCount = CacheTestSettings.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
