@@ -78,7 +78,7 @@ public class CacheTester {
 			int key1 = i;
 			int key2 = i+MAX_SIZE;
 			String s = cache.get(key1);
-			assertNull(s);
+			assertNull("First key should have been deleted (rolled over)", s);
 			s = cache.get(key2);
 			assertNotNull(s);
 			assertEquals(key2, Integer.parseInt(s));
@@ -87,6 +87,9 @@ public class CacheTester {
 	}
 	
 	public static void tryToCorruptInternalStructures(final Cache<Integer, String> cache) throws Exception{
+		
+		System.out.println("CACHE: "+cache);
+		
 		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
 		final int operationCount = CacheTestSettings.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);
@@ -159,6 +162,7 @@ public class CacheTester {
 		for (int i=0; i<MAX_SIZE; i++){
 			String v = cache.get(i);
 			if (v!=null){
+				//System.out.println("\n!!!key "+i+"v: "+v);
 				assertEquals(i, Integer.parseInt(v));
 			}else{
 				emptySpots++;
@@ -174,6 +178,7 @@ public class CacheTester {
 	}
 	
 	public static void writeCompetion(final Cache<Integer, String> cache) throws Exception{
+		System.out.println("CACHE: "+cache);
 		final int parallelThreadCount = CacheTestSettings.PARALLEL_THREAD_COUNT;
 		final int operationCount = CacheTestSettings.REPETITION_COUNT;
 		final CountDownLatch startLatch = new CountDownLatch(1);

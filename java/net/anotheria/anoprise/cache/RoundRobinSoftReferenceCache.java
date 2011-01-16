@@ -108,6 +108,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 	}
 	
 	@Override public synchronized void remove(K id){
+		cacheStatsCopy.addDelete();
 		Integer index = getCachePosition(id);
 		
 		if (index==null)

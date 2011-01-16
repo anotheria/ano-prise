@@ -72,6 +72,7 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	}
 	
 	@Override public void remove(K id){
+		cacheStatsCopy.addDelete();
 		V old = cache.remove(id);
 		if (old!=null)
 			lock.release();

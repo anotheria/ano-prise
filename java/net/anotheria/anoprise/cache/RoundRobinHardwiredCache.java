@@ -132,10 +132,12 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	}
 	
 	@Override public synchronized void remove(K id){
+		cacheStatsCopy.addDelete();
 		Integer index = id2index.get(id);
 		
 		if (index==null)
 			return ;
+		
 			
 		id2index.remove(id);
 		index2id.remove(index);
