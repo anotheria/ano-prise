@@ -51,7 +51,7 @@ public class RequestBasedCache<K,V> extends AbstractCache implements Cache<K, V>
 	}
 
 	@Override public String toString(){
-		return super.toString()+" "+mapHolder.get().toString();
+		return super.toString();
 	}
 	
 	
