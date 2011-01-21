@@ -1,5 +1,11 @@
 package net.anotheria.anoprise.cache;
 
+import net.java.dev.moskito.core.logging.DefaultStatsLogger;
+import net.java.dev.moskito.core.logging.IntervalStatsLogger;
+import net.java.dev.moskito.core.logging.Log4JOutput;
+import net.java.dev.moskito.core.stats.DefaultIntervals;
+
+import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 
 /**
@@ -68,6 +74,15 @@ public final class Caches {
 		CacheController<K, V> controller = new CacheController<K, V>(name);
 		ConfigurationManager.INSTANCE.configureAs(controller, name);
 		return controller;
+	}
+	
+	public static final void attachCacheToMoskitoLoggers(Cache<?,?> cache, String producerId, String category, String subsystem){
+		CacheProducerWrapper cacheWrapper = new CacheProducerWrapper(cache , producerId, category, subsystem);
+		new DefaultStatsLogger(cacheWrapper, new Log4JOutput(Logger.getLogger("MoskitoDefault")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIVE_MINUTES, new Log4JOutput(Logger.getLogger("Moskito5m")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIFTEEN_MINUTES, new Log4JOutput(Logger.getLogger("Moskito15m")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_HOUR, new Log4JOutput(Logger.getLogger("Moskito1h")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_DAY, new Log4JOutput(Logger.getLogger("Moskito1d")));
 		
 	}
 	
