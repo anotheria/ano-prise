@@ -45,6 +45,14 @@ public class QueuedMultiProcessorBuilder<E>{
 
 	private int processorChannels;
 	
+	private boolean attachMoskitoLoggers = false;
+	
+	private String moskitoProducerId;
+	
+	private String moskitoCategory;
+	
+	private String moskitoSubsystem;
+	
 	private Logger processingLog;
 
 
@@ -90,7 +98,10 @@ public class QueuedMultiProcessorBuilder<E>{
 	public QueuedMultiProcessor<E> build(String name, PackageWorker<E> worker) {
 		try {
 			EnterpriseQueueFactory<E> queueFactory = queueFactoryClass.newInstance();
-			return new QueuedMultiProcessor<E>(name, worker, queueFactory, queueSize, processorChannels, sleepTime, processingLog);
+			QueuedMultiProcessor<E> ret = new QueuedMultiProcessor<E>(name, worker, queueFactory, queueSize, processorChannels, sleepTime, processingLog); 
+			if(attachMoskitoLoggers)
+				new QueuedMultiProcessorProducerWrapper(ret, moskitoProducerId, moskitoCategory, moskitoSubsystem).attachToMoskitoLoggers();
+			return ret;
 		} catch (Exception e) {
 			throw new RuntimeException("Could not build QueuedMultiProcessor with name " + name + ": ", e);
 		}
@@ -142,6 +153,14 @@ public class QueuedMultiProcessorBuilder<E>{
 	 */
 	public QueuedMultiProcessorBuilder<E> setSleepTime(long sleepTime) {
 		this.sleepTime = sleepTime;
+		return this;
+	}
+	
+	public QueuedMultiProcessorBuilder<E> attachMoskitoLoggers(String producerId, String category, String subsystem){
+		attachMoskitoLoggers = true;
+		moskitoProducerId = producerId;
+		moskitoCategory = category;
+		moskitoSubsystem = subsystem;
 		return this;
 	}
 

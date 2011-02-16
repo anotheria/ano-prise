@@ -47,7 +47,7 @@ public class QueuedMultiProcessorTest {
 		CountDownLatch worksDoneLatch = new CountDownLatch(REQUESTS);
 		TestWorker worker = new TestWorker(worksDoneLatch);
 		
-		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder<Integer>().setQueueSize(QUEUE_SIZE).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("dontWaitTest", worker);
+		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder<Integer>().attachMoskitoLoggers("QueuedMultiProcessorTest", "Test", "Unit").setQueueSize(QUEUE_SIZE).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("dontWaitTest", worker);
 		processor.start();
 		
 		int fails = 0;
