@@ -1,4 +1,11 @@
 {
 	tableName: "dataspace",
 	dbOwnerName: "postgres",
+	primaryKeyName: "dataspace_pk",
+	fieldNameUserId: "userId",
+	fieldNameDataspaceId: "dataspaceId",
+	fieldNameAttributeName: "attrName",
+	fieldNameAttributeTypeId: "attrTypeId",
+	fieldNameAttributeValue: "attrValue",
+	fieldNameUpdated: "updated",
 }

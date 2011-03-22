@@ -24,41 +24,6 @@ public class DataspacePersistenceConfiguration {
 	public static final String SEPARATOR = ", ";
 
 	/**
-	 * Table field user id name.
-	 */
-	public static final String DATASPACE_TABLE_FIELD_NAME_USER_ID = "userId";
-
-	/**
-	 * Table field dataspace id name.
-	 */
-	public static final String DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID = "dataspaceId";
-
-	/**
-	 * Table field attributeName name.
-	 */
-	public static final String DATASPACE_TABLE_FIELD_NAME_ATTR_NAME = "attrName";
-
-	/**
-	 * Table field attributeTypeId name.
-	 */
-	public static final String DATASPACE_TABLE_FIELD_NAME_ATTR_TYPE_ID = "attrTypeId";
-
-	/**
-	 * Table field attributeValue name.
-	 */
-	public static final String DATASPACE_TABLE_FIELD_NAME_ATTR_VALUE = "attrValue";
-
-	/**
-	 * Table field updated name.
-	 */
-	public static final String DATASPACE_TABLE_FIELD_NAME_UPDATED = "updated";
-
-	/**
-	 * Configuration instance.
-	 */
-	private static DataspacePersistenceConfiguration INSTANCE;
-
-	/**
 	 * Database table name.
 	 */
 	@Configure
@@ -73,7 +38,49 @@ public class DataspacePersistenceConfiguration {
 	/**
 	 * Table primary key name.
 	 */
-	public final String DATASPACE_TABLE_PK_NAME = getTableName() + "_pk";
+	@Configure
+	private String primaryKeyName = "dataspace_pk";
+
+	/**
+	 * Table field user id name.
+	 */
+	@Configure
+	private String fieldNameUserId = "userId";
+
+	/**
+	 * Table field dataspace id name.
+	 */
+	@Configure
+	private String fieldNameDataspaceId = "dataspaceId";
+
+	/**
+	 * Table field attributeName name.
+	 */
+	@Configure
+	private String fieldNameAttributeName = "attrName";
+
+	/**
+	 * Table field attributeTypeId name.
+	 */
+	@Configure
+	private String fieldNameAttributeTypeId = "attrTypeId";
+
+	/**
+	 * Table field attributeValue name.
+	 */
+	@Configure
+	private String fieldNameAttributeValue = "attrValue";
+
+	/**
+	 * Table field updated name.
+	 */
+	@Configure
+	private String fieldNameUpdated = "updated";
+
+	/**
+	 * Configuration instance.
+	 */
+	private static DataspacePersistenceConfiguration INSTANCE;
 
 	/**
 	 * Get configuration instance.
@@ -126,67 +133,132 @@ public class DataspacePersistenceConfiguration {
 	public void setDbOwnerName(String aDbOwnerName) {
 		this.dbOwnerName = aDbOwnerName;
 	}
+
+	public void setPrimaryKeyName(String aPrimaryKeyName) {
+		this.primaryKeyName = aPrimaryKeyName;
+	}
+
+	public String getPrimaryKeyName() {
+		return primaryKeyName;
+	}
+
+	public void setFieldNameUserId(String aFieldNameUserId) {
+		this.fieldNameUserId = aFieldNameUserId;
+	}
+
+	public String getFieldNameUserId() {
+		return fieldNameUserId;
+	}
+
+	public void setFieldNameDataspaceId(String aFieldNameDataspaceId) {
+		this.fieldNameDataspaceId = aFieldNameDataspaceId;
+	}
+
+	public String getFieldNameDataspaceId() {
+		return fieldNameDataspaceId;
+	}
+
+	public void setFieldNameAttributeName(String aFieldNameAttributeName) {
+		this.fieldNameAttributeName = aFieldNameAttributeName;
+	}
+
+	public String getFieldNameAttributeName() {
+		return fieldNameAttributeName;
+	}
+
+	public void setFieldNameAttributeTypeId(String aFieldNameAttributeTypeId) {
+		this.fieldNameAttributeTypeId = aFieldNameAttributeTypeId;
+	}
+
+	public String getFieldNameAttributeTypeId() {
+		return fieldNameAttributeTypeId;
+	}
+
+	public void setFieldNameAttributeValue(String aFieldNameAttributeValue) {
+		this.fieldNameAttributeValue = aFieldNameAttributeValue;
+	}
+
+	public String getFieldNameAttributeValue() {
+		return fieldNameAttributeValue;
+	}
+
+	public void setFieldNameUpdated(String aFieldNameUpdated) {
+		this.fieldNameUpdated = aFieldNameUpdated;
+	}
+
+	public String getFieldNameUpdated() {
+		return fieldNameUpdated;
+	}
 	
 	/**
 	 * All fields separated by SEPARATOR.
 	 */
-	public final String DATASPACE_TABLE_FIELDS = 
-			DATASPACE_TABLE_FIELD_NAME_USER_ID + SEPARATOR +
-			DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + SEPARATOR +
-			DATASPACE_TABLE_FIELD_NAME_ATTR_NAME + SEPARATOR +
-			DATASPACE_TABLE_FIELD_NAME_ATTR_TYPE_ID + SEPARATOR +
-			DATASPACE_TABLE_FIELD_NAME_ATTR_VALUE + SEPARATOR +
-			DATASPACE_TABLE_FIELD_NAME_UPDATED;
+	public String getTableFields() { 
+		return getFieldNameUserId() + SEPARATOR +
+			getFieldNameDataspaceId() + SEPARATOR +
+			getFieldNameAttributeName() + SEPARATOR +
+			getFieldNameAttributeTypeId() + SEPARATOR +
+			getFieldNameAttributeValue() + SEPARATOR +
+			getFieldNameUpdated();
+	}
 	
 	/**
 	 * SQL create table.
 	 */
-	public final String SQL_META_CREATE_TABLE = "CREATE TABLE " + getTableName() + " (" +
-			DATASPACE_TABLE_FIELD_NAME_USER_ID + " character varying NOT NULL, " +
-			DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + " integer NOT NULL, " +
-			DATASPACE_TABLE_FIELD_NAME_ATTR_NAME + " character varying NOT NULL, " +
-			DATASPACE_TABLE_FIELD_NAME_ATTR_TYPE_ID + " integer NOT NULL, " +
-			DATASPACE_TABLE_FIELD_NAME_ATTR_VALUE + " character varying NOT NULL, " +
-			DATASPACE_TABLE_FIELD_NAME_UPDATED + " bigint NOT NULL, " +
-			"CONSTRAINT " + DATASPACE_TABLE_PK_NAME + " PRIMARY KEY (" + 
-				DATASPACE_TABLE_FIELD_NAME_USER_ID + ", " + 
-				DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + ", " +
-				DATASPACE_TABLE_FIELD_NAME_ATTR_NAME + ")" +
+	public String getDDLCreateTable() {
+		return "CREATE TABLE " + getTableName() + " (" +
+			getFieldNameUserId() + " character varying NOT NULL, " +
+			getFieldNameDataspaceId() + " integer NOT NULL, " +
+			getFieldNameAttributeName() + " character varying NOT NULL, " +
+			getFieldNameAttributeTypeId() + " integer NOT NULL, " +
+			getFieldNameAttributeValue() + " character varying NOT NULL, " +
+			getFieldNameUpdated() + " bigint NOT NULL, " +
+			"CONSTRAINT " + getPrimaryKeyName() + " PRIMARY KEY (" + 
+				getFieldNameUserId() + ", " + 
+				getFieldNameDataspaceId() + ", " +
+				getFieldNameAttributeName() + ")" +
 			");";	
+	}
 	
 	/**
 	 * SQL set table owner.
 	 */
-	public final String SQL_META_SET_OWNER = "ALTER TABLE " + getTableName() + " OWNER TO " + getDbOwnerName() + ";";
+	public String getDDLSetOwner() {
+		return "ALTER TABLE " + getTableName() + " OWNER TO " + getDbOwnerName() + ";";	
+	}
 	
 	/**
 	 * SQL get dataspace by userId and dataspaceId.
 	 */
-	public final String SQL_GET_DATASPACE_1 = 
-			"SELECT " + DATASPACE_TABLE_FIELDS +
+	public String getSQLGetDataspace() { 
+		return "SELECT " + getTableFields() +
 			" FROM " + getTableName() +
-			" WHERE " + DATASPACE_TABLE_FIELD_NAME_USER_ID + " = ?" +
-			" AND " + DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + "= ?;";
+			" WHERE " + getFieldNameUserId() + " = ?" +
+			" AND " + getFieldNameDataspaceId() + "= ?;";
+	}
 	
 	/**
 	 * SQL insert attribute.
 	 */
-	public final String SQL_INSERT_ATTRIBUTE_1 = 
-			"INSERT INTO " + getTableName() +
-			" (" + DATASPACE_TABLE_FIELDS + ")" +
-			" VALUES (?, ?, ?, ?, ?, ?);";
+	public String getSQLInsertAttribute() {
+		return "INSERT INTO " + getTableName() + " (" + getTableFields() + ")" + " VALUES (?, ?, ?, ?, ?, ?);";
+	}
 	
 	/**
 	 * SQL remove dataspace by userId and dataspaceId.
 	 */
-	public final String SQL_REMOVE_DATASPACE_1 = 
-			"DELETE FROM " + getTableName() +
-			" WHERE " + DATASPACE_TABLE_FIELD_NAME_USER_ID + " = ?" +
-			" AND " + DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + " = ?;";
-	
+	public String getSQLRemoveDataspace() { 
+		return "DELETE FROM " + getTableName() +
+			" WHERE " + getFieldNameUserId() + " = ?" +
+			" AND " + getFieldNameDataspaceId() + " = ?;";
+	}
+
 	@Override
 	public String toString() {
-		return "DataspacePersistenceConfiguration [tableName=" + tableName + ", dbOwnerName=" + dbOwnerName + "]";
+		return "DataspacePersistenceConfiguration [tableName=" + tableName + ", dbOwnerName=" + dbOwnerName + ", primaryKeyName=" + primaryKeyName
+				+ ", fieldNameUserId=" + fieldNameUserId + ", fieldNameDataspaceId=" + fieldNameDataspaceId + ", fieldNameAttributeName="
+				+ fieldNameAttributeName + ", fieldNameAttributeTypeId=" + fieldNameAttributeTypeId + ", fieldNameAttributeValue=" + fieldNameAttributeValue
+				+ ", fieldNameUpdated=" + fieldNameUpdated + "]";
 	}
 	
 }

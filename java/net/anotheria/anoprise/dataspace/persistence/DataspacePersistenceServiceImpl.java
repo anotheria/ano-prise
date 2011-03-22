@@ -54,9 +54,9 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 		this.configuration = aConfiguration;
 
 		// table creation
-		ddlQueries.add(configuration.SQL_META_CREATE_TABLE);
+		ddlQueries.add(configuration.getDDLCreateTable());
 		// grant privileges
-		ddlQueries.add(configuration.SQL_META_SET_OWNER);
+		ddlQueries.add(configuration.getDDLSetOwner());
 	}
 
 	@Override
@@ -69,15 +69,15 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 
 		try {
 			conn = getConnection();
-			st = conn.prepareStatement(configuration.SQL_GET_DATASPACE_1);
+			st = conn.prepareStatement(configuration.getSQLGetDataspace());
 			st.setString(1, userId);
 			st.setInt(2, dataspaceType.getId());
 			rs = st.executeQuery();
 
 			while (rs.next()) {
-				int attrType = rs.getInt(DataspacePersistenceConfiguration.DATASPACE_TABLE_FIELD_NAME_ATTR_TYPE_ID);
-				String attrName = rs.getString(DataspacePersistenceConfiguration.DATASPACE_TABLE_FIELD_NAME_ATTR_NAME);
-				String attrValue = rs.getString(DataspacePersistenceConfiguration.DATASPACE_TABLE_FIELD_NAME_ATTR_VALUE);
+				int attrType = rs.getInt(configuration.getFieldNameAttributeTypeId());
+				String attrName = rs.getString(configuration.getFieldNameAttributeName());
+				String attrValue = rs.getString(configuration.getFieldNameAttributeValue());
 
 				result.addAttribute(attrName, Attribute.createAttribute(attrType, attrName, attrValue));
 			}
@@ -104,13 +104,13 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 			conn = getConnection();
 			conn.setAutoCommit(false);
 			// remove old dataspace from persistence
-			st = conn.prepareStatement(configuration.SQL_REMOVE_DATASPACE_1);
+			st = conn.prepareStatement(configuration.getSQLRemoveDataspace());
 			st.setString(1, dataspace.getUserId());
 			st.setInt(2, dataspace.getDataspaceType().getId());
 			st.executeUpdate();
 
 			// create new dataspace in persistence
-			st2 = conn.prepareStatement(configuration.SQL_INSERT_ATTRIBUTE_1);
+			st2 = conn.prepareStatement(configuration.getSQLInsertAttribute());
 
 			if (conn.getMetaData().supportsBatchUpdates()) {
 				for (Attribute attribute : dataspace.getAttributes()) {
