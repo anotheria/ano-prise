@@ -11,23 +11,21 @@ public final class DataspacePersistenceConstants {
 	 * Field separator for queries.
 	 */
 	public static final String SEPARATOR = ", ";
-	
+
 	/**
 	 * Table name.
 	 */
-	public static final String DATASPACE_TABLE_NAME = "dataspace";
-	
+	public static final String DATASPACE_TABLE_NAME = "dataspace"; // TODO must be configurable
+
 	/**
 	 * Table owner.
-	 * @deprecated this constant should be replaced by a setting. 
 	 */
-	@Deprecated
-	public static final String DATASPACE_TABLE_OWNER = "affairo";
+	private static final String DATASPACE_TABLE_OWNER = "postgres";  // TODO must be configurable
 	
 	/**
 	 * Table primary key name.
 	 */
-	public static final String DATASPACE_TABLE_PK_NAME = "dataspace_pk";
+	public static final String DATASPACE_TABLE_PK_NAME = DATASPACE_TABLE_NAME + "_pk";
 	
 	/**
 	 * Table field user id name.
@@ -84,11 +82,7 @@ public final class DataspacePersistenceConstants {
 				DATASPACE_TABLE_FIELD_NAME_USER_ID + ", " + 
 				DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + ", " +
 				DATASPACE_TABLE_FIELD_NAME_ATTR_NAME + ")" +
-			");";
-	/**
-	 * SQL set table owner.
-	 */
-	public static final String SQL_META_SET_OWNER = "ALTER TABLE " + DATASPACE_TABLE_NAME + " OWNER TO " + DATASPACE_TABLE_OWNER + ";";
+			");";	
 	
 	/**
 	 * SQL get dataspace by userId and dataspaceId.
@@ -144,11 +138,17 @@ public final class DataspacePersistenceConstants {
 			"DELETE FROM " + DATASPACE_TABLE_NAME +
 			" WHERE " + DATASPACE_TABLE_FIELD_NAME_USER_ID + " = ?" +
 			" AND " + DATASPACE_TABLE_FIELD_NAME_DATASPACE_ID + " = ?" +
-			" AND " + DATASPACE_TABLE_FIELD_NAME_ATTR_NAME + " = ?;";
+			" AND " + DATASPACE_TABLE_FIELD_NAME_ATTR_NAME + " = ?;";	
+	
+	/**
+	 * SQL set table owner.
+	 */
+	 public static final String SQL_META_SET_OWNER = "ALTER TABLE " + DATASPACE_TABLE_NAME + " OWNER TO " + DATASPACE_TABLE_OWNER + ";";
 	
 	/**
 	 * Default constructor.
 	 */
-	private DataspacePersistenceConstants() {		
+	private DataspacePersistenceConstants() {	
+		throw new IllegalAccessError();
 	}
 }

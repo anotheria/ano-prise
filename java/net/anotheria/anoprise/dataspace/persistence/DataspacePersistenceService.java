@@ -32,8 +32,4 @@ public interface DataspacePersistenceService extends Service {
 	 */
 	void saveDataspace(Dataspace dataspace) throws DataspacePersistenceServiceException;
 
-	/**
-	 * Create persistence structure for dataspace service.
-	 */
-	void createPersistenceStructure() throws DataspacePersistenceServiceException;
 }
