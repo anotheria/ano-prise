@@ -25,9 +25,18 @@ public final class DataspacePersistenceServiceFactory {
 	 */
 	public static synchronized DataspacePersistenceService getInstance() {
 		if (instance == null)
-			instance = new DataspacePersistenceServiceImpl();
+			instance = new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance());
 
 		return instance;
+	}
+
+	/**
+	 * Get instance of {@link DataspacePersistenceServiceImpl} with custom configuration.
+	 * 
+	 * @return {@link DataspacePersistenceServiceImpl}
+	 */
+	public static synchronized DataspacePersistenceService getInstance(String configurationFileName) {
+		return new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance(configurationFileName));
 	}
 
 }

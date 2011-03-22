@@ -37,13 +37,26 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 	private static final List<String> ddlQueries = new ArrayList<String>();
 
 	/**
-	 * Static initialization of DDL queries by SQL commands.
+	 * Persistence service configuration
 	 */
-	static {
+	private final DataspacePersistenceConfiguration configuration;
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param aConfiguration
+	 *            - persistence service configuration
+	 */
+	protected DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration aConfiguration) {
+		if (aConfiguration == null)
+			throw new IllegalArgumentException("DataspacePersistenceServiceImpl(aConfiguration) fail. Null argument.");
+
+		this.configuration = aConfiguration;
+
 		// table creation
-		ddlQueries.add(DataspacePersistenceConstants.SQL_META_CREATE_TABLE);
+		ddlQueries.add(configuration.SQL_META_CREATE_TABLE);
 		// grant privileges
-		ddlQueries.add(DataspacePersistenceConstants.SQL_META_SET_OWNER);
+		ddlQueries.add(configuration.SQL_META_SET_OWNER);
 	}
 
 	@Override
@@ -56,15 +69,15 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 
 		try {
 			conn = getConnection();
-			st = conn.prepareStatement(DataspacePersistenceConstants.SQL_GET_DATASPACE_1);
+			st = conn.prepareStatement(configuration.SQL_GET_DATASPACE_1);
 			st.setString(1, userId);
 			st.setInt(2, dataspaceType.getId());
 			rs = st.executeQuery();
 
 			while (rs.next()) {
-				int attrType = rs.getInt(DataspacePersistenceConstants.DATASPACE_TABLE_FIELD_NAME_ATTR_TYPE_ID);
-				String attrName = rs.getString(DataspacePersistenceConstants.DATASPACE_TABLE_FIELD_NAME_ATTR_NAME);
-				String attrValue = rs.getString(DataspacePersistenceConstants.DATASPACE_TABLE_FIELD_NAME_ATTR_VALUE);
+				int attrType = rs.getInt(DataspacePersistenceConfiguration.DATASPACE_TABLE_FIELD_NAME_ATTR_TYPE_ID);
+				String attrName = rs.getString(DataspacePersistenceConfiguration.DATASPACE_TABLE_FIELD_NAME_ATTR_NAME);
+				String attrValue = rs.getString(DataspacePersistenceConfiguration.DATASPACE_TABLE_FIELD_NAME_ATTR_VALUE);
 
 				result.addAttribute(attrName, Attribute.createAttribute(attrType, attrName, attrValue));
 			}
@@ -91,13 +104,13 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 			conn = getConnection();
 			conn.setAutoCommit(false);
 			// remove old dataspace from persistence
-			st = conn.prepareStatement(DataspacePersistenceConstants.SQL_REMOVE_DATASPACE_1);
+			st = conn.prepareStatement(configuration.SQL_REMOVE_DATASPACE_1);
 			st.setString(1, dataspace.getUserId());
 			st.setInt(2, dataspace.getDataspaceType().getId());
 			st.executeUpdate();
 
 			// create new dataspace in persistence
-			st2 = conn.prepareStatement(DataspacePersistenceConstants.SQL_INSERT_ATTRIBUTE_1);
+			st2 = conn.prepareStatement(configuration.SQL_INSERT_ATTRIBUTE_1);
 
 			if (conn.getMetaData().supportsBatchUpdates()) {
 				for (Attribute attribute : dataspace.getAttributes()) {
@@ -141,7 +154,7 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 
 	@Override
 	protected String getTableName() {
-		return DataspacePersistenceConstants.DATASPACE_TABLE_NAME;
+		return configuration.getTableName();
 	}
 
 	@Override

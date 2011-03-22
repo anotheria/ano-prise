@@ -1,0 +1,4 @@
+{
+	tableName: "dataspace",
+	dbOwnerName: "postgres",
+}

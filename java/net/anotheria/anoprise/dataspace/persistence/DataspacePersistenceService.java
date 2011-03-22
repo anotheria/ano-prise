@@ -2,14 +2,13 @@ package net.anotheria.anoprise.dataspace.persistence;
 
 import net.anotheria.anoprise.dataspace.Dataspace;
 import net.anotheria.anoprise.dataspace.DataspaceType;
-import net.anotheria.anoprise.metafactory.Service;
 
 /**
  * DataspacePersistenceService interface.
  * 
  * @author lrosenberg
  */
-public interface DataspacePersistenceService extends Service {
+public interface DataspacePersistenceService {
 
 	/**
 	 * Load dataspace from persistence by given userId and dataspaceId.
