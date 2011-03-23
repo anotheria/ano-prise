@@ -219,7 +219,7 @@ public class DataspacePersistenceConfiguration {
 	 * SQL set table owner.
 	 */
 	public String getDDLSetOwner() {
-		return "ALTER TABLE " + getTableName() + " OWNER TO " + getDbOwnerName() + ";";
+		return "GRANT ALL ON " + getTableName() + " TO " + getDbOwnerName() + ";";
 	}
 
 	/**
