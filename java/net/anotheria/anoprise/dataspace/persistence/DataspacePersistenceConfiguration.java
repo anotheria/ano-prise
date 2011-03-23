@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.configureme.annotations.DontConfigure;
 
 /**
  * {@link DataspacePersistenceService} configuration.
@@ -16,11 +17,13 @@ public class DataspacePersistenceConfiguration {
 	/**
 	 * Logger.
 	 */
+	@DontConfigure
 	private static final Logger LOGGER = Logger.getLogger(DataspacePersistenceConfiguration.class.getName());
 
 	/**
 	 * Field separator for queries.
 	 */
+	@DontConfigure
 	public static final String SEPARATOR = ", ";
 
 	/**
@@ -80,6 +83,7 @@ public class DataspacePersistenceConfiguration {
 	/**
 	 * Configuration instance.
 	 */
+	@DontConfigure
 	private static DataspacePersistenceConfiguration INSTANCE;
 
 	/**
