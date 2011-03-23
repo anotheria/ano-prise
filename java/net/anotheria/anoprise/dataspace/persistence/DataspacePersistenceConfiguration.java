@@ -116,7 +116,7 @@ public class DataspacePersistenceConfiguration {
 		DataspacePersistenceConfiguration configuration = new DataspacePersistenceConfiguration();
 
 		try {
-			ConfigurationManager.INSTANCE.configureAs(INSTANCE, configurationFileName);
+			ConfigurationManager.INSTANCE.configureAs(configuration, configurationFileName);
 		} catch (Exception e) {
 			LOGGER.error("getInstance(" + configurationFileName + ") Configuration failed. Configuring with defaults.", e);
 		}
