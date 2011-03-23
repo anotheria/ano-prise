@@ -57,6 +57,8 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 		ddlQueries.add(configuration.getDDLCreateTable());
 		// grant privileges
 		ddlQueries.add(configuration.getDDLSetOwner());
+
+		initialize();
 	}
 
 	@Override
