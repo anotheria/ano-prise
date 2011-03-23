@@ -108,6 +108,8 @@ public class DataspacePersistenceConfiguration {
 	/**
 	 * Get configuration instance configured from custom file.
 	 * 
+	 * @param configurationFileName
+	 *            - file name
 	 * @return {@link DataspacePersistenceConfiguration}
 	 */
 	public static DataspacePersistenceConfiguration getInstance(String configurationFileName) {
@@ -193,68 +195,53 @@ public class DataspacePersistenceConfiguration {
 	public String getFieldNameUpdated() {
 		return fieldNameUpdated;
 	}
-	
+
 	/**
 	 * All fields separated by SEPARATOR.
 	 */
-	public String getTableFields() { 
-		return getFieldNameUserId() + SEPARATOR +
-			getFieldNameDataspaceId() + SEPARATOR +
-			getFieldNameAttributeName() + SEPARATOR +
-			getFieldNameAttributeTypeId() + SEPARATOR +
-			getFieldNameAttributeValue() + SEPARATOR +
-			getFieldNameUpdated();
+	public String getTableFields() {
+		return getFieldNameUserId() + SEPARATOR + getFieldNameDataspaceId() + SEPARATOR + getFieldNameAttributeName() + SEPARATOR
+				+ getFieldNameAttributeTypeId() + SEPARATOR + getFieldNameAttributeValue() + SEPARATOR + getFieldNameUpdated();
 	}
-	
+
 	/**
 	 * SQL create table.
 	 */
 	public String getDDLCreateTable() {
-		return "CREATE TABLE " + getTableName() + " (" +
-			getFieldNameUserId() + " character varying NOT NULL, " +
-			getFieldNameDataspaceId() + " integer NOT NULL, " +
-			getFieldNameAttributeName() + " character varying NOT NULL, " +
-			getFieldNameAttributeTypeId() + " integer NOT NULL, " +
-			getFieldNameAttributeValue() + " character varying NOT NULL, " +
-			getFieldNameUpdated() + " bigint NOT NULL, " +
-			"CONSTRAINT " + getPrimaryKeyName() + " PRIMARY KEY (" + 
-				getFieldNameUserId() + ", " + 
-				getFieldNameDataspaceId() + ", " +
-				getFieldNameAttributeName() + ")" +
-			");";	
+		return "CREATE TABLE " + getTableName() + " (" + getFieldNameUserId() + " character varying NOT NULL, " + getFieldNameDataspaceId()
+				+ " integer NOT NULL, " + getFieldNameAttributeName() + " character varying NOT NULL, " + getFieldNameAttributeTypeId() + " integer NOT NULL, "
+				+ getFieldNameAttributeValue() + " character varying NOT NULL, " + getFieldNameUpdated() + " bigint NOT NULL, " + "CONSTRAINT "
+				+ getPrimaryKeyName() + " PRIMARY KEY (" + getFieldNameUserId() + ", " + getFieldNameDataspaceId() + ", " + getFieldNameAttributeName() + ")"
+				+ ");";
 	}
-	
+
 	/**
 	 * SQL set table owner.
 	 */
 	public String getDDLSetOwner() {
-		return "ALTER TABLE " + getTableName() + " OWNER TO " + getDbOwnerName() + ";";	
+		return "ALTER TABLE " + getTableName() + " OWNER TO " + getDbOwnerName() + ";";
 	}
-	
+
 	/**
 	 * SQL get dataspace by userId and dataspaceId.
 	 */
-	public String getSQLGetDataspace() { 
-		return "SELECT " + getTableFields() +
-			" FROM " + getTableName() +
-			" WHERE " + getFieldNameUserId() + " = ?" +
-			" AND " + getFieldNameDataspaceId() + "= ?;";
+	public String getSQLGetDataspace() {
+		return "SELECT " + getTableFields() + " FROM " + getTableName() + " WHERE " + getFieldNameUserId() + " = ?" + " AND " + getFieldNameDataspaceId()
+				+ "= ?;";
 	}
-	
+
 	/**
 	 * SQL insert attribute.
 	 */
 	public String getSQLInsertAttribute() {
 		return "INSERT INTO " + getTableName() + " (" + getTableFields() + ")" + " VALUES (?, ?, ?, ?, ?, ?);";
 	}
-	
+
 	/**
 	 * SQL remove dataspace by userId and dataspaceId.
 	 */
-	public String getSQLRemoveDataspace() { 
-		return "DELETE FROM " + getTableName() +
-			" WHERE " + getFieldNameUserId() + " = ?" +
-			" AND " + getFieldNameDataspaceId() + " = ?;";
+	public String getSQLRemoveDataspace() {
+		return "DELETE FROM " + getTableName() + " WHERE " + getFieldNameUserId() + " = ?" + " AND " + getFieldNameDataspaceId() + " = ?;";
 	}
 
 	@Override
@@ -264,5 +251,5 @@ public class DataspacePersistenceConfiguration {
 				+ fieldNameAttributeName + ", fieldNameAttributeTypeId=" + fieldNameAttributeTypeId + ", fieldNameAttributeValue=" + fieldNameAttributeValue
 				+ ", fieldNameUpdated=" + fieldNameUpdated + "]";
 	}
-	
+
 }
