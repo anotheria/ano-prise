@@ -1,85 +1,127 @@
 package net.anotheria.anoprise.sessiondistributor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import net.anotheria.anoprise.eventservice.Event;
+import net.anotheria.anoprise.eventservice.EventChannel;
+import net.anotheria.anoprise.eventservice.EventServiceFactory;
+import net.anotheria.anoprise.eventservice.ProxyType;
+import net.anotheria.anoprise.eventservice.util.QueueFullException;
+import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
+import net.anotheria.anoprise.sessiondistributor.events.SessionDistributorESConstants;
+import net.anotheria.anoprise.sessiondistributor.events.SessionDistributorEvent;
+import net.anotheria.util.IdCodeGenerator;
+import org.apache.log4j.Logger;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.log4j.Logger;
-
-import net.anotheria.util.IdCodeGenerator;
-
 /**
- * SessionDestributorService implementation.
- * 
+ * SessionDistributorService implementation.
+ *
  * @author lrosenberg
  * @version 1.0, 2010/01/03
  */
 public class SessionDistributorServiceImpl implements SessionDistributorService {
 
-	private static Logger log = Logger.getLogger(SessionDistributorServiceImpl.class);
-	
+	/**
+	 * Log4j logger.
+	 */
+	private static Logger LOG = Logger.getLogger(SessionDistributorServiceImpl.class);
+
 	/**
 	 * Internal storage for session holders.
 	 */
-	private ConcurrentMap<String, SessionHolder> sessions;
+	private ConcurrentMap<String, DistributedSessionVO> sessions;
+
+	/**
+	 * SessionDistributorServiceConfig serviceConfig instance.
+	 */
+	private SessionDistributorServiceConfig serviceConfig;
+
+	/**
+	 * Queued service event sender.
+	 */
+	private QueuedEventSender eventSender;
 
 	/**
 	 * Default constructor.
 	 */
 	public SessionDistributorServiceImpl() {
-		sessions = new ConcurrentHashMap<String, SessionHolder>();
+		sessions = new ConcurrentHashMap<String, DistributedSessionVO>();
+		serviceConfig = SessionDistributorServiceConfig.getInstance();
+		initCleanUpTimerTask();
+		//obtaining eventService channel
+		EventChannel sessionDistributorEventChannel = EventServiceFactory.createEventService().obtainEventChannel(SessionDistributorESConstants.CHANNEL_NAME,
+				ProxyType.PUSH_SUPPLIER_PROXY);
+		eventSender = new QueuedEventSender("eventannounce", sessionDistributorEventChannel, serviceConfig.getSessionDistributorEventQueueSize(),
+				serviceConfig.getSessionDistributorEventQueueSleepTime(), LOG);
+		eventSender.start();
+	}
+
+	/**
+	 * CleanUp Timer task initialisation.
+	 */
+	private void initCleanUpTimerTask() {
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
-			
+
 			@Override
 			public void run() {
-				try{
+				try {
 					cleanup();
-				}catch(Exception e){
-					log.error("Uncaught exception in cleanup() timer task",e);
+				} catch (Exception e) {
+					LOG.error("Uncaught exception in cleanup() timer task", e);
 				}
 			}
-		}, 0, 1000L*60*5);
+		}, 0, serviceConfig.getDistributedSessionsCleanUpInterval());
 	}
 
 	@Override
-	public String createDistributedSession(List<SessionAttribute> attributes) throws SessionDistributorServiceException {
-		String name = null;
-		SessionHolder old;
+	public String createDistributedSession(String sessionId) throws SessionDistributorServiceException {
+		DistributedSessionVO toCreate = new DistributedSessionVO(sessionId);
+		if (!sessions.containsKey(sessionId)) {
+			sessions.put(sessionId, toCreate);
+			return sessionId;
+		}
+		DistributedSessionVO old;
 		do {
-			name = IdCodeGenerator.generateCode(30);
-			old = sessions.putIfAbsent(name, new SessionHolder(name, attributes));
+			toCreate.setName(IdCodeGenerator.generateCode(30));
+			old = sessions.putIfAbsent(toCreate.getName(), toCreate);
 		} while (old != null);
-		return name;
+
+		return toCreate.getName();
 	}
 
 	@Override
 	public void deleteDistributedSession(String name) throws SessionDistributorServiceException {
-
 		if (!sessions.containsKey(name))
 			throw new NoSuchDistributedSessionException(name);
 		sessions.remove(name);
+		//TODO : ?  maybe - not send ???
+		Event delete = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.delete(name));
+		try {
+			eventSender.push(delete);
+		} catch (QueueFullException e) {
+			LOG.error("Can't push Session delete event. Queue is Full. Event:" + delete);
+		}
+
 	}
 
-	@Override
-	public List<SessionAttribute> getAndDeleteDistributedSession(String name) throws SessionDistributorServiceException {
-
-		SessionHolder holder = sessions.remove(name);
-		if (holder == null)
-			throw new NoSuchDistributedSessionException(name);
-		return holder.getAttributes();
-	}
 
 	@Override
-	public List<SessionAttribute> getDistributedSession(String name) throws SessionDistributorServiceException {
-		SessionHolder holder = sessions.get(name);
-		if (holder == null)
-			throw new NoSuchDistributedSessionException(name);
-		return holder.getAttributes();
+	public DistributedSessionVO restoreDistributedSession(String name, String callerId) throws SessionDistributorServiceException {
+		DistributedSessionVO session = getDistributedSession(name);
+
+		//TODO : think about service ID  .. maybe "reference if ? (JSeSSIONId)"
+		Event restore = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.restore(session.getName(), callerId));
+		try {
+			eventSender.push(restore);
+		} catch (QueueFullException e) {
+			LOG.error("Can't push Session restore event. Queue is Full. Event:" + restore);
+		}
+
+
+		return session;
 	}
 
 	@Override
@@ -89,29 +131,75 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		return ret;
 	}
 
-	@Override
-	public void updateDistributedSession(String name, List<SessionAttribute> attributes) throws SessionDistributorServiceException {
-		SessionHolder holder = sessions.get(name);
-		if (holder == null)
-			throw new NoSuchDistributedSessionException(name);
-		holder.setAttributes(attributes);
+	public void updateSessionUserId(String sessionName, String userId) throws SessionDistributorServiceException {
+		DistributedSessionVO session = getDistributedSession(sessionName);
+		session.setUserId(userId);
+		session.setLastChangeTime(System.currentTimeMillis());
 	}
-	
+
+	public void updateSessionEditorId(String sessionName, String editorId) throws SessionDistributorServiceException {
+		DistributedSessionVO session = getDistributedSession(sessionName);
+		session.setEditorId(editorId);
+		session.setLastChangeTime(System.currentTimeMillis());
+	}
+
+
+	public void addDistributedAttribute(String sessionName, DistributedSessionAttribute attribute) throws SessionDistributorServiceException {
+		DistributedSessionVO session = getDistributedSession(sessionName);
+		session.addDistributedAttribute(attribute);
+		session.setLastChangeTime(System.currentTimeMillis());
+	}
+
+	public void removeDistributedAttribute(String sessionName, String attributeName) throws SessionDistributorServiceException {
+		DistributedSessionVO session = getDistributedSession(sessionName);
+		session.removeDistributedAttribute(attributeName);
+		session.setLastChangeTime(System.currentTimeMillis());
+	}
+
 	/**
-	 * 
+	 * Return DistributedSessionVO from local cache.
+	 * If such session does not exists NoSuchDistributedSessionException will be thrown.
+	 *
+	 * @param name - session name
+	 * @return {@link DistributedSessionVO}
+	 * @throws NoSuchDistributedSessionException
+	 *          if session does not exist
 	 */
-	private void cleanup(){
+	private DistributedSessionVO getDistributedSession(String name) throws NoSuchDistributedSessionException {
+		DistributedSessionVO session = sessions.get(name);
+		if (session == null)
+			throw new NoSuchDistributedSessionException(name);
+		return session;
+	}
+
+	/**
+	 * Clean up expired session from local cache  based on timer task.
+	 */
+	private void cleanup() {
 		int expiredCount = 0;
 		int sizeBefore = sessions.size();
-		Collection<SessionHolder> holders = new ArrayList<SessionHolder>();
+		List<String> cleanedIds = new ArrayList<String>();
+		Collection<DistributedSessionVO> holders = new ArrayList<DistributedSessionVO>();
 		holders.addAll(sessions.values());
-		for (SessionHolder h : holders){
-			if (h.isExpired()){
+		for (DistributedSessionVO session : holders) {
+			if (session.isExpired()) {
 				expiredCount++;
-				sessions.remove(h.getName());
+				sessions.remove(session.getName());
+				cleanedIds.add(session.getName());
 			}
 		}
-		log.info("Finished session distributor cleanup run, removed sessions: " + expiredCount + ", sizeBefore: " + sizeBefore + ", sizeAfter: "
+		//event !
+		//TODO : ?  maybe - not send ???
+		if (!cleanedIds.isEmpty()) {
+			Event cleanUp = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.cleanUp(cleanedIds));
+			try {
+				eventSender.push(cleanUp);
+			} catch (QueueFullException e) {
+				LOG.error("Can't push Session cleanUp event. Queue is Full. Event:" + cleanUp);
+			}
+		}
+
+		LOG.info("Finished session distributor cleanup run, removed sessions: " + expiredCount + ", sizeBefore: " + sizeBefore + ", sizeAfter: "
 				+ sessions.size());
 	}
 
