@@ -32,9 +32,9 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 	private static final String LOG_PREFIX = "DATASPACE PERSISTENCE SERVICE: ";
 
 	/**
-	 * DDL queries.
+	 * DDL queries. Don't make this variable static.
 	 */
-	private static final List<String> ddlQueries = new ArrayList<String>();
+	private final List<String> ddlQueries = new ArrayList<String>();
 
 	/**
 	 * Persistence service configuration
