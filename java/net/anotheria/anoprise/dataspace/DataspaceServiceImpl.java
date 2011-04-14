@@ -49,10 +49,10 @@ public class DataspaceServiceImpl implements DataspaceService {
 		persistenceService = DataspacePersistenceServiceFactory.getInstance();
 
 		try {
-			cache = Caches.createConfigurableHardwiredCache("dataspacecache");
+			cache = Caches.createConfigurableHardwiredCache("ano-prise-dataspace-cache");
 		} catch (IllegalArgumentException e) {
-			log.warn("Can't find cache configuration for dataspacecache, falling back to min cache.");
-			cache = Caches.createHardwiredCache("dataspacecache", CACHE_START_SIZE, CACHE_MAX_SIZE);
+			log.warn("Can't find cache configuration for ano-prise-dataspace-cache, falling back to min cache.");
+			cache = Caches.createHardwiredCache("ano-prise-dataspace-cache", CACHE_START_SIZE, CACHE_MAX_SIZE);
 		}
 	}
 
