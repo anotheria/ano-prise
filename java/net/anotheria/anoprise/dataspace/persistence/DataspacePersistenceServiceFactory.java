@@ -8,11 +8,6 @@ package net.anotheria.anoprise.dataspace.persistence;
 public final class DataspacePersistenceServiceFactory {
 
 	/**
-	 * Instance of {@link DataspacePersistenceServiceImpl}.
-	 */
-	private static DataspacePersistenceServiceImpl instance;
-
-	/**
 	 * Default constructor.
 	 */
 	private DataspacePersistenceServiceFactory() {
@@ -24,10 +19,7 @@ public final class DataspacePersistenceServiceFactory {
 	 * @return {@link DataspacePersistenceServiceImpl}
 	 */
 	public static synchronized DataspacePersistenceService getInstance() {
-		if (instance == null)
-			instance = new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance());
-
-		return instance;
+		return new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance());
 	}
 
 	/**
