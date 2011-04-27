@@ -3,12 +3,12 @@ package net.anotheria.anoprise.sessiondistributor;
 import java.io.Serializable;
 
 /**
- * SessionAttribute used in SessionDestributorService.
- * 
+ * DistributedSessionAttribute used in SessionDistributorService.
+ *
  * @author lrosenberg
  * @version 1.0, 2010/01/03
  */
-public class SessionAttribute implements Serializable {
+public class DistributedSessionAttribute implements Serializable {
 
 	/**
 	 * Basic serialVersionUID variable.
@@ -16,27 +16,28 @@ public class SessionAttribute implements Serializable {
 	private static final long serialVersionUID = 3161203681531772457L;
 
 	/**
+	 * DistributedSessionAttribute 'name'.
 	 * Name of the attribute.
 	 */
 	private String name;
 
 	/**
+	 * DistributedSessionAttribute 'data'.
 	 * Stored serialized data.
 	 */
 	private byte[] data;
 
 	/**
 	 * Default constructor.
-	 * 
-	 * @param aName
-	 *            - name
-	 * @param someData
-	 *            - data
+	 *
+	 * @param aName	- name
+	 * @param someData - data
 	 */
-	public SessionAttribute(String aName, byte[] someData) {
+	public DistributedSessionAttribute(String aName, byte[] someData) {
 		name = aName;
 		data = someData;
 	}
+
 
 	public String getName() {
 		return name;
@@ -45,6 +46,8 @@ public class SessionAttribute implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
 
 	public byte[] getData() {
 		return data;
@@ -60,7 +63,16 @@ public class SessionAttribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getName() + " with " + getDataSize() + " bytes.";
+		return getName() + ",  with " + getDataSize() + " bytes.";
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return o == this || ((o instanceof DistributedSessionAttribute) && ((DistributedSessionAttribute) o).getName().equals(getName()));
+	}
+
+	@Override
+	public int hashCode() {
+		return getName() != null ? getName().hashCode() : 0;
+	}
 }
