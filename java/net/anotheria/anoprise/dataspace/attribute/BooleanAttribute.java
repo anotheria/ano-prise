@@ -45,7 +45,7 @@ public class BooleanAttribute extends Attribute {
 
 	@Override
 	public String getValueAsString() {
-		return "" + value;
+		return String.valueOf(value);
 	}
 
 	@Override

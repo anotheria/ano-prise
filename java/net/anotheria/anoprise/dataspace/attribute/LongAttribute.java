@@ -45,7 +45,7 @@ public class LongAttribute extends Attribute {
 
 	@Override
 	public String getValueAsString() {
-		return "" + value;
+		return String.valueOf(value);
 	}
 
 	@Override
