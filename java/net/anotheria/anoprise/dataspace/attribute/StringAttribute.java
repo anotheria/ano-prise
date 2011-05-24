@@ -1,5 +1,7 @@
 package net.anotheria.anoprise.dataspace.attribute;
 
+import net.anotheria.util.StringUtils;
+
 /**
  * String attribute used in dataspace.
  * 
@@ -32,7 +34,7 @@ public class StringAttribute extends Attribute {
 
 	@Override
 	public String getValueAsString() {
-		return "" + value;
+		return StringUtils.isEmpty(null) ? "" : value;
 	}
 
 	@Override
