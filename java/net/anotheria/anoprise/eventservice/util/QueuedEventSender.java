@@ -61,6 +61,8 @@ public class QueuedEventSender extends Thread {
 	 */
 	private int throwAwayCount;
 	
+	private volatile boolean started = false; 
+	
 	static{
 		defLogger = Logger.getLogger(QueuedEventSender.class);
 	}
@@ -101,6 +103,8 @@ public class QueuedEventSender extends Thread {
 	}
 	
 	public void push(Event event) throws QueueFullException{
+		if (!started)
+			throw new IllegalStateException("Can't push into not started event sender");
 		try{
 			queue.putElement(event);
 		}catch(QueueOverflowException e1){
@@ -122,9 +126,13 @@ public class QueuedEventSender extends Thread {
 		}
 	}
 	
+	@Override public void start(){
+		started = true;
+		super.start();
+	}
+	
 	@Override
 	public void run(){
-		
 		try{
 		
 			//ThreadController.getInstance().addThreadAs(this, name);
