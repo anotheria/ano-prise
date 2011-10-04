@@ -63,6 +63,13 @@ public final class Caches {
 		return controller;
 	}
 	
+	public static final <K,V> Cache<K,V> createConfigurableSoftReferenceExpiringCache(String name){
+		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>();
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		ConfigurationManager.INSTANCE.configureAs(controller, name);
+		return controller;
+	}
+
 	public static final <K,V> Cache<K,V> createConfigurableHardwiredCache(String name){
 		CacheFactory<K, V> factory = new RoundRobinHardwiredCacheFactory<K, V>();
 		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
@@ -108,8 +115,13 @@ public final class Caches {
 		//protect from instantiation.
 	}
 	
-/*	public static enum Strategy{
+	public static enum Strategy{
 		ROUNDROBIN,
 		EXPIRATION
-	}*/
+	}
+	
+	public static enum Wiring{
+		HARDWIRED,
+		SOFTREFERENCE,
+	}
 }
