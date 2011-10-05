@@ -3,10 +3,8 @@ package net.anotheria.anoprise.inmemorymirror;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryMirror<K, V>{
 	
