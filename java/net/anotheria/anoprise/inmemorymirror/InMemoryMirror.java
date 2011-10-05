@@ -2,6 +2,13 @@ package net.anotheria.anoprise.inmemorymirror;
 
 import java.util.Collection;
 
+/**
+ * The InMemoryMirror allows to hold a copy of some small portion of data in memory.
+ * @author lrosenberg
+ *
+ * @param <K>
+ * @param <V>
+ */
 public interface InMemoryMirror<K,V extends Mirrorable<K>> {
 	/**
 	 * Returns all elements as a collection.
