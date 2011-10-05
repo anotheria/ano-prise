@@ -1,13 +1,17 @@
 package net.anotheria.anoprise.inmemorymirror;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOnSupplier;
 
 public class InMemoryMirrorTest {
 	
