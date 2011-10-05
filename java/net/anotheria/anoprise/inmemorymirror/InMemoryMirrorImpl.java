@@ -20,11 +20,11 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	}
 	
 	@Override
-	public Collection<V> getAll() {
+	public Collection<V> getAll() throws InMemoryMirrorException{
 		return getCache().values();
 	}
 	
-	private Map<K, V> getCache(){
+	private Map<K, V> getCache() throws InMemoryMirrorException{
 		try{
 			lock.readLock().lock();
 			if (cache!=null)
@@ -50,20 +50,36 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	}
 	
 	@Override
-	public V get(K id) {
-		return getCache().get(id);
+	public V get(K key) throws InMemoryMirrorException{
+		V ret = getCache().get(key);
+		if (ret==null)
+			throw new ElementNotFoundException(key.toString());
+		return ret;
 	}
 
 	@Override
-	public V remove(K id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void update(V element) {
-		// TODO Auto-generated method stub
+	public V remove(K key) throws InMemoryMirrorException{
+		try{
+			lock.writeLock().lock();
+			V fromSupport = support.remove(key);
+			//technically next call is not necessary if fromSupport == null, but in order to reduce possible inconsistency we still do it.
+			getCache().remove(key);
+			return fromSupport;
+		}finally{
+			lock.writeLock().unlock();
+		}
 		
+	}
+
+	@Override
+	public void update(V element) throws InMemoryMirrorException{
+		try{
+			lock.writeLock().lock();
+			support.update(element);
+			getCache().put(element.getKey(), element);
+		}finally{
+			lock.writeLock().unlock();
+		}
 	}
 
 	@Override

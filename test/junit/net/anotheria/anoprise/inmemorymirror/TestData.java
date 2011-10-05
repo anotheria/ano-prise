@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.inmemorymirror;
 
-public class TestData implements Mirrorable<String>{
+public class TestData implements Mirrorable<String>, Cloneable{
 	private String key;
 	private String value;
 	
@@ -35,6 +35,12 @@ public class TestData implements Mirrorable<String>{
 		
 	}
 	
-	
+	public TestData clone(){
+		try{
+			return (TestData)super.clone();
+		}catch(CloneNotSupportedException e){
+			throw new AssertionError("can't happen!");
+		}
+	}
 
 }
