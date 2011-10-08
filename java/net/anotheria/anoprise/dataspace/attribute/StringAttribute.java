@@ -34,7 +34,7 @@ public class StringAttribute extends Attribute {
 
 	@Override
 	public String getValueAsString() {
-		return StringUtils.isEmpty(null) ? "" : value;
+		return StringUtils.isEmpty(value) ? "" : value;
 	}
 
 	@Override
