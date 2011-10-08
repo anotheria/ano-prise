@@ -61,7 +61,12 @@ public class QueuedEventSender extends Thread {
 	 */
 	private int throwAwayCount;
 	
-	private volatile boolean started = false; 
+	private volatile boolean started = false;
+	
+	/**
+	 * This is a special mode for unittesting, in this mode events are delivered directly without queue. Use only in testing.
+	 */
+	private volatile boolean synchedMode = false;
 	
 	static{
 		defLogger = Logger.getLogger(QueuedEventSender.class);
@@ -103,6 +108,11 @@ public class QueuedEventSender extends Thread {
 	}
 	
 	public void push(Event event) throws QueueFullException{
+		//this is the special testing mode. In this mode no queuing takes places. Also, the queue processor can remain unstarted in this mode.
+		if (synchedMode){
+			myChannel.push(event);
+			return;
+		}
 		if (!started)
 			throw new IllegalStateException("Can't push into not started event sender");
 		try{
@@ -194,5 +204,13 @@ public class QueuedEventSender extends Thread {
 	
 	public boolean hasUnsentElements(){
 		return queue.hasElements();
+	}
+
+	public boolean isSynchedMode() {
+		return synchedMode;
+	}
+
+	public void setSynchedMode(boolean synchedMode) {
+		this.synchedMode = synchedMode;
 	}
 }
