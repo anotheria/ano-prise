@@ -28,6 +28,10 @@ public class EventServiceImpl implements EventService {
 	private RemoteEventChannelSupportFactory remoteSupportFactory;
 
 	private EventServiceImpl() {
+		init();
+	}
+	
+	private void init(){
 		pushConsumerProxies = new ConcurrentHashMap<String, EventChannelPushConsumerProxy>(10);
 		pushSupplierProxies = new ConcurrentHashMap<String, EventChannelPushSupplierProxy>(10);
 		remoteConsumerProxies = new ConcurrentHashMap<String, RemoteEventChannelConsumerProxy>(10);
@@ -35,7 +39,13 @@ public class EventServiceImpl implements EventService {
 
 		listeners = new CopyOnWriteArrayList<EventServiceListener>();
 	}
+	
+	public void resetForUnitTesting(){
+		init();
+	}
 
+	
+	
 	public static EventServiceImpl getInstance() {
 		return instance;
 	}
