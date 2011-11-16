@@ -11,6 +11,10 @@ import java.util.List;
 public class SessionCleanUpEvent extends SessionDistributorEvent {
 
 	/**
+	 * SerialVersionUID.
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * SessionCleanUpEvent 'sessionIds'.
 	 */
 	private List<String> sessionIds;

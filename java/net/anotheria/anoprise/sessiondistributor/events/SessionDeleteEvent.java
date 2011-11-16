@@ -8,6 +8,10 @@ package net.anotheria.anoprise.sessiondistributor.events;
 
 public class SessionDeleteEvent extends SessionDistributorEvent {
 	/**
+	 * SerialVersionUID.
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * SessionDeleteEvent 'sessionId'.
 	 */
 	private String sessionId;
