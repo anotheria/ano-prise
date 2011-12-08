@@ -78,6 +78,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public String createDistributedSession(String sessionId) throws SessionDistributorServiceException {
+		LOG.debug("createDistributedSession("+sessionId+")");
 		DistributedSessionVO toCreate = new DistributedSessionVO(sessionId);
 		if (!sessions.containsKey(sessionId)) {
 			sessions.put(sessionId, toCreate);
@@ -94,6 +95,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public void deleteDistributedSession(String name) throws SessionDistributorServiceException {
+		LOG.debug("deleteDistributedSession("+name+")");
 		if (!sessions.containsKey(name))
 			throw new NoSuchDistributedSessionException(name);
 		sessions.remove(name);
@@ -109,15 +111,18 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public DistributedSessionVO restoreDistributedSession(String name, String callerId) throws SessionDistributorServiceException {
+		LOG.debug("restoreDistributedSession("+name+", "+callerId+")");
 		DistributedSessionVO session = getDistributedSession(name);
 
 		Event restore = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.restore(session.getName(), callerId));
+		LOG.debug("pushing event: "+restore);
 		try {
 			eventSender.push(restore);
 		} catch (QueueFullException e) {
 			LOG.error("Can't push Session restore event. Queue is Full. Event:" + restore);
 		}
 
+		LOG.debug("pushing finished");
 
 		return session;
 	}
@@ -143,12 +148,14 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 
 	public void addDistributedAttribute(String sessionName, DistributedSessionAttribute attribute) throws SessionDistributorServiceException {
+		LOG.debug("addDistributedAttribute("+sessionName+", "+attribute+")");
 		DistributedSessionVO session = getDistributedSession(sessionName);
 		session.addDistributedAttribute(attribute);
 		session.setLastChangeTime(System.currentTimeMillis());
 	}
 
 	public void removeDistributedAttribute(String sessionName, String attributeName) throws SessionDistributorServiceException {
+		LOG.debug("removeDistributedAttribute("+sessionName+", "+attributeName+")");
 		DistributedSessionVO session = getDistributedSession(sessionName);
 		session.removeDistributedAttribute(attributeName);
 		session.setLastChangeTime(System.currentTimeMillis());
@@ -156,6 +163,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public void keepDistributedSessionAlive(String sessionName) throws SessionDistributorServiceException {
+		LOG.debug("keepDistributedSessionAlive("+sessionName+")");
 		DistributedSessionVO session = getDistributedSession(sessionName);
 		session.setLastChangeTime(System.currentTimeMillis());
 	}
@@ -197,6 +205,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		if (!cleanedSessionsIds.isEmpty()) {
 			Event cleanUp = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.cleanUp(cleanedSessionsIds));
 			try {
+				LOG.debug("cleanup event sending: "+cleanUp);
 				eventSender.push(cleanUp);
 			} catch (QueueFullException e) {
 				LOG.error("Can't push Session cleanUp event. Queue is Full. Event:" + cleanUp);
