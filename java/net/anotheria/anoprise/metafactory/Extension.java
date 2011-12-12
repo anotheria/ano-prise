@@ -15,9 +15,13 @@ public enum Extension {
      */
     LOCAL,
     /**
-     * Remote service factory (rmi).
+     * Remote service factory (used by distributeme for synch remote).
      */
     REMOTE,
+    /**
+     * Asynch service factory (used by distributeme for asynch remote).
+     */
+    ASYNCH,
     /**
      * Domain knowledge factory (means real impl).
      */
