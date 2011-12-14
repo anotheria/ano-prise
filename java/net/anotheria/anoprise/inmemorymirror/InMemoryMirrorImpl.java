@@ -81,14 +81,14 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	}
 
 	@Override
-	public V create(V element) {
+	public V create(V element) throws InMemoryMirrorException {
 		try{
 			lock.writeLock().lock();
 			V created = support.create(element);
 			cache.put(created.getKey(), created);
 			return created;
 		}catch(Exception exception){
-			throw new AssertionError("FIXME");
+			throw new InMemoryMirrorException("create(" + element + ")", exception);
 		}finally{
 			lock.writeLock().unlock();
 		}
