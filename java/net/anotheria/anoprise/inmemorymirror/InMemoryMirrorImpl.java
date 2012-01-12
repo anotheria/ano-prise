@@ -85,7 +85,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 		try{
 			lock.writeLock().lock();
 			V created = support.create(element);
-			cache.put(created.getKey(), created);
+			getCache().put(created.getKey(), created);
 			return created;
 		}catch(Exception exception){
 			throw new InMemoryMirrorException("create(" + element + ")", exception);
