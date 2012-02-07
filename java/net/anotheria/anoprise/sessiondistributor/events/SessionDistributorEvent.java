@@ -8,7 +8,6 @@ import java.util.List;
  *
  * @author h3ll
  */
-
 public abstract class SessionDistributorEvent implements Serializable {
 
 	/**
@@ -43,7 +42,7 @@ public abstract class SessionDistributorEvent implements Serializable {
 	 * Creates session restore event.
 	 *
 	 * @param sessionId id of the session
-	 * @param callerId some unique caller service id
+	 * @param callerId  some unique caller service id
 	 * @return {@link SessionRestoreEvent}
 	 */
 	public static SessionDistributorEvent restore(final String sessionId, final String callerId) {

@@ -26,23 +26,23 @@ public interface SessionDistributorService extends Service {
 	/**
 	 * Delete distributed session.
 	 *
-	 * @param name - session name
+	 * @param sessionId - session sessionId
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	void deleteDistributedSession(String name) throws SessionDistributorServiceException;
+	void deleteDistributedSession(String sessionId) throws SessionDistributorServiceException;
 
 
 	/**
 	 * Return distributed session if such exists. Afterwards session restored event will be generated.
 	 *
-	 * @param name	 - session name
+	 * @param sessionId	 - session sessionId
 	 * @param callerId - actually caller service id (will be used only in event!)
 	 * @return {@link DistributedSessionVO}
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	DistributedSessionVO restoreDistributedSession(String name, String callerId) throws SessionDistributorServiceException;
+	DistributedSessionVO restoreDistributedSession(String sessionId, String callerId) throws SessionDistributorServiceException;
 
 	/**
 	 * Get distributed session names.
@@ -56,51 +56,51 @@ public interface SessionDistributorService extends Service {
 	/**
 	 * Updates DistributedSession userId property.
 	 *
-	 * @param sessionName name of the session
+	 * @param sessionId name of the session
 	 * @param userId	  user id
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	void updateSessionUserId(String sessionName, String userId) throws SessionDistributorServiceException;
+	void updateSessionUserId(String sessionId, String userId) throws SessionDistributorServiceException;
 
 	/**
 	 * Updates DistributedSession editorId property.
 	 *
-	 * @param sessionName name of the session
+	 * @param sessionId name of the session
 	 * @param editorId	editor id
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	void updateSessionEditorId(String sessionName, String editorId) throws SessionDistributorServiceException;
+	void updateSessionEditorId(String sessionId, String editorId) throws SessionDistributorServiceException;
 
 	/**
 	 * Add attribute to session.
 	 * If such attribute already exist - it will be updated.
 	 *
-	 * @param sessionName - name of the session
+	 * @param sessionId - name of the session
 	 * @param attribute   - {@link DistributedSessionAttribute}
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	void addDistributedAttribute(String sessionName, DistributedSessionAttribute attribute) throws SessionDistributorServiceException;
+	void addDistributedAttribute(String sessionId, DistributedSessionAttribute attribute) throws SessionDistributorServiceException;
 
 	/**
 	 * Remove distributed attribute with selected attributeName from session.
 	 *
-	 * @param sessionName   -  name of the session
+	 * @param sessionId   -  name of the session
 	 * @param attributeName - attribute name
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	void removeDistributedAttribute(String sessionName, String attributeName) throws SessionDistributorServiceException;
+	void removeDistributedAttribute(String sessionId, String attributeName) throws SessionDistributorServiceException;
 
 	/**
 	 * Keep alive call. Actually simply prolong distributed session expiration time!
 	 *
-	 * @param sessionName name/id of the  session
+	 * @param sessionId name/id of the  session
 	 * @throws SessionDistributorServiceException
 	 *          on errors
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
-	void keepDistributedSessionAlive(String sessionName) throws SessionDistributorServiceException;
+	void keepDistributedSessionAlive(String sessionId) throws SessionDistributorServiceException;
 }
