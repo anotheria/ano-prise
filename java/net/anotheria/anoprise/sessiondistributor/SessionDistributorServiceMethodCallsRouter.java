@@ -91,7 +91,6 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 
 	@Override
 	public String getServiceIdForCall(ClientSideCallContext callContext) {
-		String result;
 		//Checking if MOD routing is possible for current call!
 		if (routeModMethods.contains(callContext.getMethodName()) && callContext.isFirstCall())
 			return getModBasedServiceId(callContext);
