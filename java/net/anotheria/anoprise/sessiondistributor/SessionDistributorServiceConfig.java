@@ -240,8 +240,7 @@ public class SessionDistributorServiceConfig {
 			try {
 				ConfigurationManager.INSTANCE.configure(INSTANCE);
 			} catch (Exception e) {
-				Logger.getLogger(SessionDistributorServiceConfig.class).error("SessionDistributorServiceConfig configuration failed. configuring defaults.",
-						e);
+				Logger.getLogger(SessionDistributorServiceConfig.class).error("SessionDistributorServiceConfig configuration failed. configuring defaults. " + e.getMessage());
 			}
 		}
 
