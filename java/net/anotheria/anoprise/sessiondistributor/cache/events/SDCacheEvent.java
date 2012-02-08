@@ -81,6 +81,6 @@ public class SDCacheEvent implements Serializable {
 	 * @return save event
 	 */
 	public static SDCacheEvent delete(String nodeId, DistributedSessionVO sessionVO) {
-		return new SDCacheEvent(SDCacheESOperations.CACHE_SESSION_SAVE, sessionVO, nodeId);
+		return new SDCacheEvent(SDCacheESOperations.CACHE_SESSION_REMOVE, sessionVO, nodeId);
 	}
 }
