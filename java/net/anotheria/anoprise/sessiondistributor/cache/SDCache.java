@@ -138,6 +138,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 		DistributedSessionVO toCreate = new DistributedSessionVO(possibleSessionId);
 		if (!sessionExists(possibleSessionId)) {
 			sessions.put(possibleSessionId, toCreate);
+			//send event!  CREATE
+			announceSave(toCreate);
 			return possibleSessionId;
 		}
 		DistributedSessionVO old;
