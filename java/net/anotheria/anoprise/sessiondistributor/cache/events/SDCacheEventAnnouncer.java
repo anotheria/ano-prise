@@ -44,7 +44,7 @@ public final class SDCacheEventAnnouncer implements EventServicePushSupplier {
 	public SDCacheEventAnnouncer() {
 		SessionDistributorServiceConfig config = SessionDistributorServiceConfig.getInstance();
 		EventChannel eventChannel = EventServiceFactory.createEventService().obtainEventChannel(EVENT_CHANNEL_NAME, this);
-		boolean unitTesting = Boolean.parseBoolean(System.getProperty(JUNITTEST, "false"));
+		boolean unitTesting = Boolean.valueOf(System.getProperty(JUNITTEST, String.valueOf(false)));
 		eventSender = new QueuedEventSender(EVENT_CHANNEL_NAME + "-sender", eventChannel, config.getSdCacheEventQueueSize(), config.getSdCacheEventQueueSleepTime(), LOG);
 		if (unitTesting) {
 			eventSender.setSynchedMode(true);
