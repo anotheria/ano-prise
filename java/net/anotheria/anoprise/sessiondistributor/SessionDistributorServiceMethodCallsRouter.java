@@ -93,18 +93,10 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	public String getServiceIdForCall(ClientSideCallContext callContext) {
 		String result;
 		//Checking if MOD routing is possible for current call!
-		if (routeModMethods.contains(callContext.getMethodName()) && callContext.isFirstCall()) {
-			result = getModBasedServiceId(callContext);
-			if (LOG.isDebugEnabled())
-				LOG.debug("Returning mod based result : " + result + " for " + callContext);
-			return result;
-		}
+		if (routeModMethods.contains(callContext.getMethodName()) && callContext.isFirstCall())
+			return getModBasedServiceId(callContext);
 
-		result = getRoundRobinBasedServiceId(callContext);
-		if (LOG.isDebugEnabled())
-			LOG.debug("Returning roundRobin based result : " + result + " for " + callContext);
-
-		return result;
+		return getRoundRobinBasedServiceId(callContext);
 	}
 
 	/**
@@ -123,7 +115,11 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 		long parameterValue = getModableValue(parameter);
 		//reading mod from config
 		int mod = configuration.getSessionDistributorServersAmount();
-		return callContext.getServiceId() + UNDER_LINE + (parameterValue % mod);
+
+		String result = (mod - 1) <= 0 ? callContext.getServiceId() : callContext.getServiceId() + UNDER_LINE + (parameterValue % mod);
+		if (LOG.isDebugEnabled())
+			LOG.debug("Returning mod based result : " + result + " for " + callContext);
+		return result;
 	}
 
 	/**
@@ -138,7 +134,15 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 		int mod = configuration.getSessionDistributorServersAmount();
 		if (delegateCallCounter.incrementAndGet() > (mod - 1))
 			delegateCallCounter.set(0);
-		String result = mod == 0 || mod < 0 ? callContext.getServiceId() : callContext.getServiceId() + UNDER_LINE + callCounter;
+		String serviceId = callContext.getServiceId();
+		//for failing strategy!
+		if (!callContext.isFirstCall()) {
+			//find last index of "_" cause after failing serviceId will contains smth like "_{mod}"
+			int instanceNumberPosition = serviceId.lastIndexOf(UNDER_LINE);
+			serviceId = instanceNumberPosition > 0 ? serviceId.substring(0, instanceNumberPosition) : serviceId;
+		}
+		String result = (mod - 1) <= 0 ? serviceId : serviceId + UNDER_LINE + callCounter;
+
 		if (LOG.isDebugEnabled())
 			LOG.debug("Returning roundRobin based result : " + result + " for " + callContext);
 
@@ -155,7 +159,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	 */
 	private long getModableValue(Object o) {
 		if (o instanceof String)
-			return String.class.cast(o).hashCode();
+			return Math.abs(String.class.cast(o).hashCode());
 		if (o == null)
 			throw new AssertionError("Null objects are not supported");
 

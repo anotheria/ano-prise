@@ -172,8 +172,7 @@ public class SessionDistributorServiceConfig {
 
 	public void setSessionDistributorServersAmount(int sessionDistributorServersAmount) {
 		//set only in case  when more then 1. Otherwise rely on defaults!
-		if (sessionDistributorServersAmount > 1)
-			this.sessionDistributorServersAmount = sessionDistributorServersAmount;
+		this.sessionDistributorServersAmount = sessionDistributorServersAmount > 0 ? sessionDistributorServersAmount : 0;
 	}
 
 	public boolean isFailingStrategyEnabled() {
