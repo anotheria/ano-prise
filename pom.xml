@@ -37,7 +37,7 @@
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>ano-util</artifactId>
-            <version>1.0.12-SNAPSHOT</version>
+            <version>1.0.14</version>
         </dependency>
         <dependency>
             <groupId>net.anotheria</groupId>
