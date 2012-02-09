@@ -7,7 +7,11 @@ import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
 import net.anotheria.anoprise.eventservice.util.QueuedEventReceiver;
 import net.anotheria.anoprise.fs.FSSaveable;
-import net.anotheria.anoprise.sessiondistributor.*;
+import net.anotheria.anoprise.sessiondistributor.DistributedSessionAttribute;
+import net.anotheria.anoprise.sessiondistributor.DistributedSessionVO;
+import net.anotheria.anoprise.sessiondistributor.NoSuchDistributedSessionException;
+import net.anotheria.anoprise.sessiondistributor.SessionDistributorServiceConfig;
+import net.anotheria.anoprise.sessiondistributor.SessionDistributorServiceImpl;
 import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEvent;
 import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEventAnnouncer;
 import net.anotheria.util.IdCodeGenerator;
@@ -29,6 +33,10 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class SDCache implements FSSaveable, CrudSaveable {
 	/**
+	 * Basic serial version UID.
+	 */
+	private static final long serialVersionUID = -1947015503980653358L;
+	/**
 	 * Logger.
 	 */
 	private static final Logger LOG = Logger.getLogger(SDCache.class);
@@ -36,6 +44,7 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 * CACHE_OWNER_ID constant.
 	 */
 	protected static final String CACHE_OWNER_ID = String.valueOf(SessionDistributorServiceImpl.SESSION_DISTRIBUTOR_SERVICE_DISTRIBUTED_SESSIONS_CACHE_OWNER);
+
 	/**
 	 * {@link IdBasedLockManager} instance.
 	 */
