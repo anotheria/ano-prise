@@ -86,6 +86,8 @@ public class DataspaceServiceImpl implements DataspaceService {
 
 	@Override
 	public void saveDataspace(Dataspace dataspace) throws DataspaceServiceException {
+		if (dataspace == null)
+			throw new IllegalArgumentException("Dataspace null");
 		if (dataspace.getUserId() == null)
 			throw new IllegalArgumentException("User id null");
 		if (dataspace.getDataspaceType() == null)

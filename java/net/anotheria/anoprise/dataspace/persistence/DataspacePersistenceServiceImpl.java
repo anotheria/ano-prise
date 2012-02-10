@@ -11,6 +11,9 @@ import net.anotheria.anoprise.dataspace.Dataspace;
 import net.anotheria.anoprise.dataspace.DataspaceType;
 import net.anotheria.anoprise.dataspace.attribute.Attribute;
 import net.anotheria.db.service.GenericPersistenceService;
+import net.anotheria.util.concurrency.IdBasedLock;
+import net.anotheria.util.concurrency.IdBasedLockManager;
+import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 
 import org.apache.log4j.Logger;
 
@@ -42,6 +45,11 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 	private final DataspacePersistenceConfiguration configuration;
 
 	/**
+	 * {@link IdBasedLockManager} instance.
+	 */
+	private IdBasedLockManager lockManager;
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @param aConfiguration
@@ -59,10 +67,17 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 		ddlQueries.add(configuration.getDDLSetOwner());
 
 		initialize();
+
+		lockManager = new SafeIdBasedLockManager();
 	}
 
 	@Override
 	public Dataspace loadDataspace(String userId, DataspaceType dataspaceType) throws DataspacePersistenceServiceException {
+		if (userId == null)
+			throw new IllegalArgumentException("User id null");
+		if (dataspaceType == null)
+			throw new IllegalArgumentException("Dataspace type null");
+
 		Dataspace result = new Dataspace(userId, dataspaceType);
 
 		Connection conn = null;
@@ -97,11 +112,20 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 
 	@Override
 	public void saveDataspace(Dataspace dataspace) throws DataspacePersistenceServiceException {
+		if (dataspace == null)
+			throw new IllegalArgumentException("Dataspace null");
+		if (dataspace.getUserId() == null)
+			throw new IllegalArgumentException("User id null");
+		if (dataspace.getDataspaceType() == null)
+			throw new IllegalArgumentException("Dataspace type null");
+
 		Connection conn = null;
 		PreparedStatement st = null;
 		PreparedStatement st2 = null;
-		ResultSet rs = null;
 
+		String lockId = dataspace.getUserId() + "_" + dataspace.getDataspaceType();
+		IdBasedLock lock = lockManager.obtainLock(lockId);
+		lock.lock();
 		try {
 			conn = getConnection();
 			conn.setAutoCommit(false);
@@ -139,13 +163,18 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 			}
 			conn.commit();
 		} catch (SQLException sqle) {
+			try {
+				conn.rollback();
+			} catch (SQLException sqle2) {
+				log.error(LOG_PREFIX + "SQL Exception: " + sqle2.getMessage(), sqle2);
+			}
 			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage(), sqle);
 			throw new DataspacePersistenceServiceException(sqle.getMessage(), sqle);
 		} finally {
-			close(rs);
 			close(st2);
 			close(st);
 			close(conn);
+			lock.unlock();
 		}
 	}
 
