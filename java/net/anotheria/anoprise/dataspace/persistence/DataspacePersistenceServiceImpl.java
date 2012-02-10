@@ -166,7 +166,7 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 			try {
 				conn.rollback();
 			} catch (SQLException sqle2) {
-				log.error(LOG_PREFIX + "SQL Exception: " + sqle2.getMessage(), sqle2);
+				log.error(LOG_PREFIX + "SQL Exception on transaction rollback: " + sqle2.getMessage(), sqle2);
 			}
 			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage(), sqle);
 			throw new DataspacePersistenceServiceException(sqle.getMessage(), sqle);
