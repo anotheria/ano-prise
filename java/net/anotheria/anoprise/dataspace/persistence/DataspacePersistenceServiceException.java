@@ -21,4 +21,17 @@ public class DataspacePersistenceServiceException extends Exception {
 	public DataspacePersistenceServiceException(String message) {
 		super(message);
 	}
+
+	/**
+	 * Public constructor.
+	 * 
+	 * @param message
+	 *            - exception message
+	 * @param cause
+	 *            - exception cause
+	 */
+	public DataspacePersistenceServiceException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

@@ -84,8 +84,8 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 				result.addAttribute(attrName, Attribute.createAttribute(attrType, attrName, attrValue));
 			}
 		} catch (SQLException sqle) {
-			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage());
-			throw new DataspacePersistenceServiceException(sqle.getMessage());
+			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage(), sqle);
+			throw new DataspacePersistenceServiceException(sqle.getMessage(), sqle);
 		} finally {
 			close(rs);
 			close(st);
@@ -139,8 +139,8 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 			}
 			conn.commit();
 		} catch (SQLException sqle) {
-			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage());
-			throw new DataspacePersistenceServiceException(sqle.getMessage());
+			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage(), sqle);
+			throw new DataspacePersistenceServiceException(sqle.getMessage(), sqle);
 		} finally {
 			close(rs);
 			close(st2);
