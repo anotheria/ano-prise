@@ -173,8 +173,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 */
 	public void removeSession(String sessionId) throws NoSuchDistributedSessionException {
 		IdBasedLock lock = lockManager.obtainLock(sessionId);
+		lock.lock();
 		try {
-			lock.lock();
 			DistributedSessionVO session = getSession(sessionId);
 			sessions.remove(sessionId);
 			//Announce delete
@@ -210,8 +210,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 */
 	public void updateSessionUserId(String sessionId, String userId) throws NoSuchDistributedSessionException {
 		IdBasedLock lock = lockManager.obtainLock(sessionId);
+		lock.lock();
 		try {
-			lock.lock();
 			DistributedSessionVO session = getSession(sessionId);
 			session.setUserId(userId);
 			session.setLastChangeTime(System.currentTimeMillis());
@@ -232,8 +232,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 */
 	public void updateSessionEditorId(String sessionId, String editorId) throws NoSuchDistributedSessionException {
 		IdBasedLock lock = lockManager.obtainLock(sessionId);
+		lock.lock();
 		try {
-			lock.lock();
 			DistributedSessionVO session = getSession(sessionId);
 			session.setEditorId(editorId);
 			session.setLastChangeTime(System.currentTimeMillis());
@@ -254,8 +254,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 */
 	public void addAttribute(String sessionId, DistributedSessionAttribute attribute) throws NoSuchDistributedSessionException {
 		IdBasedLock lock = lockManager.obtainLock(sessionId);
+		lock.lock();
 		try {
-			lock.lock();
 			DistributedSessionVO session = getSession(sessionId);
 			session.addDistributedAttribute(attribute);
 			session.setLastChangeTime(System.currentTimeMillis());
@@ -278,8 +278,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 */
 	public void removeAttribute(String sessionId, String attribute) throws NoSuchDistributedSessionException {
 		IdBasedLock lock = lockManager.obtainLock(sessionId);
+		lock.lock();
 		try {
-			lock.lock();
 			DistributedSessionVO session = getSession(sessionId);
 			session.removeDistributedAttribute(attribute);
 			session.setLastChangeTime(System.currentTimeMillis());
@@ -300,8 +300,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	 */
 	public void updateCallTime(String sessionId) throws NoSuchDistributedSessionException {
 		IdBasedLock lock = lockManager.obtainLock(sessionId);
+		lock.lock();
 		try {
-			lock.lock();
 			DistributedSessionVO session = getSession(sessionId);
 			session.setLastChangeTime(System.currentTimeMillis());
 			//update event
@@ -403,8 +403,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 			return;
 
 		IdBasedLock lock = lockManager.obtainLock(session.getName());
+		lock.lock();
 		try {
-			lock.lock();
 			try {
 				DistributedSessionVO onCurrentNode = getSession(session.getName());
 
@@ -447,8 +447,8 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 
 
 		IdBasedLock lock = lockManager.obtainLock(session.getName());
+		lock.lock();
 		try {
-			lock.lock();
 			try {
 				DistributedSessionVO onCurrentNode = getSession(session.getName());
 
