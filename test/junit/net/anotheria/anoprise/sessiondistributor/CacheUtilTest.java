@@ -3,10 +3,7 @@ package net.anotheria.anoprise.sessiondistributor;
 import net.anotheria.anoprise.fs.*;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCache;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCacheUtil;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * Junit for net.anotheria.anoprise.sessiondistributor.cache stuff.
@@ -34,6 +31,11 @@ public class CacheUtilTest {
 			Assert.fail("Should not happen!" + e.getMessage());
 		}
 
+	}
+
+	@Before
+	public void beforeM(){
+		before();
 	}
 
 	@AfterClass
