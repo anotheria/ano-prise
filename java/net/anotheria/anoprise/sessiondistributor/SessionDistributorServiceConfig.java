@@ -99,6 +99,13 @@ public class SessionDistributorServiceConfig {
 	@Configure
 	private long sdCacheEventQueueSleepTime;
 
+	/**
+	 * Represent System parameter name - under which SessionDistributor node ID  will be passed.
+	 * "extension" by default. @see Constructor.
+	 */
+	@Configure
+	private String nodeIdSystemPropertyName;
+
 
 	public static SessionDistributorServiceConfig getInstance() {
 		return SessionDistributorConfigInstanceHolder.INSTANCE;
@@ -124,6 +131,7 @@ public class SessionDistributorServiceConfig {
 
 		this.sdCacheEventQueueSize = DEFAULT_SD_EVEN_CHANNEL_Q_SIZE;
 		this.sdCacheEventQueueSleepTime = DEFAULT_SD_EVEN_CHANNEL_Q_SLEEP_TIME;
+		this.nodeIdSystemPropertyName = "extension";
 	}
 
 	public long getDistributedSessionMaxAge() {
@@ -223,6 +231,14 @@ public class SessionDistributorServiceConfig {
 		this.sdCacheEventQueueSleepTime = sdCacheEventQueueSleepTime;
 	}
 
+	public String getNodeIdSystemPropertyName() {
+		return nodeIdSystemPropertyName;
+	}
+
+	public void setNodeIdSystemPropertyName(String nodeIdSystemPropertyName) {
+		this.nodeIdSystemPropertyName = nodeIdSystemPropertyName;
+	}
+
 	/**
 	 * Static SessionDistributorConfigInstanceHolder which holds configured SessionDistributorServiceConfig instance.
 	 */
@@ -244,5 +260,24 @@ public class SessionDistributorServiceConfig {
 			}
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "SessionDistributorServiceConfig{" +
+				"distributedSessionsCleanUpInterval=" + distributedSessionsCleanUpInterval +
+				", distributedSessionMaxAge=" + distributedSessionMaxAge +
+				", sessionDistributorEventQueueSize=" + sessionDistributorEventQueueSize +
+				", sessionDistributorEventQueueSleepTime=" + sessionDistributorEventQueueSleepTime +
+				", multipleInstancesEnabled=" + multipleInstancesEnabled +
+				", sessionDistributorServersAmount=" + sessionDistributorServersAmount +
+				", failingStrategyEnabled=" + failingStrategyEnabled +
+				", wrightSessionsToFsOnShutdownEnabled=" + wrightSessionsToFsOnShutdownEnabled +
+				", sdSessionsFSRootFolder='" + sdSessionsFSRootFolder + '\'' +
+				", sdSessionsFileExtension='" + sdSessionsFileExtension + '\'' +
+				", sdCacheEventQueueSize=" + sdCacheEventQueueSize +
+				", sdCacheEventQueueSleepTime=" + sdCacheEventQueueSleepTime +
+				", nodeIdSystemPropertyName='" + nodeIdSystemPropertyName + '\'' +
+				'}';
 	}
 }

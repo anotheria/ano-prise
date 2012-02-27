@@ -1,7 +1,6 @@
 package net.anotheria.anoprise.sessiondistributor.cache;
 
 
-import net.anotheria.anoprise.dualcrud.CrudSaveable;
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
@@ -15,6 +14,7 @@ import net.anotheria.anoprise.sessiondistributor.SessionDistributorServiceImpl;
 import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEvent;
 import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEventAnnouncer;
 import net.anotheria.util.IdCodeGenerator;
+import net.anotheria.util.StringUtils;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
@@ -31,27 +31,27 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Defines SDCache, with serialization possibility, etc.
  */
-public final class SDCache implements FSSaveable, CrudSaveable {
+public final class SDCache implements FSSaveable {
 	/**
 	 * Basic serial version UID.
 	 */
 	private static final long serialVersionUID = -1947015503980653358L;
 	/**
+	 * Default id of current cache node in the cluster.
+	 * Actually this Id will be used for NON clustered environment, as SERIALIZED cache file name.
+	 */
+	static final String DEFAULT_NODE_ID = "1000";
+	/**
 	 * Logger.
 	 */
 	private static final Logger LOG = Logger.getLogger(SDCache.class);
-	/**
-	 * CACHE_OWNER_ID constant.
-	 */
-	protected static final String CACHE_OWNER_ID = String.valueOf(SessionDistributorServiceImpl.SESSION_DISTRIBUTOR_SERVICE_DISTRIBUTED_SESSIONS_CACHE_OWNER);
-
 	/**
 	 * {@link IdBasedLockManager} instance.
 	 */
 	private transient IdBasedLockManager lockManager;
 
 	/**
-	 * {@link SessionDistributorServiceConfig}
+	 * {@link SessionDistributorServiceConfig} configuration.
 	 */
 	private transient SessionDistributorServiceConfig config;
 	/**
@@ -60,8 +60,11 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	private transient SDCacheEventAnnouncer announcer;
 	/**
 	 * Unique id of current cache in the cluster.
+	 * Also serves as FileName for Serialized cache - on FS!
+	 * If nodeId won't be provided via System.property with configured name - then DEFAULT_NODE_ID will be used.
+	 * And cluster features won't be enabled.
 	 */
-	private transient String nodeId;
+	private transient String nodeId = DEFAULT_NODE_ID;
 
 	/**
 	 * Internal storage for session holders.
@@ -82,22 +85,38 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 	private void init() {
 		lockManager = new SafeIdBasedLockManager();
 		config = SessionDistributorServiceConfig.getInstance();
-		nodeId = IdCodeGenerator.generateCode(20);
 		//checking that  clustering is enabled
-		if (config.isMultipleInstancesEnabled()) {
-			//announcer!
-			announcer = new SDCacheEventAnnouncer();
+		if (config.isMultipleInstancesEnabled())
+			configureClusterIntegration();
+	}
 
-			//receiver configuration
-			SDCacheEventsConsumer cacheConsumer = new SDCacheEventsConsumer();
-			QueuedEventReceiver sdCacheEventReceiver = new QueuedEventReceiver("SDCacheEventReceiver",
-					SDCacheEventAnnouncer.EVENT_CHANNEL_NAME, cacheConsumer,
-					config.getSdCacheEventQueueSize(),
-					config.getSessionDistributorEventQueueSleepTime(), LOG);
-			//consumer registration
-			EventServiceFactory.createEventService().obtainEventChannel(SDCacheEventAnnouncer.EVENT_CHANNEL_NAME, sdCacheEventReceiver).addConsumer(cacheConsumer);
-			sdCacheEventReceiver.start();
+	/**
+	 * Configure integration STUFF.
+	 */
+	private void configureClusterIntegration() {
+		LOG.info("Cluster integration configuration started");
+		String systemPropertyNodeId = System.getProperty(config.getNodeIdSystemPropertyName());
+		if (StringUtils.isEmpty(systemPropertyNodeId)) {
+			LOG.warn("SD -  Cluster configuration FAILED. Required nodeId property[" + config.getNodeIdSystemPropertyName() + "] is absent in SystemProperties, or badly configured!" +
+					" Working in standAlone mode!");
+			return;
 		}
+		nodeId = systemPropertyNodeId;
+
+		//announcer!
+		announcer = new SDCacheEventAnnouncer();
+
+		//receiver configuration
+		SDCacheEventsConsumer cacheConsumer = new SDCacheEventsConsumer();
+		QueuedEventReceiver sdCacheEventReceiver = new QueuedEventReceiver("SDCacheEventReceiver",
+				SDCacheEventAnnouncer.EVENT_CHANNEL_NAME, cacheConsumer,
+				config.getSdCacheEventQueueSize(),
+				config.getSessionDistributorEventQueueSleepTime(), LOG);
+		//consumer registration
+		EventServiceFactory.createEventService().obtainEventChannel(SDCacheEventAnnouncer.EVENT_CHANNEL_NAME, sdCacheEventReceiver).addConsumer(cacheConsumer);
+		sdCacheEventReceiver.start();
+
+		LOG.info("Cluster integration stuff successfully configured! NodeId{" + nodeId + "}");
 	}
 
 	/**
@@ -313,8 +332,7 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 
 	@Override
 	public String getOwnerId() {
-		//TODO : please check! cause with such strategy --- all nodes will have own file!!!!
-		return CACHE_OWNER_ID;
+		return nodeId;
 	}
 
 	@Override
@@ -354,7 +372,7 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 		for (DistributedSessionVO session : sessions.values())
 			session.setLastChangeTime(time);
 
-		//initing transient vars!
+		//execute initialization!
 		init();
 		LOG.info("Reading persisted Sessions - completed! " + sessions.size() + "Read successfully, LastChangeTime updated!");
 	}
@@ -412,17 +430,18 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 				if (onCurrentNode.getLastChangeTime() <= session.getLastChangeTime()) {
 					sessions.remove(session.getName());
 					if (isDebug)
-						LOG.debug("Session[" + session.getName() + "] removed by event, on node[" + nodeId + "]");
+						LOG.debug("Session[" + session.getName() + "] removed by delete event, on node[" + nodeId + "] - event comes from remote node[" + incomingNodeId + "] ");
 				}
 
 				if (isDebug)
-					LOG.debug("Session[" + session.getName() + "] can't be removed by delete event, on node[" + nodeId + "], cause It is still in use!!!!!");
+					LOG.debug("Session[" + session.getName() + "] can't be removed by delete event, on node[" + nodeId + "], cause It is still in use!!!!! - " +
+							"event comes by remote node[" + incomingNodeId + "] ");
 
 
 			} catch (NoSuchDistributedSessionException e) {
 				// Session  does not exists on current node!!
 				LOG.warn("NoSuchDistributedSessionException - occurred on delete try of session with name [" + session.getName() + "] on node : [" + nodeId + "]," +
-						" deletion comes from remote_node:[" + incomingNodeId + "]");
+						" -  deletion event comes from remote_node:[" + incomingNodeId + "]");
 			}
 
 		} finally {
@@ -452,16 +471,12 @@ public final class SDCache implements FSSaveable, CrudSaveable {
 			try {
 				DistributedSessionVO onCurrentNode = getSession(session.getName());
 
-				// remove   if it's possible!!!
+				// update   if it's possible!!!
 				if (onCurrentNode.getLastChangeTime() < session.getLastChangeTime()) {
 					sessions.put(session.getName(), session);
 					if (isDebug)
 						LOG.debug("Session[" + session.getName() + "] updated on node[" + nodeId + "] by event from remote_node[" + incomingNodeId + "]");
 				}
-
-				if (isDebug)
-					LOG.debug("Session[" + session.getName() + "] was not updated delete event from remote_node[" + incomingNodeId + "], on node[" + nodeId + "], cause It is same");
-
 
 			} catch (NoSuchDistributedSessionException e) {
 				sessions.put(session.getName(), session);

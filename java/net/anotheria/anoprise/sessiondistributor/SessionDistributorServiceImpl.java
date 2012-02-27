@@ -31,11 +31,6 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	 */
 	public static final int SESSION_ID_LENGTH = 30;
 	/**
-	 * SD sessions cache constant.
-	 */
-	public static final String SESSION_DISTRIBUTOR_SERVICE_DISTRIBUTED_SESSIONS_CACHE_OWNER = "1";
-
-	/**
 	 * Internal storage for session holders.
 	 */
 	private SDCache sessions;
@@ -58,7 +53,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		serviceConfig = SessionDistributorServiceConfig.getInstance();
 
 		//initialising CACHE! can be read from FS - or simply created!
-		sessions = SDCacheUtil.createCache(SESSION_DISTRIBUTOR_SERVICE_DISTRIBUTED_SESSIONS_CACHE_OWNER);
+		sessions = SDCacheUtil.createCache();
 
 		initIntegration();
 

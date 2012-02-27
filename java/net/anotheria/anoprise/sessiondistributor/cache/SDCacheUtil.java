@@ -46,26 +46,26 @@ public final class SDCacheUtil {
 	 * <p/>
 	 * Anyway - this method will return some Cache :)  so please do not add any NULL checks.
 	 *
-	 * @param ownerId actually owner id. (can be SDServiceId - or whatEver.... etc)
 	 * @return {@link SDCache} read from FS - or newly created.
 	 */
-	public static SDCache createCache(String ownerId) {
-		if (StringUtils.isEmpty(ownerId))
-			throw new IllegalArgumentException("Invalid id passed");
-
+	public static SDCache createCache() {
 		if (!SessionDistributorServiceConfig.getInstance().isWrightSessionsToFsOnShutdownEnabled())
 			return new SDCache();
+
+		//checking if Node ID  was provided via SystemProperty , or default should be used!
+		String cacheId = System.getProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName());
+		cacheId = StringUtils.isEmpty(cacheId) ? SDCache.DEFAULT_NODE_ID : cacheId;
 		try {
-			SDCache cache = fsPersistence.read(ownerId);
+			SDCache cache = fsPersistence.read(cacheId);
 			// remove  after read!
 			try {
-				fsPersistence.delete(ownerId);
+				fsPersistence.delete(cacheId);
 			} catch (FSServiceException e) {
-				LOG.warn("Deleting restored sessions cache  failed! READ : " + cache);
+				LOG.warn(LOG_PREFIX + "Deleting restored sessions cache  failed! CAUSE : " + e.getMessage());
 			}
 			return cache;
 		} catch (FSServiceException fSSe) {
-			LOG.warn(LOG_PREFIX + " read(" + ownerId + ") failed - creating empty cache!", fSSe);
+			LOG.warn(LOG_PREFIX + " read(" + cacheId + ") failed - creating empty cache!", fSSe);
 			return new SDCache();
 		}
 	}

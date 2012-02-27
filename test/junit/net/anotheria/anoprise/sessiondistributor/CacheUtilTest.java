@@ -19,7 +19,7 @@ public class CacheUtilTest {
 		//prevents ooE
 		System.setProperty("JUNITTEST", String.valueOf(true));
 		//creating some cache!
-		SDCache cache = SDCacheUtil.createCache("1");
+		SDCache cache = SDCacheUtil.createCache();
 		Assert.assertNotNull("Is null", cache);
 
 
@@ -46,7 +46,7 @@ public class CacheUtilTest {
 			SessionDistributorServiceConfig.getInstance().setWrightSessionsToFsOnShutdownEnabled(true);
 
 			//  trying to read same session!!
-			cache = SDCacheUtil.createCache("1");
+			cache = SDCacheUtil.createCache();
 
 			DistributedSessionVO session2 = cache.getSession(id);
 			cache.updateCallTime(id);
@@ -87,10 +87,14 @@ public class CacheUtilTest {
 		//prevent errors
 		System.setProperty("JUNITTEST", String.valueOf(true));
 
-		SDCache cacheInstance1 = SDCacheUtil.createCache("1");
+		//Setting proper  Node ID  via system property!  before cache creation  --  0 id for this node
+		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), "0");
+		SDCache cacheInstance1 = SDCacheUtil.createCache();
 		Assert.assertNotNull("Is null", cacheInstance1);
 
-		SDCache cacheInstance2 = SDCacheUtil.createCache("1");
+		//Setting proper  Node ID  via system property!  before cache creation  --  1 id for this node
+		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), "1");
+		SDCache cacheInstance2 = SDCacheUtil.createCache();
 		Assert.assertNotNull("Is null", cacheInstance2);
 
 		String id1 = cacheInstance1.createSession(sessionId1);
@@ -213,7 +217,6 @@ public class CacheUtilTest {
 		SessionDistributorServiceConfig.getInstance().setMultipleInstancesEnabled(false);
 
 	}
-
 
 
 }
