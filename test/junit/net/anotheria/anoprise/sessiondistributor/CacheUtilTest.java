@@ -1,8 +1,11 @@
 package net.anotheria.anoprise.sessiondistributor;
 
+import net.anotheria.anoprise.fs.*;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCache;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCacheUtil;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -13,6 +16,30 @@ import org.junit.Test;
  */
 public class CacheUtilTest {
 
+
+	private static final String NODE_0_VALUE = "0";
+	private static final String NODE_1_VALUE = "1";
+
+	@BeforeClass
+	public static void before() {
+		FSServiceConfig config = null;
+		try {
+			config = new FSServiceConfig(SessionDistributorServiceConfig.getInstance().getSdSessionsFSRootFolder(), SessionDistributorServiceConfig.getInstance().getSdSessionsFileExtension());
+			FSService<SDCache> fsPersistence = FSServiceFactory.createFSService(config);
+			fsPersistence.delete(NODE_0_VALUE);
+			fsPersistence.delete(NODE_1_VALUE);
+		} catch (FSServiceConfigException e) {
+			Assert.fail("Should not happen!" + e.getMessage());
+		} catch (FSServiceException e) {
+			Assert.fail("Should not happen!" + e.getMessage());
+		}
+
+	}
+
+	@AfterClass
+	public static void after() {
+		before();
+	}
 
 	@Test
 	public void testFlow() {
@@ -88,12 +115,12 @@ public class CacheUtilTest {
 		System.setProperty("JUNITTEST", String.valueOf(true));
 
 		//Setting proper  Node ID  via system property!  before cache creation  --  0 id for this node
-		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), "0");
+		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), NODE_0_VALUE);
 		SDCache cacheInstance1 = SDCacheUtil.createCache();
 		Assert.assertNotNull("Is null", cacheInstance1);
 
 		//Setting proper  Node ID  via system property!  before cache creation  --  1 id for this node
-		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), "1");
+		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), NODE_1_VALUE);
 		SDCache cacheInstance2 = SDCacheUtil.createCache();
 		Assert.assertNotNull("Is null", cacheInstance2);
 
