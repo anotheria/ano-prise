@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.anotheria</groupId>
     <artifactId>ano-prise</artifactId>
-    <version>1.0.26</version>
+    <version>1.0.27-SNAPSHOT</version>
     <name>anotheria.net enterprise class utils</name>
 
     <dependencies>
@@ -49,8 +49,8 @@
     </dependencies>
 
     <scm>
-        <url>svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.26</url>
-        <connection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.26</connection>
-        <developerConnection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.26</developerConnection>
+        <url>svn:svn://svn.anotheria.net/opensource/ano-prise/trunk</url>
+        <connection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/trunk</connection>
+        <developerConnection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/trunk</developerConnection>
     </scm>
 </project>
