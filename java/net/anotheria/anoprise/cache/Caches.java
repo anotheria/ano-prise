@@ -85,14 +85,13 @@ public final class Caches {
 	
 	public static final void attachCacheToMoskitoLoggers(Cache<?,?> cache, String producerId, String category, String subsystem){
 		CacheProducerWrapper cacheWrapper = new CacheProducerWrapper(cache , producerId, category, subsystem);
-		new DefaultStatsLogger(cacheWrapper, new Log4JOutput(Logger.getLogger("MoskitoDefault")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIVE_MINUTES, new Log4JOutput(Logger.getLogger("Moskito5m")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIFTEEN_MINUTES, new Log4JOutput(Logger.getLogger("Moskito15m")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_HOUR, new Log4JOutput(Logger.getLogger("Moskito1h")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_DAY, new Log4JOutput(Logger.getLogger("Moskito1d")));
-		
+		new DefaultStatsLogger(cacheWrapper, new Log4JOutput(Logger.getLogger("moskito.custom.default")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIVE_MINUTES, new Log4JOutput(Logger.getLogger("moskito.custom.5m")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIFTEEN_MINUTES, new Log4JOutput(Logger.getLogger("moskito.custom.15m")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_HOUR, new Log4JOutput(Logger.getLogger("moskito.custom.1h")));
+		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_DAY, new Log4JOutput(Logger.getLogger("moskito.custom.1d")));
 	}
-	
+
 	/*
 	public static final <K,V> Cache<K,V> createConfigurableHardwiredExpiringCache(String name){
 		Cache<K,CachedObjectWrapper<V>> underlyingCache = createHardwiredCache(name, startSize, maxSize);
