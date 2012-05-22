@@ -7,10 +7,13 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.anotheria</groupId>
+    <!--  defined in parent groupId>net.anotheria</groupId -->
     <artifactId>ano-prise</artifactId>
     <version>1.0.28-SNAPSHOT</version>
     <name>anotheria.net enterprise class utils</name>
+    <description>Collection of utils for different enterprise class projects. Among other stuff contains 
+    Caches, Mocking, DualCrud, MetaFactory and SessionDistributorService. Visit https://opensource.anotheria.net for details.
+    </description>
 
     <dependencies>
         <dependency>
