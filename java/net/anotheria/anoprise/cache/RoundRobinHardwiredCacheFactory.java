@@ -13,5 +13,11 @@ public class RoundRobinHardwiredCacheFactory<K,V> implements CacheFactory<K, V> 
 	public Cache<K, V> create(String name, int startSize, int maxSize) {
 		return new RoundRobinHardwiredCache<K, V>(name, startSize, maxSize);
 	}
-	
+
+	@Override
+	public ExpiringCache<K, V> createExpiried(String name, int startSize, int maxSize, long expirationTime) {
+		Cache<K, CachedObjectWrapper<V>> underlyingCache = new RoundRobinHardwiredCache<K, CachedObjectWrapper<V>>(name, startSize, maxSize);
+		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
+	}
+
 }

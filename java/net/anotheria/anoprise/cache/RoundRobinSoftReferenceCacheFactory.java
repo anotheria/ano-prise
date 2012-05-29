@@ -13,5 +13,11 @@ public class RoundRobinSoftReferenceCacheFactory<K,V> implements CacheFactory<K,
 	public Cache<K, V> create(String name, int startSize, int maxSize) {
 		return new RoundRobinSoftReferenceCache<K, V>(name, startSize, maxSize);
 	}
-	
+
+	@Override
+	public ExpiringCache<K, V> createExpiried(String name, int startSize, int maxSize, long expirationTime) {
+		Cache<K, CachedObjectWrapper<V>> underlyingCache = new RoundRobinSoftReferenceCache(name, startSize, maxSize);
+		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
+	}
+
 }

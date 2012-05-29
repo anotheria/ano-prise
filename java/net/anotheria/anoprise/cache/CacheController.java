@@ -33,12 +33,17 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * Cache max size.
 	 */
 	@Configure private int maxSize;
-	
+
 	/**
 	 * Class for the configuration factory.
 	 */
 	@Configure private String factoryClazz;
-	 
+
+	/**
+	 * Expiration time for cache entries to become invalid, if we use ExpiringCache
+	 */
+	@Configure private long expirationTime;
+
 	/**
 	 * CacheOn value previous to a reconfigure.
 	 */
@@ -51,21 +56,27 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * Max size previous to a reconfigure.
 	 */
 	private int prevMaxSize;
+
+	/**
+	 * Expiration time previous to a reconfigure.
+	 */
+	private long preExpirationTime;
+
 	/**
 	 * Underlying cache.
 	 */
 	private Cache<K,V> cache;
-	
+
 	/**
 	 * Name of the cache configuration.
 	 */
 	private String configurationName;
-	
+
 	/**
 	 * Number of out of memory errors in the underlying cache.
 	 */
 	private int outOfMemoryErrors;
-	
+
 	/**
 	 * Initial value for cacheOn.
 	 */
@@ -73,173 +84,205 @@ public class CacheController<K,V> implements Cache<K,V>{
 	/**
 	 * Initial value for start size.
 	 */
-	public static final int DEF_START_SIZE   = 1000;
+	public static final int DEF_START_SIZE = 1000;
 	/**
 	 * Initial value for the max size.
 	 */
-	public static final int DEF_MAX_SIZE     = 5000;
-	
+	public static final int DEF_MAX_SIZE = 5000;
+	/**
+	 * Initial value for the expiration time 0 - never expired.
+	 */
+	public static final int DEF_EXPIRATION_TIME = 0;
+
+
 	/**
 	 * Logger.
 	 */
 	private static Logger log = Logger.getLogger(CacheController.class);
-	
+
 	/**
 	 * Factory for underlying cache creation.
 	 */
 	private CacheFactory<K, V> factory;
+
 	/**
 	 * Creates a new CacheController with a configuration name and a cache factory.
+	 *
 	 * @param aConfigurationName the name to configure with.
-	 * @param aFactory the factory to create new cache instances.
+	 * @param aFactory		   the factory to create new cache instances.
 	 */
-	public CacheController(String aConfigurationName, CacheFactory<K,V> aFactory){
+	public CacheController(String aConfigurationName, CacheFactory<K, V> aFactory) {
 		this.configurationName = aConfigurationName;
 		factory = aFactory;
 	}
-	
+
 	/**
 	 * Creates a new CacheController with a configuration name and a cache factory.
+	 *
 	 * @param aConfigurationName the name to configure with.
 	 */
-	public CacheController(String aConfigurationName){
+	public CacheController(String aConfigurationName) {
 		this(aConfigurationName, null);
 	}
 
 	/**
 	 * Called before first configuration.
 	 */
-	@BeforeInitialConfiguration public void preInit(){
+	@BeforeInitialConfiguration
+	public void preInit() {
 		prevCacheOn = false;
 		prevStartSize = -1;
 		prevMaxSize = -1;
+		preExpirationTime = -1;
 	}
-	
-	private void init(){
-		
-		if (factory==null){
-			try{
+
+	private void init() {
+
+		if (factory == null) {
+			try {
 				@SuppressWarnings("unchecked")
-				CacheFactory<K,V> newFactory = (CacheFactory<K,V>)Class.forName(factoryClazz).newInstance(); 
+				CacheFactory<K, V> newFactory = (CacheFactory<K, V>) Class.forName(factoryClazz).newInstance();
 				factory = newFactory;
-			}catch(ClassNotFoundException e){
+			} catch (ClassNotFoundException e) {
 				log.fatal("can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());
+				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			} catch (InstantiationException e) {
 				log.fatal("can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());
+				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			} catch (IllegalAccessException e) {
 				log.fatal("can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: "+factoryClazz+" --> "+e.getMessage());
+				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			}
 		}
-		
-		log.debug("reiniting cache for "+configurationName);
-		if (!cacheOn){
-			if (prevCacheOn){
+
+		log.debug("reiniting cache for " + configurationName);
+		if (!cacheOn) {
+			if (prevCacheOn) {
 				log.debug("switching cache off.");
 				cache.clear();
 				cache = null;
-			}else{
+			} else {
 				log.debug("cache remains off.");
 			}
-		}else{ 
-			if (prevCacheOn){
-				if (prevMaxSize == maxSize && prevStartSize == startSize){
-					log.debug("Cache remains on, settings unchanged.");					
-				}else{
+		} else {
+			if (prevCacheOn) {
+				if (prevMaxSize == maxSize && prevStartSize == startSize && preExpirationTime == expirationTime) {
+					log.debug("Cache remains on, settings unchanged.");
+				} else {
 					log.debug("Cache remains on, settings changed, cache will be renewed.");
-					if (cache!=null){
+					if (cache != null) {
 						cache.clear();
-					}else{
+					} else {
 						log.warn("Cache is null, when it shouldn't be.");
 					}
-					if (factory==null)
+					if (factory == null)
 						throw new IllegalStateException("No factory is configured or submitted for cache creation!");
-					cache = factory.create(configurationName, startSize, maxSize);
+					if (expirationTime == 0)
+						cache = factory.create(configurationName, startSize, maxSize);
+					else
+						cache = createExpiringCache(startSize, maxSize, expirationTime);
 				}
-			}else{
+			} else {
 				log.debug("switching cache on.");
-				cache = createCache(startSize, maxSize);
+				if (expirationTime == DEF_EXPIRATION_TIME)
+					cache = createCache(startSize, maxSize);
+				else
+					cache = createExpiringCache(startSize, maxSize, expirationTime);
 			}
 		}
 	}
-	
-	protected Cache<K,V> createCache(int aStartSize, int aMaxSize){
-		if (factory==null)
+
+	protected Cache<K, V> createCache(int aStartSize, int aMaxSize) {
+		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		return factory.create(configurationName, aStartSize, aMaxSize);
 	}
-	
-	@Override public void clear() {
+
+	protected Cache<K, V> createExpiringCache(int aStartSize, int aMaxSize, long expirationTime) {
+		if (factory == null)
+			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
+		return factory.createExpiried(configurationName, aStartSize, aMaxSize, expirationTime);
+	}
+
+	@Override
+	public void clear() {
 		if (cacheOn)
 			cache.clear();
 	}
 
-	@Override public V get(K id) {
+	@Override
+	public V get(K id) {
 		if (!cacheOn)
 			return null;
 		return cache.get(id);
 	}
 
-	@Override public void put(K id, V cacheable) {
+	@Override
+	public void put(K id, V cacheable) {
 		if (!cacheOn)
 			return;
-		try{
+		try {
 			cache.put(id, cacheable);
-		}catch(OutOfMemoryError error){
+		} catch (OutOfMemoryError error) {
 			outOfMemoryErrors++;
 			throw error;
 		}
 	}
-	
-	@Override public void remove(K id){
+
+	@Override
+	public void remove(K id) {
 		if (!cacheOn)
 			return;
 		cache.remove(id);
 	}
 
-	@AfterConfiguration public void configurationFinished() {
-		log.info("configuration "+configurationName+" finished, settings are:");
-		log.info("cacheOn "+prevCacheOn+" -> "+cacheOn);
-		log.info("startSize "+prevStartSize+" -> "+startSize);
-		log.info("maxSize "+prevMaxSize+" -> "+maxSize);
+	@AfterConfiguration
+	public void configurationFinished() {
+		log.info("configuration " + configurationName + " finished, settings are:");
+		log.info("cacheOn " + prevCacheOn + " -> " + cacheOn);
+		log.info("startSize " + prevStartSize + " -> " + startSize);
+		log.info("maxSize " + prevMaxSize + " -> " + maxSize);
+		log.info("expirationTime " + preExpirationTime + " -> " + expirationTime);
 		init();
 	}
 
-	@BeforeConfiguration public void configurationStarted() {
+	@BeforeConfiguration
+	public void configurationStarted() {
 		prevCacheOn = cacheOn;
 		prevMaxSize = maxSize;
 		prevStartSize = startSize;
+		preExpirationTime = expirationTime;
 		cacheOn = DEF_CACHE_ON;
 		startSize = DEF_START_SIZE;
-		maxSize   = DEF_MAX_SIZE;
+		maxSize = DEF_MAX_SIZE;
+		expirationTime = DEF_EXPIRATION_TIME;
 	}
 
-	public String getStats(){
-		String stats = cacheOn ? "On, "+startSize+", "+maxSize : "Off";
+	public String getStats() {
+		String stats = cacheOn ? "On, " + startSize + ", " + maxSize : "Off";
 		if (cacheOn)
-			stats += " " + cache.getCacheStats().toString()+", OOME: "+outOfMemoryErrors;
+			stats += " " + cache.getCacheStats().toString() + ", OOME: " + outOfMemoryErrors;
 		return stats;
 	}
-	
-	public String getDetails(){
+
+	public String getDetails() {
 		if (!cacheOn)
 			return "off";
 		return cache.toString();
 	}
 
-    
-    protected Cache<K, V> getCache(){
-    	return cache;
-    }
-    
-    @Override public CacheStats getCacheStats(){
-    	if (!cacheOn)
-    		return new CacheStats();
-    	CacheStats stats = getCache().getCacheStats();
-    	return stats;
-    }
+
+	protected Cache<K, V> getCache() {
+		return cache;
+	}
+
+	@Override
+	public CacheStats getCacheStats() {
+		if (!cacheOn)
+			return new CacheStats();
+		CacheStats stats = getCache().getCacheStats();
+		return stats;
+	}
 
 	public void setCacheOn(boolean cacheOn) {
 		this.cacheOn = cacheOn;
@@ -252,20 +295,28 @@ public class CacheController<K,V> implements Cache<K,V>{
 	public void setMaxSize(int maxSize) {
 		this.maxSize = maxSize;
 	}
-	
-	protected boolean isCacheOn(){
+
+	protected boolean isCacheOn() {
 		return cacheOn;
 	}
-	
-	protected int getStartSize(){
+
+	protected int getStartSize() {
 		return startSize;
 	}
-	
-	protected int getMaxSize(){
+
+	protected int getMaxSize() {
 		return maxSize;
 	}
 
 	public void setFactoryClazz(String factoryClazz) {
 		this.factoryClazz = factoryClazz;
+	}
+
+	public long getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(long expirationTime) {
+		this.expirationTime = expirationTime;
 	}
 }

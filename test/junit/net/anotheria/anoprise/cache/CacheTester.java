@@ -1,13 +1,11 @@
 package net.anotheria.anoprise.cache;
 
-import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+
+import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
+import static org.junit.Assert.*;
 
 
 public class CacheTester {
@@ -266,6 +264,27 @@ public class CacheTester {
 		System.out.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
 		System.out.println("Stats: "+cache.getCacheStats().toStatsString());
 		System.out.println("Counters by Identity: "+countersByIdentity);
+	}
+
+	public static void testFailOverFunctionality(Cache<Integer, String> cache) throws Exception{
+		System.setProperty(CacheTestSettings.REGISTRATION_NAME_PROVIDER, String.valueOf(CacheTestSettings.CURRENT_NODE));
+		for (int i=0; i<MAX_SIZE; i++){
+			cache.put(i,""+i);
+		}
+
+		for (int i=0; i<MAX_SIZE; i++){
+			String s = cache.get(i);
+			if((i % CacheTestSettings.SERVICE_NODE_AMOUNT)==CacheTestSettings.CURRENT_NODE) {
+				assertNotNull(s);
+				assertEquals(i, Integer.parseInt(s));
+			}else{
+				assertNull(s);
+			}
+		}
+
+		//testing clear
+		cache.clear();
+		System.clearProperty(CacheTestSettings.REGISTRATION_NAME_PROVIDER);
 	}
 	
 	static class RunnerStats{
