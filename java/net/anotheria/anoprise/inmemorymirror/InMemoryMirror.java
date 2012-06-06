@@ -28,14 +28,31 @@ public interface InMemoryMirror<K,V extends Mirrorable<K>> {
 	 */
 	V remove(K id) throws InMemoryMirrorException;
 	/**
+	 * Removes the element with given key local only (without InMemorySupport call), returns the element previously associated with the key if present, null otherwise.
+	 * @param id
+	 * @return
+	 */
+	V removeLocalOnly(K id) throws InMemoryMirrorException;
+	/**
 	 * Updates the given element.
 	 * @param element
 	 */
 	void update(V element) throws InMemoryMirrorException, ElementNotFoundException;
+	/**
+	* Updates the given element local only (without InMemorySupport call).
+	* @param element
+	*/
+	void updateLocalOnly(V element) throws InMemoryMirrorException, ElementNotFoundException;
 	/**
 	 * Creates a new element out of parameter element, returns the new element as its stored in underlying storage.
 	 * @param element
 	 * @return
 	 */
 	V create(V element) throws InMemoryMirrorException;
+	/**
+	 * Creates a new element out of parameter element local only (without InMemorySupport call), returns the new element as its stored in underlying storage.
+	 * @param element
+	 * @return
+	 */
+	V createLocalOnly(V element) throws InMemoryMirrorException;
 }

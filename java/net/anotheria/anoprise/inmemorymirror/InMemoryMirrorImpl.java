@@ -57,23 +57,42 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 
 	@Override
 	public V remove(K key) throws InMemoryMirrorException{
-		try{
+		return remove(key, false);
+	}
+
+	@Override
+	public V removeLocalOnly(K id) throws InMemoryMirrorException {
+		return remove(id, true);
+	}
+
+	protected V remove(K key, boolean localOnly) throws InMemoryMirrorException{
+		try {
 			lock.writeLock().lock();
-			V fromSupport = support.remove(key);
-			//technically next call is not necessary if fromSupport == null, but in order to reduce possible inconsistency we still do it.
-			getCache().remove(key);
-			return fromSupport;
-		}finally{
+			if (!localOnly) {
+				support.remove(key);
+			}
+			return getCache().remove(key);
+		} finally {
 			lock.writeLock().unlock();
 		}
-		
 	}
 
 	@Override
 	public void update(V element) throws InMemoryMirrorException{
+		update(element, false);
+	}
+
+	@Override
+	public void updateLocalOnly(V element) throws InMemoryMirrorException, ElementNotFoundException {
+		update(element, true);
+	}
+
+	protected void update(V element, boolean localOnly) throws InMemoryMirrorException{
 		try{
 			lock.writeLock().lock();
-			support.update(element);
+			if(!localOnly) {
+				support.update(element);
+			}
 			getCache().put(element.getKey(), element);
 		}finally{
 			lock.writeLock().unlock();
@@ -82,9 +101,21 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 
 	@Override
 	public V create(V element) throws InMemoryMirrorException {
+		return create(element, false);
+	}
+
+	@Override
+	public V createLocalOnly(V element) throws InMemoryMirrorException {
+		return create(element, true);
+	}
+
+	protected V create(V element, boolean localOnly) throws InMemoryMirrorException {
 		try{
 			lock.writeLock().lock();
-			V created = support.create(element);
+			V created = element;
+			if(!localOnly) {
+				created = support.create(element);
+			}
 			getCache().put(created.getKey(), created);
 			return created;
 		}catch(Exception exception){
@@ -93,6 +124,4 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 			lock.writeLock().unlock();
 		}
 	}
-	
-
 }
