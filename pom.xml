@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <!--  defined in parent groupId>net.anotheria</groupId -->
     <artifactId>ano-prise</artifactId>
-    <version>1.0.29-SNAPSHOT</version>
+    <version>1.0.29</version>
     <name>anotheria.net enterprise class utils</name>
     <description>Collection of utils for different enterprise class projects. Among other stuff contains 
     Caches, Mocking, DualCrud, MetaFactory and SessionDistributorService. Visit https://opensource.anotheria.net for details.
@@ -52,8 +52,8 @@
     </dependencies>
 
     <scm>
-        <url>svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.28</url>
-        <connection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.28</connection>
-        <developerConnection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.28</developerConnection>
+        <url>svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.29</url>
+        <connection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.29</connection>
+        <developerConnection>scm:svn:svn://svn.anotheria.net/opensource/ano-prise/tags/ano-prise-1.0.29</developerConnection>
     </scm>
 </project>
