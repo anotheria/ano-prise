@@ -28,5 +28,30 @@ public interface CacheFactory<K, V> {
 	 * @return created cache object
 	 */
 	ExpiringCache<K, V> createExpiried(String name, int startSize, int maxSize, long expirationTime);
+
+	/**
+	 * Creates a new cache with failover support
+	 *
+	 * @param name					 name of the cache
+	 * @param startSize				start size of the cache
+	 * @param maxSize				  max size of the cache
+	 * @param serviceAmount			number of service nodes
+	 * @param registrationNameProvider name of the system property with current node number
+	 * @return
+	 */
+	Cache<K, V> createFailover(String name, int startSize, int maxSize, int serviceAmount, String registrationNameProvider);
+
+	/**
+	 * Creates a new expiring cache with failover support
+	 *
+	 * @param name					 name of the cache
+	 * @param startSize				start size of the cache
+	 * @param maxSize				  max size of the cache
+	 * @param expirationTime		   expiration time of the cache elements
+	 * @param serviceAmount			number of service nodes
+	 * @param registrationNameProvider name of the system property with current node number
+	 * @return
+	 */
+	ExpiringCache<K, V> createExpiriedFailover(String name, int startSize, int maxSize, long expirationTime, int serviceAmount, String registrationNameProvider);
 }
 

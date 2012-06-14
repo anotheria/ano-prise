@@ -45,6 +45,16 @@ public class CacheController<K,V> implements Cache<K,V>{
 	@Configure private long expirationTime;
 
 	/**
+	 * serviceAmount for failover support cache - amount for nodes
+	 */
+	@Configure private int serviceAmount;
+
+	/**
+	 * registrationNameProvider for failover support cache - extension to get current mode number
+	 */
+	@Configure private String registrationNameProvider;
+
+	/**
 	 * CacheOn value previous to a reconfigure.
 	 */
 	private boolean prevCacheOn;
@@ -61,6 +71,16 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * Expiration time previous to a reconfigure.
 	 */
 	private long preExpirationTime;
+
+	/**
+	 * serviceAmount previous to a reconfigur
+	 */
+	private int preServiceAmount;
+
+	/**
+	 * registrationNameProvider previous to a reconfigur
+	 */
+	private String preRegistrationNameProvider;
 
 	/**
 	 * Underlying cache.
@@ -93,7 +113,15 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * Initial value for the expiration time 0 - never expired.
 	 */
 	public static final int DEF_EXPIRATION_TIME = 0;
+	/**
+	 * Initial value for the serviceAmount
+	 */
+	public static final int DEF_SERVICE_AMOUNT = 1;
 
+	/**
+	 * Initial value for the registrationNameProvider.
+	 */
+	public static final String DEF_REGISTRATION_NAME_PROVIDER = "extension";
 
 	/**
 	 * Logger.
@@ -134,6 +162,8 @@ public class CacheController<K,V> implements Cache<K,V>{
 		prevStartSize = -1;
 		prevMaxSize = -1;
 		preExpirationTime = -1;
+		preServiceAmount = - 1;
+		preRegistrationNameProvider = "";
 	}
 
 	private void init() {
@@ -166,7 +196,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 			}
 		} else {
 			if (prevCacheOn) {
-				if (prevMaxSize == maxSize && prevStartSize == startSize && preExpirationTime == expirationTime) {
+				if (prevMaxSize == maxSize && prevStartSize == startSize && preExpirationTime == expirationTime && preServiceAmount == serviceAmount && preRegistrationNameProvider.equals(registrationNameProvider)) {
 					log.debug("Cache remains on, settings unchanged.");
 				} else {
 					log.debug("Cache remains on, settings changed, cache will be renewed.");
@@ -177,17 +207,19 @@ public class CacheController<K,V> implements Cache<K,V>{
 					}
 					if (factory == null)
 						throw new IllegalStateException("No factory is configured or submitted for cache creation!");
-					if (expirationTime == 0)
-						cache = factory.create(configurationName, startSize, maxSize);
-					else
-						cache = createExpiringCache(startSize, maxSize, expirationTime);
+//					if (expirationTime == 0)
+//						cache = factory.create(configurationName, startSize, maxSize);
+//					else
+//						cache = createExpiringCache(startSize, maxSize, expirationTime);
+					cache = createCaches();
 				}
 			} else {
 				log.debug("switching cache on.");
-				if (expirationTime == DEF_EXPIRATION_TIME)
-					cache = createCache(startSize, maxSize);
-				else
-					cache = createExpiringCache(startSize, maxSize, expirationTime);
+//				if (expirationTime == DEF_EXPIRATION_TIME)
+//					cache = createCache(startSize, maxSize);
+//				else
+//					cache = createExpiringCache(startSize, maxSize, expirationTime);
+				cache = createCaches();
 			}
 		}
 	}
@@ -202,6 +234,32 @@ public class CacheController<K,V> implements Cache<K,V>{
 		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		return factory.createExpiried(configurationName, aStartSize, aMaxSize, expirationTime);
+	}
+
+	protected Cache<K, V> createCacheFailover(int aStartSize, int aMaxSize, int aServiceAmount, String aRegistrationNameProvider) {
+		if (factory == null)
+			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
+		return factory.createFailover(configurationName, aStartSize, aMaxSize, aServiceAmount, aRegistrationNameProvider);
+	}
+
+	protected Cache<K, V> createExpiringCacheFailover(int aStartSize, int aMaxSize, long expirationTime, int aServiceAmount, String aRegistrationNameProvider) {
+		if (factory == null)
+			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
+		return factory.createExpiriedFailover(configurationName, aStartSize, aMaxSize, expirationTime, aServiceAmount, aRegistrationNameProvider);
+	}
+
+	protected Cache<K, V> createCaches() {
+		if (serviceAmount == DEF_SERVICE_AMOUNT) {
+			if (expirationTime == DEF_EXPIRATION_TIME)
+				return createCache(startSize, maxSize);
+			else
+				return createExpiringCache(startSize, maxSize, expirationTime);
+		} else {
+			if (expirationTime == DEF_EXPIRATION_TIME)
+				return createCacheFailover(startSize, maxSize, serviceAmount, registrationNameProvider);
+			else
+				return createExpiringCacheFailover(startSize, maxSize, expirationTime, serviceAmount, registrationNameProvider);
+		}
 	}
 
 	@Override
@@ -243,6 +301,8 @@ public class CacheController<K,V> implements Cache<K,V>{
 		log.info("startSize " + prevStartSize + " -> " + startSize);
 		log.info("maxSize " + prevMaxSize + " -> " + maxSize);
 		log.info("expirationTime " + preExpirationTime + " -> " + expirationTime);
+		log.info("serviceAmount " + preServiceAmount + " -> " + serviceAmount);
+		log.info("registrationNameProvider " + preRegistrationNameProvider + " -> " + registrationNameProvider);
 		init();
 	}
 
@@ -252,10 +312,15 @@ public class CacheController<K,V> implements Cache<K,V>{
 		prevMaxSize = maxSize;
 		prevStartSize = startSize;
 		preExpirationTime = expirationTime;
+		preServiceAmount = serviceAmount;
+		preRegistrationNameProvider = registrationNameProvider;
+
 		cacheOn = DEF_CACHE_ON;
 		startSize = DEF_START_SIZE;
 		maxSize = DEF_MAX_SIZE;
 		expirationTime = DEF_EXPIRATION_TIME;
+		serviceAmount = DEF_SERVICE_AMOUNT;
+		registrationNameProvider = DEF_REGISTRATION_NAME_PROVIDER;
 	}
 
 	public String getStats() {
@@ -318,5 +383,21 @@ public class CacheController<K,V> implements Cache<K,V>{
 
 	public void setExpirationTime(long expirationTime) {
 		this.expirationTime = expirationTime;
+	}
+
+	public int getServiceAmount() {
+		return serviceAmount;
+	}
+
+	public void setServiceAmount(int serviceAmount) {
+		this.serviceAmount = serviceAmount;
+	}
+
+	public String getRegistrationNameProvider() {
+		return registrationNameProvider;
+	}
+
+	public void setRegistrationNameProvider(String registrationNameProvider) {
+		this.registrationNameProvider = registrationNameProvider;
 	}
 }

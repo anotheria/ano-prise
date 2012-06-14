@@ -1,0 +1,23 @@
+{
+	cacheOn: true,
+	startSize: 3000,
+	maxSize: 7000,
+    serviceAmount: 3,
+    registrationNameProvider: "extensionTest",
+	dev:{
+	},
+	unittest:{
+		startSize: 3000,
+		maxSize: 5000,
+        registrationNameProvider: "extensionTest",
+
+	},
+	tenK:{
+		startSize: 10000,
+		maxSize: 10000,
+	},
+	off:{
+		cacheOn:false,
+	},
+	
+}

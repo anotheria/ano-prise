@@ -86,7 +86,7 @@ public final class Caches {
 	}
 
 	/**
-	 * Creates a new soft reference with failover node support cache with given params
+	 * Creates a new soft reference cache with failover node support cache with given params
 	 *
 	 * @param name					 name of the cache.
 	 * @param startSize				starting size of the cache.
@@ -104,7 +104,7 @@ public final class Caches {
 
 
 	/**
-	 * Creates a new soft reference with failover node support cache with given params
+	 * Creates a new soft reference expiring cache with failover node support cache with given params
 	 *
 	 * @param name					 name of the cache.
 	 * @param startSize				starting size of the cache.
@@ -121,6 +121,39 @@ public final class Caches {
 	public static final <K, V> Cache<K, V> createSoftReferenceExpiringFailoverSupportCache(String name, int startSize, int maxSize, int expirationTime, int serviceAmount, String registrationNameProvider, ModableTypeHandler modableTypeHandler) {
 		Cache<K, CachedObjectWrapper<V>> underlyingCache = createSoftReferenceFailoverSupportCache(name, startSize, maxSize, serviceAmount, registrationNameProvider, modableTypeHandler);
 		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
+	}
+
+	/**
+	 * Creates a new configurable soft reference cache with failover node support cache with given params
+	 *
+	 * @param name			   configurable params (json file)
+	 * @param modableTypeHandler instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
+	 * @param <K>                ype used as key in the cache.
+	 * @param <V>                type used as value in the cache.
+	 * @return
+	 */
+	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceCacheFailoverSupportCache(String name, ModableTypeHandler modableTypeHandler) {
+		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>(modableTypeHandler);
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		ConfigurationManager.INSTANCE.configureAs(controller, name);
+		return controller;
+	}
+
+
+	/**
+	 * Creates a new configurable soft reference expiring cache with failover node support cache with given params
+	 *
+	 * @param name			   configurable params (json file)
+	 * @param modableTypeHandler instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
+	 * @param <K>                ype used as key in the cache.
+	 * @param <V>                type used as value in the cache.
+	 * @return
+	 */
+	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceExpiringCacheFailoverSupportCache(String name, ModableTypeHandler modableTypeHandler) {
+		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>(modableTypeHandler);
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		ConfigurationManager.INSTANCE.configureAs(controller, name);
+		return controller;
 	}
 
 	public static final void attachCacheToMoskitoLoggers(Cache<?, ?> cache, String producerId, String category, String subsystem) {
