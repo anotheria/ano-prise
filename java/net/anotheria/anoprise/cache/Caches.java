@@ -40,10 +40,22 @@ public final class Caches {
 		return new RoundRobinSoftReferenceCache<K, V>(name, startSize, maxSize);
 	}
 
+	/**
+	 * Creates a new hardwired cache with given name and default size.
+	 * @param name
+	 * @return
+	 */
 	public static final <K, V> Cache<K, V> createHardwiredCache(String name) {
 		return new RoundRobinHardwiredCache<K, V>(name);
 	}
 
+	/**
+	 * Creates a new hardwired cache with given name and size.
+	 * @param name
+	 * @param startSize
+	 * @param maxSize
+	 * @return
+	 */
 	public static final <K, V> Cache<K, V> createHardwiredCache(String name, int startSize, int maxSize) {
 		return new RoundRobinHardwiredCache<K, V>(name, startSize, maxSize);
 	}
