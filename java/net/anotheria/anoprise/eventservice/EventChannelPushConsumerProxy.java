@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO Please remind lrosenberg to comment this class.
+ * Proxy implementation for Push Consumers.
  * @author lrosenberg
  * Created on 22.09.2004
  */
 public class EventChannelPushConsumerProxy extends AbstractEventChannel implements EventChannelConsumerProxy{
-
+	/**
+	 * List of connected consumers.
+	 */
 	private List<EventServiceConsumer> consumers;
 
 	public EventChannelPushConsumerProxy(String name){
@@ -17,6 +19,10 @@ public class EventChannelPushConsumerProxy extends AbstractEventChannel implemen
 		
 		consumers = new ArrayList<EventServiceConsumer>(10);	
 	}
+	
+	/**
+	 * Adds a new consumer.
+	 */
 	public void addConsumer(EventServiceConsumer consumer) {
 		if (! (consumer instanceof EventServicePushConsumer))
 			throw new IllegalArgumentException("Only EventServicePushConsumer are supported.");
@@ -44,11 +50,11 @@ public class EventChannelPushConsumerProxy extends AbstractEventChannel implemen
 		return "PushConsumerProxy "+getName();
 	}
 
-	public boolean isLocal() {
+	@Override public boolean isLocal() {
 		return true;
 	}
 
-	public void push(Event e) {
+	@Override public void push(Event e) {
 		throw new UnsupportedOperationException("push");
 
 	}

@@ -12,10 +12,12 @@ import net.anotheria.util.Date;
 public class Event implements Serializable, Cloneable{
 	
 	/**
-	 * 
+	 * Serial versionuid.
 	 */
 	private static final long serialVersionUID = -956595007030617361L;
-
+	/**
+	 * Default originator.
+	 */
 	public static final String NO_ORIGINATOR = "Unknown";
 	
 	/**
