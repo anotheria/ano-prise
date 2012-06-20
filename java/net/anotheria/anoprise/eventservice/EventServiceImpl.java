@@ -68,9 +68,9 @@ public class EventServiceImpl implements EventService {
 			throw new IllegalArgumentException("Unsupported participant type: " + participant);
 
 		return obtainEventChannel(channelName, type);
-	}
+	} 
 
-	public synchronized EventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
+	public  EventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
 		EventChannel ret = null;
 		log.debug("Creating event channel: " + channelName + " of type " + proxyType);
 		switch (proxyType) {
@@ -97,8 +97,12 @@ public class EventServiceImpl implements EventService {
 		RemoteEventChannelConsumerProxy proxy = remoteConsumerProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
-		proxy = createRemoteConsumerProxy(channelName);
-		remoteConsumerProxies.put(channelName, proxy);
+		proxy = remoteSupportFactory.createRemoteEventChannelConsumerProxy(channelName);
+		RemoteEventChannelConsumerProxy old = remoteConsumerProxies.putIfAbsent(channelName, proxy);
+		if (old!=null)
+			return old;
+		log.debug("Created " + proxy);
+		connectConsumerProxy(channelName, proxy);
 		return proxy;
 	}
 
@@ -106,8 +110,13 @@ public class EventServiceImpl implements EventService {
 		EventChannelPushConsumerProxy proxy = pushConsumerProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
-		proxy = createPushConsumerProxy(channelName);
-		pushConsumerProxies.put(channelName, proxy);
+		proxy = new EventChannelPushConsumerProxy(channelName);
+		EventChannelPushConsumerProxy old = pushConsumerProxies.putIfAbsent(channelName, proxy);
+		if (old!=null)
+			return old;
+		
+		log.debug("created " + proxy);
+		connectConsumerProxy(channelName, proxy);
 		notifyChannelCreation(channelName, ProxyType.PUSH_CONSUMER_PROXY);
 		return proxy;
 	}
@@ -116,8 +125,13 @@ public class EventServiceImpl implements EventService {
 		EventChannelPushSupplierProxy proxy = pushSupplierProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
-		proxy = createPushSupplierProxy(channelName);
-		pushSupplierProxies.put(channelName, proxy);
+		proxy = new EventChannelPushSupplierProxy(channelName);
+		EventChannelPushSupplierProxy old = pushSupplierProxies.putIfAbsent(channelName, proxy);
+		if (old!=null)
+			return old;
+		
+		log.debug("Created " + proxy);
+		connectSupplierProxy(channelName, proxy);
 		notifyChannelCreation(channelName, ProxyType.PUSH_SUPPLIER_PROXY);
 		return proxy;
 	}
@@ -126,24 +140,15 @@ public class EventServiceImpl implements EventService {
 		RemoteEventChannelSupplierProxy proxy = remoteSupplierProxies.get(channelName);
 		if (proxy != null)
 			return proxy;
-		proxy = createRemoteSupplierProxy(channelName);
-		remoteSupplierProxies.put(channelName, proxy);
-		return proxy;
-	}
-
-	private RemoteEventChannelSupplierProxy createRemoteSupplierProxy(String channelName) {
-		RemoteEventChannelSupplierProxy proxy = remoteSupportFactory.createRemoteEventChannelSupplierProxy(channelName);
+		proxy = remoteSupportFactory.createRemoteEventChannelSupplierProxy(channelName);
+		RemoteEventChannelSupplierProxy old = remoteSupplierProxies.putIfAbsent(channelName, proxy);
+		if (old!=null)
+			return old;
 		log.debug("Created " + proxy);
 		connectSupplierProxy(channelName, proxy);
 		return proxy;
 	}
 
-	private EventChannelPushSupplierProxy createPushSupplierProxy(String channelName) {
-		EventChannelPushSupplierProxy proxy = new EventChannelPushSupplierProxy(channelName);
-		log.debug("Created " + proxy);
-		connectSupplierProxy(channelName, proxy);
-		return proxy;
-	}
 
 	private void connectSupplierProxy(String channelName, EventChannelSupplierProxy proxy) {
 		List<EventChannelConsumerProxy> consumers = getConsumerProxies(channelName);
@@ -152,20 +157,6 @@ public class EventServiceImpl implements EventService {
 			log.debug("connecting " + consumers.get(i));
 			proxy.addConsumerProxy(consumers.get(i));
 		}
-	}
-
-	private EventChannelPushConsumerProxy createPushConsumerProxy(String channelName) {
-		EventChannelPushConsumerProxy proxy = new EventChannelPushConsumerProxy(channelName);
-		log.debug("created " + proxy);
-		connectConsumerProxy(channelName, proxy);
-		return proxy;
-	}
-
-	private RemoteEventChannelConsumerProxy createRemoteConsumerProxy(String channelName) {
-		RemoteEventChannelConsumerProxy proxy = remoteSupportFactory.createRemoteEventChannelConsumerProxy(channelName);
-		log.debug("Created " + proxy);
-		connectConsumerProxy(channelName, proxy);
-		return proxy;
 	}
 
 	private void connectConsumerProxy(String channelName, EventChannelConsumerProxy proxy) {
