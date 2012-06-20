@@ -9,9 +9,18 @@ import org.apache.log4j.Logger;
  */
 public abstract class AbstractEventChannel implements EventChannel{
 
+	/**
+	 * Name of the channel.
+	 */
 	private String name;
+	/**
+	 * Logger.
+	 */
 	protected Logger log;
-	
+	/**
+	 * Creates a new AbstractEventChannel.
+	 * @param aName
+	 */
 	protected AbstractEventChannel(String aName){
 		setName(aName);
 		log = Logger.getLogger(this.getClass());
@@ -31,6 +40,10 @@ public abstract class AbstractEventChannel implements EventChannel{
 		name = string;
 	}
 	
+	/**
+	 * Produces a debug message.
+	 * @param msg
+	 */
 	protected void out(String msg){
 		log.debug("["+name+"] "+msg);
 	}
