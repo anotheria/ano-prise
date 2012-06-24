@@ -267,14 +267,13 @@ public class CacheTester {
 	}
 
 	public static void testFailOverFunctionality(Cache<Integer, String> cache) throws Exception{
-		System.setProperty(CacheTestSettings.REGISTRATION_NAME_PROVIDER, String.valueOf(CacheTestSettings.CURRENT_NODE));
 		for (int i=0; i<MAX_SIZE; i++){
 			cache.put(i,""+i);
 		}
 
 		for (int i=0; i<MAX_SIZE; i++){
 			String s = cache.get(i);
-			if((i % CacheTestSettings.SERVICE_NODE_AMOUNT)==CacheTestSettings.CURRENT_NODE) {
+			if((i % CacheTestSettings.INSTANCE_AMOUNT)==CacheTestSettings.CURRENT_INSTANCE_NUMBER) {
 				assertNotNull(s);
 				assertEquals(i, Integer.parseInt(s));
 			}else{
@@ -284,7 +283,6 @@ public class CacheTester {
 
 		//testing clear
 		cache.clear();
-		System.clearProperty(CacheTestSettings.REGISTRATION_NAME_PROVIDER);
 	}
 	
 	static class RunnerStats{

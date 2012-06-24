@@ -2,14 +2,13 @@
 	cacheOn: true,
 	startSize: 3000,
 	maxSize: 7000,
-    serviceAmount: 3,
-    registrationNameProvider: "extensionTest",
+    instanceAmount: 3,
+    currentInstanceNumber: 2,
 	dev:{
 	},
 	unittest:{
 		startSize: 3000,
 		maxSize: 5000,
-        registrationNameProvider: "extensionTest",
 
 	},
 	tenK:{

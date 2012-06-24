@@ -10,7 +10,7 @@ import org.junit.Test;
  * @author ivanbatura
  * @since: 14.06.12
  */
-public class ConfigurableRoundRobinSoftReferenceCacheWithFailoverSupportTest {
+public class ConfigurableFailoverCacheTest {
 	@BeforeClass
 	public static void initlog4j() {
 		BasicConfigurator.configure();
@@ -23,31 +23,31 @@ public class ConfigurableRoundRobinSoftReferenceCacheWithFailoverSupportTest {
 
 	@Test
 	public void testBasicFunctionality() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest3", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
 		CacheTester.testBasicFunctionality(cache);
 	}
 
 	@Test
 	public void testOverwrite() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest3", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
 		CacheTester.testOverwrite(cache);
 	}
 
 	@Test
 	public void testRollover() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest3", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
 		CacheTester.testRollover(cache);
 	}
 
 	@Test
 	public void testConcurrency() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest3", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
 		CacheTester.tryToCorruptInternalStructures(cache);
 	}
 
 	@Test
 	public void testCompetion() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest3", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
 		CacheTester.writeCompetion(cache);
 	}
 

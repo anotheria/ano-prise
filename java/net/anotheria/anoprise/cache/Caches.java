@@ -100,39 +100,40 @@ public final class Caches {
 	/**
 	 * Creates a new soft reference cache with failover node support cache with given params
 	 *
-	 * @param name					 name of the cache.
-	 * @param startSize				starting size of the cache.
-	 * @param maxSize				  max size of the cache.
-	 * @param serviceAmount			number of the service in order to now what to store
-	 * @param registrationNameProvider name of the system property, that store current service numbre
-	 * @param modableTypeHandler	   instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
-	 * @param <K>                      type used as key in the cache.
-	 * @param <V>                      type used as value in the cache.
+	 * @param name				  name of the cache.
+	 * @param startSize			 starting size of the cache.
+	 * @param maxSize			   max size of the cache.
+	 * @param instanceAmount		number of the cache instances in order
+	 * @param currentInstanceNumber current number of cache instance
+	 * @param modableTypeHandler	instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
+	 * @param <K>                   type used as key in the cache.
+	 * @param <V>                   type used as value in the cache.
 	 * @return
 	 */
-	public static final <K, V> Cache<K, V> createSoftReferenceFailoverSupportCache(String name, int startSize, int maxSize, int serviceAmount, String registrationNameProvider, ModableTypeHandler modableTypeHandler) {
-		return new RoundRobinSoftReferenceFailoverSupportCache<K, V>(name, startSize, maxSize, serviceAmount, registrationNameProvider, modableTypeHandler);
+	public static final <K, V> Cache<K, V> createSoftReferenceFailoverSupportCache(String name, int startSize, int maxSize, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
+		Cache<K, V> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
+		return new FailoverCache<K, V>(name, instanceAmount, currentInstanceNumber, modableTypeHandler, underlyingCache);
 	}
 
 
 	/**
 	 * Creates a new soft reference expiring cache with failover node support cache with given params
 	 *
-	 * @param name					 name of the cache.
-	 * @param startSize				starting size of the cache.
-	 * @param maxSize				  max size of the cache.
-	 * @param expirationTime		   expiration time of the cache entry
-	 * @param serviceAmount			number of the service in order to now what to store
-	 * @param registrationNameProvider name of the system property, that store current service numbre
-	 * @param modableTypeHandler	   instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
-	 * @param <K>                      type used as key in the cache.
-	 * @param <V>                      type used as value in the cache.
+	 * @param name				  name of the cache.
+	 * @param startSize			 starting size of the cache.
+	 * @param maxSize			   max size of the cache.
+	 * @param expirationTime		expiration time of the cache entry
+	 * @param instanceAmount		number of the cache instances in order
+	 * @param currentInstanceNumber current number of cache instance
+	 * @param modableTypeHandler	instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
+	 * @param <K>                   type used as key in the cache.
+	 * @param <V>                   type used as value in the cache.
 	 * @return created cahe
 	 */
 
-	public static final <K, V> Cache<K, V> createSoftReferenceExpiringFailoverSupportCache(String name, int startSize, int maxSize, int expirationTime, int serviceAmount, String registrationNameProvider, ModableTypeHandler modableTypeHandler) {
-		Cache<K, CachedObjectWrapper<V>> underlyingCache = createSoftReferenceFailoverSupportCache(name, startSize, maxSize, serviceAmount, registrationNameProvider, modableTypeHandler);
-		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
+	public static final <K, V> Cache<K, V> createSoftReferenceExpiringFailoverSupportCache(String name, int startSize, int maxSize, int expirationTime, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
+		Cache<K, V> underlyingCache = createSoftReferenceExpiringCache(name, startSize, maxSize, expirationTime);
+		return new FailoverCache<K, V>(name, instanceAmount, currentInstanceNumber, modableTypeHandler, underlyingCache);
 	}
 
 	/**
@@ -145,8 +146,8 @@ public final class Caches {
 	 * @return
 	 */
 	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceCacheFailoverSupportCache(String name, ModableTypeHandler modableTypeHandler) {
-		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>(modableTypeHandler);
-		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>();
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory, modableTypeHandler);
 		ConfigurationManager.INSTANCE.configureAs(controller, name);
 		return controller;
 	}
@@ -162,8 +163,8 @@ public final class Caches {
 	 * @return
 	 */
 	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceExpiringCacheFailoverSupportCache(String name, ModableTypeHandler modableTypeHandler) {
-		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>(modableTypeHandler);
-		CacheController<K, V> controller = new CacheController<K, V>(name, factory);
+		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>();
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory, modableTypeHandler);
 		ConfigurationManager.INSTANCE.configureAs(controller, name);
 		return controller;
 	}
