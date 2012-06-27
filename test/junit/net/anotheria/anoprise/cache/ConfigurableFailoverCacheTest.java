@@ -23,37 +23,37 @@ public class ConfigurableFailoverCacheTest {
 
 	@Test
 	public void testBasicFunctionality() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", 1, 0, null);
 		CacheTester.testBasicFunctionality(cache);
 	}
 
 	@Test
 	public void testOverwrite() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", 1, 0, null);
 		CacheTester.testOverwrite(cache);
 	}
 
 	@Test
 	public void testRollover() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", 1, 0, null);
 		CacheTester.testRollover(cache);
 	}
 
 	@Test
 	public void testConcurrency() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", 1, 0, null);
 		CacheTester.tryToCorruptInternalStructures(cache);
 	}
 
 	@Test
 	public void testCompetion() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", 1, 0, null);
 		CacheTester.writeCompetion(cache);
 	}
 
 	@Test
 	public void testFailover() throws Exception {
-		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest3", null);
+		Cache<Integer, String> cache = Caches.createConfigurableSoftReferenceCacheFailoverSupportCache("cachetest", CacheTestSettings.INSTANCE_AMOUNT, CacheTestSettings.CURRENT_INSTANCE_NUMBER, null);
 		CacheTester.testFailOverFunctionality(cache);
 	}
 }

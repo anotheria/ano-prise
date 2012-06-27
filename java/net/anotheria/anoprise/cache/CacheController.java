@@ -44,15 +44,6 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 */
 	@Configure private long expirationTime;
 
-	/**
-	 * instanceAmount for failover support cache - amount for nodes
-	 */
-	@Configure private int instanceAmount;
-
-	/**
-	 * currentInstanceNumber for failover support cache - extension to get current mode number
-	 */
-	@Configure private int currentInstanceNumber;
 
 	/**
 	 * CacheOn value previous to a reconfigure.
@@ -96,6 +87,17 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * Type handler used for failover cache
 	 */
 	private ModableTypeHandler typeHandler;
+
+	/**
+	 * instanceAmount for failover support cache - amount for nodes
+	 */
+	private int instanceAmount = 1;
+
+	/**
+	 * currentInstanceNumber for failover support cache - extension to get current mode number
+	 */
+	private int currentInstanceNumber = 0;
+
 
 	/**
 	 * Number of out of memory errors in the underlying cache.
@@ -165,9 +167,11 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * @param aFactory		   the factory to create new cache instances.
 	 * @param aTypeHandler      type handler used for failover cache
 	 */
-	public CacheController(String aConfigurationName, CacheFactory<K, V> aFactory, ModableTypeHandler aTypeHandler) {
+	public CacheController(String aConfigurationName, CacheFactory<K, V> aFactory, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aTypeHandler) {
 		this(aConfigurationName, aFactory);
 		typeHandler = aTypeHandler;
+		instanceAmount = aInstanceAmount;
+		currentInstanceNumber = aCurrentInstanceNumber;
 	}
 
 
@@ -180,8 +184,6 @@ public class CacheController<K,V> implements Cache<K,V>{
 		prevStartSize = -1;
 		prevMaxSize = -1;
 		preExpirationTime = -1;
-		preInstanceAmount = - 1;
-		preCurrentInstanceNumber = -1;
 	}
 
 	private void init() {
@@ -214,7 +216,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 			}
 		} else {
 			if (prevCacheOn) {
-				if (prevMaxSize == maxSize && prevStartSize == startSize && preExpirationTime == expirationTime && preInstanceAmount == instanceAmount && preCurrentInstanceNumber == currentInstanceNumber) {
+				if (prevMaxSize == maxSize && prevStartSize == startSize && preExpirationTime == expirationTime) {
 					log.debug("Cache remains on, settings unchanged.");
 				} else {
 					log.debug("Cache remains on, settings changed, cache will be renewed.");
@@ -274,7 +276,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 * @return created cache
 	 */
 	protected Cache<K, V> createCaches() {
-		if (instanceAmount == DEF_INSTANCE_AMOUNT) {
+		if (instanceAmount <= DEF_INSTANCE_AMOUNT) {
 			if (expirationTime == DEF_EXPIRATION_TIME)
 				return createCache(startSize, maxSize);
 			else
@@ -326,8 +328,6 @@ public class CacheController<K,V> implements Cache<K,V>{
 		log.info("startSize " + prevStartSize + " -> " + startSize);
 		log.info("maxSize " + prevMaxSize + " -> " + maxSize);
 		log.info("expirationTime " + preExpirationTime + " -> " + expirationTime);
-		log.info("instanceAmount " + preInstanceAmount + " -> " + instanceAmount);
-		log.info("currentInstanceNumber " + preCurrentInstanceNumber + " -> " + currentInstanceNumber);
 		init();
 	}
 
@@ -337,15 +337,11 @@ public class CacheController<K,V> implements Cache<K,V>{
 		prevMaxSize = maxSize;
 		prevStartSize = startSize;
 		preExpirationTime = expirationTime;
-		preInstanceAmount = instanceAmount;
-		preCurrentInstanceNumber = currentInstanceNumber;
 
 		cacheOn = DEF_CACHE_ON;
 		startSize = DEF_START_SIZE;
 		maxSize = DEF_MAX_SIZE;
 		expirationTime = DEF_EXPIRATION_TIME;
-		instanceAmount = DEF_INSTANCE_AMOUNT;
-		currentInstanceNumber = DEF_CURRENT_INSTANCE_NUMBER;
 	}
 
 	public String getStats() {

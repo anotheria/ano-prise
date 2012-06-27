@@ -145,9 +145,9 @@ public final class Caches {
 	 * @param <V>                type used as value in the cache.
 	 * @return
 	 */
-	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceCacheFailoverSupportCache(String name, ModableTypeHandler modableTypeHandler) {
+	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceCacheFailoverSupportCache(String name, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>();
-		CacheController<K, V> controller = new CacheController<K, V>(name, factory, modableTypeHandler);
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory, instanceAmount, currentInstanceNumber, modableTypeHandler);
 		ConfigurationManager.INSTANCE.configureAs(controller, name);
 		return controller;
 	}
@@ -162,9 +162,9 @@ public final class Caches {
 	 * @param <V>                type used as value in the cache.
 	 * @return
 	 */
-	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceExpiringCacheFailoverSupportCache(String name, ModableTypeHandler modableTypeHandler) {
+	public static final <K, V> Cache<K, V> createConfigurableSoftReferenceExpiringCacheFailoverSupportCache(String name, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<K, V>();
-		CacheController<K, V> controller = new CacheController<K, V>(name, factory, modableTypeHandler);
+		CacheController<K, V> controller = new CacheController<K, V>(name, factory, instanceAmount, currentInstanceNumber, modableTypeHandler);
 		ConfigurationManager.INSTANCE.configureAs(controller, name);
 		return controller;
 	}
