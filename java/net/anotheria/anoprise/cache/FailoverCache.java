@@ -40,7 +40,7 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 	public FailoverCache(String name, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, Cache<K, V> underlyingCache) {
 		cache = underlyingCache;
 		instanceAmount = aInstanceAmount > 0 ? aInstanceAmount : 1;
-		currentInstanceNumber = aInstanceAmount > 0 ? aCurrentInstanceNumber : 0;
+		currentInstanceNumber = aCurrentInstanceNumber;
 		modableTypeHandler = aModableTypeHandler != null ? aModableTypeHandler : new DefaultModableTypeHandler();
 		moskitoCacheStats = cache.getCacheStats();
 	}
@@ -86,7 +86,7 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 	 * @return
 	 */
 	private boolean isFailOverCall(Object id) {
-		if (instanceAmount < 2)
+		if (instanceAmount < 2 || currentInstanceNumber < 0)
 			return false;
 		return currentInstanceNumber != (Math.abs(modableTypeHandler.getModableValue(id)) % instanceAmount);
 	}

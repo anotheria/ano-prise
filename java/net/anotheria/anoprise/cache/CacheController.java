@@ -1,7 +1,6 @@
 package net.anotheria.anoprise.cache;
 
 import net.java.dev.moskito.core.predefined.CacheStats;
-
 import org.apache.log4j.Logger;
 import org.configureme.annotations.AfterConfiguration;
 import org.configureme.annotations.BeforeConfiguration;
@@ -16,33 +15,39 @@ import org.configureme.annotations.ConfigureMe;
  * If the cache is on, the calls will be delegated to the cache, otherwise
  * they will be directly answered (returning null and puting nothing).
  * Currently RoundRobinCache is used as internal cache delegate.
+ *
  * @author lrosenberg
- * Created on 29.07.2004
+ *         Created on 29.07.2004
  */
 @ConfigureMe
-public class CacheController<K,V> implements Cache<K,V>{
+public class CacheController<K, V> implements Cache<K, V> {
 	/**
 	 * If true the cache is on.
 	 */
-	@Configure private boolean cacheOn;
+	@Configure
+	private boolean cacheOn;
 	/**
 	 * Cache start size.
 	 */
-	@Configure private int startSize;
+	@Configure
+	private int startSize;
 	/**
 	 * Cache max size.
 	 */
-	@Configure private int maxSize;
+	@Configure
+	private int maxSize;
 
 	/**
 	 * Class for the configuration factory.
 	 */
-	@Configure private String factoryClazz;
+	@Configure
+	private String factoryClazz;
 
 	/**
 	 * Expiration time for cache entries to become invalid, if we use ExpiringCache
 	 */
-	@Configure private long expirationTime;
+	@Configure
+	private long expirationTime;
 
 
 	/**
@@ -76,7 +81,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 	/**
 	 * Underlying cache.
 	 */
-	private Cache<K,V> cache;
+	private Cache<K, V> cache;
 
 	/**
 	 * Name of the cache configuration.
@@ -128,7 +133,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 	/**
 	 * Initial value for the currentInstanceNumber.
 	 */
-	public static final int DEF_CURRENT_INSTANCE_NUMBER = 0;
+	public static final int DEF_CURRENT_INSTANCE_NUMBER = -1;
 
 	/**
 	 * Logger.
@@ -165,7 +170,7 @@ public class CacheController<K,V> implements Cache<K,V>{
 	 *
 	 * @param aConfigurationName the name to configure with.
 	 * @param aFactory		   the factory to create new cache instances.
-	 * @param aTypeHandler      type handler used for failover cache
+	 * @param aTypeHandler	   type handler used for failover cache
 	 */
 	public CacheController(String aConfigurationName, CacheFactory<K, V> aFactory, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aTypeHandler) {
 		this(aConfigurationName, aFactory);
@@ -259,24 +264,25 @@ public class CacheController<K,V> implements Cache<K,V>{
 	protected Cache<K, V> createCacheFailover(int aStartSize, int aMaxSize, int aInstanceAmount, int aCurrentInstanceNumber) {
 		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
-		Cache <K,V> underlyingCache = factory.create(configurationName, aStartSize, aMaxSize);
-		return new FailoverCache<K, V>(configurationName, instanceAmount, currentInstanceNumber,  typeHandler,  underlyingCache);
+		Cache<K, V> underlyingCache = factory.create(configurationName, aStartSize, aMaxSize);
+		return new FailoverCache<K, V>(configurationName, instanceAmount, currentInstanceNumber, typeHandler, underlyingCache);
 	}
 
 	protected Cache<K, V> createExpiringCacheFailover(int aStartSize, int aMaxSize, long expirationTime, int aInstanceAmount, int aCurrentInstanceNumber) {
 		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
-		Cache <K,V> underlyingCache = factory.createExpiring(configurationName, aStartSize, aMaxSize, expirationTime);
+		Cache<K, V> underlyingCache = factory.createExpiring(configurationName, aStartSize, aMaxSize, expirationTime);
 
-		return new FailoverCache<K, V>(configurationName, aStartSize, aMaxSize,  typeHandler,  underlyingCache);
+		return new FailoverCache<K, V>(configurationName, aStartSize, aMaxSize, typeHandler, underlyingCache);
 	}
 
 	/**
 	 * Create Cache base on params that were configured
+	 *
 	 * @return created cache
 	 */
 	protected Cache<K, V> createCaches() {
-		if (instanceAmount <= DEF_INSTANCE_AMOUNT) {
+		if (instanceAmount <= DEF_INSTANCE_AMOUNT || currentInstanceNumber <= DEF_CURRENT_INSTANCE_NUMBER) {
 			if (expirationTime == DEF_EXPIRATION_TIME)
 				return createCache(startSize, maxSize);
 			else
