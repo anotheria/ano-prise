@@ -1,5 +1,6 @@
 package net.anotheria.anoprise.inmemorymirror;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	
 	@Override
 	public Collection<V> getAll() throws InMemoryMirrorException{
-		return getCache().values();
+		return new ArrayList<V>(getCache().values());
 	}
 	
 	private Map<K, V> getCache() throws InMemoryMirrorException{
