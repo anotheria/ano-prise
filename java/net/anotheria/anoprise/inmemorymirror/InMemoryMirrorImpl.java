@@ -20,7 +20,13 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	
 	@Override
 	public Collection<V> getAll() throws InMemoryMirrorException{
-		return new ArrayList<V>(getCache().values());
+		getCache();
+		try{
+			lock.readLock().lock();
+			return new ArrayList<V>(cache.values());
+		}finally{
+			lock.readLock().unlock();
+		}
 	}
 	
 	private Map<K, V> getCache() throws InMemoryMirrorException{
