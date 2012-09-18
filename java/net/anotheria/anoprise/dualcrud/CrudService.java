@@ -2,7 +2,9 @@ package net.anotheria.anoprise.dualcrud;
 
 import java.util.List;
 
-public interface CrudService<T extends CrudSaveable> {
+import net.anotheria.anoprise.metafactory.Service;
+
+public interface CrudService<T extends CrudSaveable> extends Service {
 	/**
 	 * Creates a new saved instance of T. Disallows overwriting.
 	 * 
