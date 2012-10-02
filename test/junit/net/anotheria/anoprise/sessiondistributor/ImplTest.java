@@ -4,6 +4,7 @@ import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.anoprise.metafactory.ServiceFactory;
+import net.anotheria.util.IdCodeGenerator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +13,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
@@ -286,6 +289,78 @@ public class ImplTest {
 		}
 	}
 
+
+	@Test
+	public void testCreationWithLimiting() {
+		final int sessionsLimit = 2;
+		MetaFactory.reset();
+		try {
+			MetaFactory.addAlias(SessionDistributorService.class, Extension.LOCAL);
+			MetaFactory.addFactoryClass(SessionDistributorService.class, Extension.LOCAL, SDFactory.class);
+
+			final SessionDistributorService sdService = MetaFactory.get(SessionDistributorService.class);
+
+			SessionDistributorServiceConfig.getInstance().setMaxSessionsCount(sessionsLimit);
+			SessionDistributorServiceConfig.getInstance().setSessionsLimitEnabled(true);
+
+
+			final AtomicInteger failedCallsAmount = new AtomicInteger(0);
+			final int nThreads = 100;
+			final CountDownLatch prepareLatch = new CountDownLatch(nThreads);
+			final CountDownLatch startLatch = new CountDownLatch(1);
+			final CountDownLatch stopLatch = new CountDownLatch(nThreads);
+
+
+			for (int i = 0; i < nThreads; i++) {
+				Thread t = new Thread() {
+
+					@Override
+					public void run() {
+						try {
+							prepareLatch.countDown();
+							startLatch.await();
+
+							try {
+								sdService.createDistributedSession(IdCodeGenerator.generateCode(15));
+								if (failedCallsAmount.get() == sessionsLimit)
+									Assert.fail("Limit Reached - But Exception does not  fall!");
+
+							} catch (SessionsCountLimitReachedSessionDistributorServiceException e) {
+								failedCallsAmount.incrementAndGet();
+							} catch (SessionDistributorServiceException e) {
+								Assert.fail(e.getMessage());
+							}
+
+
+						} catch (InterruptedException e) {
+							Assert.fail(e.getMessage());
+						} finally {
+							stopLatch.countDown();
+						}
+					}
+				};
+				t.start();
+			}
+
+			try {
+				prepareLatch.await();
+				startLatch.countDown();
+
+				stopLatch.await();
+			} catch (InterruptedException e) {
+				Assert.fail(e.getMessage());
+			}
+
+
+			Assert.assertEquals("Should be EQUALS", nThreads - sessionsLimit, failedCallsAmount.get());
+		} catch (MetaFactoryException e) {
+			Assert.fail();
+		}
+
+		// Setting to prev  values!
+		SessionDistributorServiceConfig.getInstance().setMaxSessionsCount(1000);
+		SessionDistributorServiceConfig.getInstance().setSessionsLimitEnabled(false);
+	}
 
 	/**
 	 * Factory for test!

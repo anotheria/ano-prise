@@ -23,6 +23,10 @@ public class SessionDistributorServiceConfig {
 	 * Default session distributor event channel queue sleep time.
 	 */
 	protected static final long DEFAULT_SD_EVEN_CHANNEL_Q_SLEEP_TIME = 300;
+	/**
+	 * Default max amount of sessions.
+	 */
+	protected static final int MAX_SESSIONS_COUNT = 1000;
 
 
 	/**
@@ -105,6 +109,16 @@ public class SessionDistributorServiceConfig {
 	 */
 	@Configure
 	private String nodeIdSystemPropertyName;
+	/**
+	 * Max Distributed sessions amount - per single {@link SessionDistributorService} instance.
+	 */
+	@Configure
+	private int maxSessionsCount;
+	/**
+	 * Allow to enable and disable max sessions count functionality.
+	 */
+	@Configure
+	private boolean sessionsLimitEnabled;
 
 
 	public static SessionDistributorServiceConfig getInstance() {
@@ -132,6 +146,9 @@ public class SessionDistributorServiceConfig {
 		this.sdCacheEventQueueSize = DEFAULT_SD_EVEN_CHANNEL_Q_SIZE;
 		this.sdCacheEventQueueSleepTime = DEFAULT_SD_EVEN_CHANNEL_Q_SLEEP_TIME;
 		this.nodeIdSystemPropertyName = "extension";
+
+		this.maxSessionsCount = MAX_SESSIONS_COUNT;
+		this.sessionsLimitEnabled = false;
 	}
 
 	public long getDistributedSessionMaxAge() {
@@ -239,6 +256,22 @@ public class SessionDistributorServiceConfig {
 		this.nodeIdSystemPropertyName = nodeIdSystemPropertyName;
 	}
 
+	public int getMaxSessionsCount() {
+		return maxSessionsCount;
+	}
+
+	public void setMaxSessionsCount(int maxSessionsCount) {
+		this.maxSessionsCount = maxSessionsCount;
+	}
+
+	public boolean isSessionsLimitEnabled() {
+		return sessionsLimitEnabled;
+	}
+
+	public void setSessionsLimitEnabled(boolean sessionsLimitEnabled) {
+		this.sessionsLimitEnabled = sessionsLimitEnabled;
+	}
+
 	/**
 	 * Static SessionDistributorConfigInstanceHolder which holds configured SessionDistributorServiceConfig instance.
 	 */
@@ -278,6 +311,8 @@ public class SessionDistributorServiceConfig {
 				", sdCacheEventQueueSize=" + sdCacheEventQueueSize +
 				", sdCacheEventQueueSleepTime=" + sdCacheEventQueueSleepTime +
 				", nodeIdSystemPropertyName='" + nodeIdSystemPropertyName + '\'' +
+				", maxSessionsCount=" + maxSessionsCount +
+				", sessionsLimitEnabled=" + sessionsLimitEnabled +
 				'}';
 	}
 }

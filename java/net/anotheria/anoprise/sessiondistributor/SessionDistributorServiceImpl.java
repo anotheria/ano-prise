@@ -44,6 +44,10 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	 * Queued service event sender.
 	 */
 	private QueuedEventSender eventSender;
+	/**
+	 * Simple lock monitor.
+	 */
+	private final Object lock = new Object();
 
 	/**
 	 * /**
@@ -103,7 +107,17 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	@Override
 	public String createDistributedSession(String sessionId) throws SessionDistributorServiceException {
 		LOG.debug("createDistributedSession(" + sessionId + ")");
-		return sessions.createSession(sessionId);
+
+		if (!serviceConfig.isSessionsLimitEnabled())
+			return sessions.createSession(sessionId);
+
+
+		synchronized (lock) {
+			if (sessions.getCount() >= serviceConfig.getMaxSessionsCount())
+				throw new SessionsCountLimitReachedSessionDistributorServiceException(serviceConfig.getMaxSessionsCount());
+
+			return sessions.createSession(sessionId);
+		}
 	}
 
 	@Override

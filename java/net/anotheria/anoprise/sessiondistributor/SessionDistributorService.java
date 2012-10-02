@@ -20,6 +20,7 @@ public interface SessionDistributorService extends Service {
 	 * @return created session id
 	 * @throws SessionDistributorServiceException
 	 *          on errors
+	 *          {@link SessionsCountLimitReachedSessionDistributorServiceException} in case when max configured session amount - is reached.
 	 */
 	String createDistributedSession(String sessionId) throws SessionDistributorServiceException;
 
@@ -36,8 +37,8 @@ public interface SessionDistributorService extends Service {
 	/**
 	 * Return distributed session if such exists. Afterwards session restored event will be generated.
 	 *
-	 * @param sessionId	 - session sessionId
-	 * @param callerId - actually caller service id (will be used only in event!)
+	 * @param sessionId - session sessionId
+	 * @param callerId  - actually caller service id (will be used only in event!)
 	 * @return {@link DistributedSessionVO}
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
@@ -57,7 +58,7 @@ public interface SessionDistributorService extends Service {
 	 * Updates DistributedSession userId property.
 	 *
 	 * @param sessionId name of the session
-	 * @param userId	  user id
+	 * @param userId    user id
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
@@ -67,7 +68,7 @@ public interface SessionDistributorService extends Service {
 	 * Updates DistributedSession editorId property.
 	 *
 	 * @param sessionId name of the session
-	 * @param editorId	editor id
+	 * @param editorId  editor id
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
@@ -78,7 +79,7 @@ public interface SessionDistributorService extends Service {
 	 * If such attribute already exist - it will be updated.
 	 *
 	 * @param sessionId - name of the session
-	 * @param attribute   - {@link DistributedSessionAttribute}
+	 * @param attribute - {@link DistributedSessionAttribute}
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
 	 */
@@ -87,7 +88,7 @@ public interface SessionDistributorService extends Service {
 	/**
 	 * Remove distributed attribute with selected attributeName from session.
 	 *
-	 * @param sessionId   -  name of the session
+	 * @param sessionId     -  name of the session
 	 * @param attributeName - attribute name
 	 * @throws SessionDistributorServiceException
 	 *          - {@link NoSuchDistributedSessionException} - if session does not exist.
