@@ -26,10 +26,12 @@
             <artifactId>configureme</artifactId>
             <version>2.0.0</version>
         </dependency>
+		<!-- we will update this to 2.0 later, for now its in provided to prevent from loading -->
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>moskito-core</artifactId>
             <version>1.6.3</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.anotheria</groupId>
