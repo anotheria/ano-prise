@@ -1,12 +1,12 @@
 package net.anotheria.anoprise.metafactory;
 
+import net.java.dev.moskito.core.util.storage.Storage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.java.dev.moskito.util.storage.Storage;
 
 /**
  * Utility class for dynamic instance creation of multiple possible instance types.
