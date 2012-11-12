@@ -1,17 +1,16 @@
 package net.anotheria.anoprise.processor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import net.anotheria.anoprise.queue.BoundedFifoQueueFactory;
 import net.anotheria.anoprise.queue.EnterpriseQueue;
 import net.anotheria.anoprise.queue.EnterpriseQueueFactory;
+import net.anotheria.moskito.core.predefined.QueueStats;
+import net.anotheria.moskito.core.predefined.QueuingSystemStats;
 import net.anotheria.util.ThreadUtils;
-import net.java.dev.moskito.core.predefined.QueueStats;
-import net.java.dev.moskito.core.predefined.QueuingSystemStats;
-
 import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Processor to perform same type work under elements that arrives in non

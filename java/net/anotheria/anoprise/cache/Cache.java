@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import net.java.dev.moskito.core.predefined.CacheStats;
+import net.anotheria.moskito.core.predefined.CacheStats;
 
 /**
  * An interface for the service side object cache.

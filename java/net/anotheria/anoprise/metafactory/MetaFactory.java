@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.metafactory;
 
-import net.java.dev.moskito.core.util.storage.Storage;
+import net.anotheria.moskito.core.util.storage.Storage;
 
 import java.util.ArrayList;
 import java.util.List;

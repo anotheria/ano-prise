@@ -1,15 +1,15 @@
 package net.anotheria.anoprise.cache;
 
+import net.anotheria.moskito.core.predefined.CacheStats;
+import net.anotheria.moskito.core.predefined.Constants;
+import net.anotheria.moskito.core.producers.IStats;
+import net.anotheria.moskito.core.producers.IStatsProducer;
+import net.anotheria.moskito.core.registry.IProducerRegistry;
+import net.anotheria.moskito.core.registry.ProducerRegistryFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import net.java.dev.moskito.core.predefined.CacheStats;
-import net.java.dev.moskito.core.predefined.Constants;
-import net.java.dev.moskito.core.producers.IStats;
-import net.java.dev.moskito.core.producers.IStatsProducer;
-import net.java.dev.moskito.core.registry.IProducerRegistry;
-import net.java.dev.moskito.core.registry.ProducerRegistryFactory;
 
 /**
  * Base class for cache implementations. Implements support for moskito monitoring in caches.

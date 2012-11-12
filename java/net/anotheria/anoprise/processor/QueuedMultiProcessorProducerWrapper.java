@@ -1,16 +1,15 @@
 package net.anotheria.anoprise.processor;
 
+import net.anotheria.moskito.core.logging.DefaultStatsLogger;
+import net.anotheria.moskito.core.logging.IntervalStatsLogger;
+import net.anotheria.moskito.core.logging.Log4JOutput;
+import net.anotheria.moskito.core.producers.IStats;
+import net.anotheria.moskito.core.producers.IStatsProducer;
+import net.anotheria.moskito.core.stats.DefaultIntervals;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.java.dev.moskito.core.logging.DefaultStatsLogger;
-import net.java.dev.moskito.core.logging.IntervalStatsLogger;
-import net.java.dev.moskito.core.logging.Log4JOutput;
-import net.java.dev.moskito.core.producers.IStats;
-import net.java.dev.moskito.core.producers.IStatsProducer;
-import net.java.dev.moskito.core.stats.DefaultIntervals;
-
-import org.apache.log4j.Logger;
 
 /**
  * Helper class for QueuedMultiProcessor - moskito integration.

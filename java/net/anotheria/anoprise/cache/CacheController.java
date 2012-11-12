@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import net.java.dev.moskito.core.predefined.CacheStats;
+import net.anotheria.moskito.core.predefined.CacheStats;
 import org.apache.log4j.Logger;
 import org.configureme.annotations.AfterConfiguration;
 import org.configureme.annotations.BeforeConfiguration;

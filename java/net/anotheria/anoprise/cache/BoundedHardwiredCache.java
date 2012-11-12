@@ -3,7 +3,7 @@ package net.anotheria.anoprise.cache;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
-import net.java.dev.moskito.core.predefined.CacheStats;
+import net.anotheria.moskito.core.predefined.CacheStats;
 
 
 /**

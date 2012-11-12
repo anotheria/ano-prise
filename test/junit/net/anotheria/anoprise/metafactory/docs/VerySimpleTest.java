@@ -3,10 +3,20 @@ package net.anotheria.anoprise.metafactory.docs;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 
+import org.configureme.ConfigurationManager;
+import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
+import org.junit.BeforeClass;
+
 import static junit.framework.Assert.*;
 
 public class VerySimpleTest {
+
+	@BeforeClass
+	public static void setConfigureMe(){
+		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "junit"));
+	}
+
 	@Before public void configureMetaFactory(){
 		MetaFactory.reset();
 		

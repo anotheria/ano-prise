@@ -4,8 +4,8 @@
             //Factory configuration syntax:
             //<service|service>: "<factoryClass>"
             //defines alias XxxService on service foo.bar.XxxService
-            foo.bar.XxxService: "foo.bar.XxxServiceFactory",
-            net.anotheria.anoprise.mock.TestService: "net.anotheria.anoprise.mock.TestServiceFactory",
+            "foo.bar.XxxService": "foo.bar.XxxServiceFactory",
+            "net.anotheria.anoprise.mock.TestService": "net.anotheria.anoprise.mock.TestServiceFactory",
 		},
 	},
 }

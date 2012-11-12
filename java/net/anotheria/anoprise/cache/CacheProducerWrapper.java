@@ -1,10 +1,10 @@
 package net.anotheria.anoprise.cache;
 
+import net.anotheria.moskito.core.producers.IStats;
+import net.anotheria.moskito.core.producers.IStatsProducer;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.java.dev.moskito.core.producers.IStats;
-import net.java.dev.moskito.core.producers.IStatsProducer;
 
 /**
  * Helper class for cache - moskito integration.

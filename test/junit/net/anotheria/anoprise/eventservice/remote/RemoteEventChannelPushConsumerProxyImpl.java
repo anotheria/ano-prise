@@ -1,15 +1,16 @@
 package net.anotheria.anoprise.eventservice.remote;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.log4j.Logger;
-
 import net.anotheria.anoprise.eventservice.AbstractEventChannel;
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventServiceConsumer;
+import net.anotheria.anoprise.eventservice.EventTransportShell;
 import net.anotheria.anoprise.eventservice.RemoteEventChannelConsumerProxy;
 import net.anotheria.anoprise.eventservice.RemoteEventServiceConsumer;
+import net.anotheria.net.util.ByteArraySerializer;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RemoteEventChannelPushConsumerProxyImpl extends AbstractEventChannel implements RemoteEventChannelConsumerProxy{
 	
@@ -38,7 +39,14 @@ public class RemoteEventChannelPushConsumerProxyImpl extends AbstractEventChanne
 
 	@Override
 	public void pushEvent(Event e) {
-		System.out.println("PushEvent: "+e);
+		EventTransportShell shell = new EventTransportShell();
+		shell.setChannelName(getName());
+		try{
+			shell.setData(ByteArraySerializer.serializeObject(e));
+		}catch(Exception ignored){}
+		for (RemoteEventServiceConsumer c  :consumers){
+			c.deliverEvent(shell);
+		}
 	}
 
 	@Override

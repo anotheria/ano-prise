@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import net.java.dev.moskito.core.predefined.CacheStats;
+import net.anotheria.moskito.core.predefined.CacheStats;
 
 /**
  * A cache implementation where elements stored based on the instance of cache

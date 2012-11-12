@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.cache;
 
-import java.util.HashMap;
+import net.anotheria.moskito.core.predefined.CacheStats;
 
-import net.java.dev.moskito.core.predefined.CacheStats;
+import java.util.HashMap;
 
 public class RequestBasedCache<K,V> extends AbstractCache implements Cache<K, V>{
 	

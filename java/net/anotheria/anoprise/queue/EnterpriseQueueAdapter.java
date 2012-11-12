@@ -1,11 +1,11 @@
 package net.anotheria.anoprise.queue;
 
+import net.anotheria.moskito.core.predefined.QueueStats;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
-
-import net.java.dev.moskito.core.predefined.QueueStats;
 
 /**
  * Completely adapts standard java queue to enterprise without any limitation of
@@ -33,9 +33,6 @@ public class EnterpriseQueueAdapter<T> implements EnterpriseQueue<T> {
 	 * 
 	 * @param aDelegateQueue
 	 *            underlying queue to delegate all queuing operations
-	 * @param aCapacity
-	 *            underlying queue capacity restriction. Has only information
-	 *            aim and doesn't re-restrict any how underlying queue.
 	 */
 	public EnterpriseQueueAdapter(Queue<T> aDelegateQueue) {
 		this(aDelegateQueue, Integer.MAX_VALUE);

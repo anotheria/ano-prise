@@ -65,6 +65,7 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 	@SuppressWarnings("unchecked")
 	@SetAll
 	public void addFactory(final String name, final String value) {
+		System.out.println("Set "+name+" = "+value);
 		try {
 			factoryMap.put(name, (Class<? extends ServiceFactory<? extends Service>>) Class.forName(value));
 		} catch (ClassNotFoundException e) {
@@ -86,5 +87,10 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 	@Override
 	public int getPriority() {
 		return priority;
+	}
+
+	@Override
+	public String toString(){
+		return getClass().getSimpleName()+" "+factoryMap;
 	}
 }

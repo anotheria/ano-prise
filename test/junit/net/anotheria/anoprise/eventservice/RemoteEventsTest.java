@@ -1,12 +1,13 @@
 package net.anotheria.anoprise.eventservice;
 
-import static org.junit.Assert.assertEquals;
 import net.anotheria.anoprise.eventservice.LocalEventsTest.TestConsumer;
 import net.anotheria.anoprise.eventservice.remote.RemoteSupplierFactory;
-
 import org.junit.Test;
 
-public class TestRemoteEvents {
+import static org.junit.Assert.assertEquals;
+
+public class RemoteEventsTest {
+
 	@Test public void testPush(){
 		EventService service = EventServiceFactory.createEventService();
 		((EventServiceImpl)service).setRemoteSupportFactory(new RemoteSupplierFactory());
@@ -72,6 +73,10 @@ public class TestRemoteEvents {
 		
 		public int getEventCount(){
 			return eventCount;
+		}
+
+		@Override public String toString(){
+			return TestRemoteConsumer.class.getSimpleName()+" "+eventCount;
 		}
 		
 	}

@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.queue;
 
-import java.util.List;
+import net.anotheria.moskito.core.predefined.QueueStats;
 
-import net.java.dev.moskito.core.predefined.QueueStats;
+import java.util.List;
 
 /**
  * This queue can be considered as such that repeats standard java queue with
