@@ -24,9 +24,8 @@
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>configureme</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.1</version>
         </dependency>
-		<!-- we will update this to 2.0 later, for now its in provided to prevent from loading -->
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>moskito-core</artifactId>
@@ -41,10 +40,13 @@
             <groupId>net.anotheria</groupId>
             <artifactId>distributeme-core</artifactId>
             <scope>provided</scope>
-            <version>1.2.0</version>
+            <version>2.0.0</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.8</version>
+        </dependency>
     </dependencies>
 
     <scm>

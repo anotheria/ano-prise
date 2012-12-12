@@ -3,6 +3,7 @@ package net.anotheria.anoprise.metafactory;
 import net.anotheria.moskito.core.util.storage.Storage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +73,7 @@ public class MetaFactory {
 	}
 
 	public static <T extends Service> T create(Class<T> pattern, Extension extension) throws MetaFactoryException {
-		return pattern.cast(create(extension.toName(pattern)));
+		return pattern.cast(_create(pattern, extension, null));
 	}
 
 	public static <T extends Service> T create(Class<T> pattern) throws MetaFactoryException {
@@ -81,7 +82,9 @@ public class MetaFactory {
 
 	// /*
 	@SuppressWarnings("unchecked")
-	private static <T extends Service> T create(String name) throws MetaFactoryException {
+	private static <T extends Service> T _create(Class<T> pattern, Extension extension, String name) throws MetaFactoryException {
+		if (name==null)
+			name = extension.toName(pattern);
 		ServiceFactory<T> factory = (ServiceFactory<T>) factories.get(name);
 		if (factory != null)
 			return factory.create();
@@ -93,8 +96,21 @@ public class MetaFactory {
 				addFactoryClass(name, clazz);
 		}
 
-		if (clazz == null)
-			throw new FactoryNotFoundException(name);
+		if (clazz == null){
+			if (extension!=Extension.NONE)
+				throw new FactoryNotFoundException(name);
+			//attempt to dynamically load from reflections.
+			Collection<Class<? extends T>> implementations = OnTheFlyResolver.resolveOnTheFly(pattern);
+			if (implementations==null)
+				throw new FactoryNotFoundException(name);
+			if (implementations.size()>1)
+				throw new MetaFactoryException("No configured factory and multiple subclasses found: "+implementations);
+			try{
+				return implementations.iterator().next().newInstance();
+			}catch(Exception e){
+				throw new MetaFactoryException("Found implementation but couldn't instantiate it "+e.getMessage(), e);
+			}
+		}
 
 		synchronized (factories) {
 			factory = (ServiceFactory<T>) factories.get(name);
@@ -145,7 +161,7 @@ public class MetaFactory {
 			instance = pattern.cast(instances.get(name));
 			if (instance == null) {
 				out("creating new instance of " + name);
-				instance = pattern.cast(create(name));
+				instance = pattern.cast(_create(pattern, extension, name));
 				out("created new instance of " + name + " ---> " + instance);
 				instances.put(name, instance);
 			}

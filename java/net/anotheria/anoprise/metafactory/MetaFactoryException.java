@@ -22,4 +22,8 @@ public class MetaFactoryException extends Exception {
 	public MetaFactoryException(String message) {
 		super(message);
 	}
+
+	public MetaFactoryException(String message, Exception e) {
+		super(message, e);
+	}
 }
