@@ -34,6 +34,8 @@ public class MetaFactory {
 	 */
 	private static Map<String, ServiceFactory<? extends Service>> factories;
 
+	private static List<OnTheFlyConflictResolver> otfConflictResolvers;
+
 	/**
 	 * List of additional resolvers for aliases.
 	 */
@@ -60,6 +62,7 @@ public class MetaFactory {
 		factories = Storage.createConcurrentHashMapStorage("mf-factories");
 		aliases = Storage.createConcurrentHashMapStorage("mf-aliases");
 		instances = Storage.createConcurrentHashMapStorage("mf-instances");
+		otfConflictResolvers = new CopyOnWriteArrayList<OnTheFlyConflictResolver>();
 	}
 
 	/**
@@ -103,8 +106,20 @@ public class MetaFactory {
 			Collection<Class<? extends T>> implementations = OnTheFlyResolver.resolveOnTheFly(pattern);
 			if (implementations==null)
 				throw new FactoryNotFoundException(name);
-			if (implementations.size()>1)
+			if (implementations.size()>1){
+				for (OnTheFlyConflictResolver conflictResolver : otfConflictResolvers){
+					Class<? extends T> resolved = conflictResolver.resolveConflict(implementations);
+					if (resolved!=null){
+						try{
+							return resolved.newInstance();
+						}catch(Exception e){
+							throw new MetaFactoryException("Found implementations and picked ("+resolved+" by "+conflictResolver+"  but couldn't instantiate it "+e.getMessage(), e);
+						}
+					}
+				}
 				throw new MetaFactoryException("No configured factory and multiple subclasses found: "+implementations);
+			}
+
 			try{
 				return implementations.iterator().next().newInstance();
 			}catch(Exception e){
@@ -260,6 +275,14 @@ public class MetaFactory {
 			ret.addAll(resolverList);
 			return ret;
 		}
+	}
+
+	/**
+	 * Adds a new conflict resolver to be used whenever onthefly impl lookup returns multiple candidates.
+	 * @param otfCR
+	 */
+	public static void addOnTheFlyConflictResolver(OnTheFlyConflictResolver otfCR){
+		otfConflictResolvers.add(otfCR);
 	}
 
 }
