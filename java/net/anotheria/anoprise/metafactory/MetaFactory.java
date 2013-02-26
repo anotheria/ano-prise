@@ -1,13 +1,14 @@
 package net.anotheria.anoprise.metafactory;
 
-import net.anotheria.moskito.core.util.storage.Storage;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import net.anotheria.moskito.core.util.storage.Storage;
 
 /**
  * Utility class for dynamic instance creation of multiple possible instance types.
@@ -28,7 +29,8 @@ public class MetaFactory {
 	/**
 	 * Storage for factory classes.
 	 */
-	private static Map<String, Class<? extends ServiceFactory<? extends Service>>> factoryClasses;
+	@SuppressWarnings("rawtypes")
+	private static Map<String, FactoryHolder> factoryClasses;
 	/**
 	 * Storage for factories.
 	 */
@@ -83,16 +85,16 @@ public class MetaFactory {
 		return pattern.cast(create(pattern, Extension.NONE));
 	}
 
-	// /*
 	@SuppressWarnings("unchecked")
 	private static <T extends Service> T _create(Class<T> pattern, Extension extension, String name) throws MetaFactoryException {
 		if (name==null)
 			name = extension.toName(pattern);
 		ServiceFactory<T> factory = (ServiceFactory<T>) factories.get(name);
 		if (factory != null)
-			return factory.create();
+			return factory.create();		
 
-		Class<? extends ServiceFactory<T>> clazz = (Class<? extends ServiceFactory<T>>) factoryClasses.get(name);
+		FactoryHolder<T> factoryConfiguration = factoryClasses.get(name);		
+		Class<? extends ServiceFactory<T>> clazz = factoryConfiguration != null ? factoryConfiguration.getFactoryClass() : null;
 		if (clazz == null) {
 			clazz = (Class<? extends ServiceFactory<T>>) factoryResolver.resolveFactory(name);
 			if (clazz != null)
@@ -132,6 +134,11 @@ public class MetaFactory {
 			if (factory == null) {
 				try {
 					factory = clazz.newInstance();
+					if (factory instanceof ParameterizedServiceFactory<?>) {
+						ParameterizedServiceFactory<T> parameterizedFactory = (ParameterizedServiceFactory<T>) factory;
+						parameterizedFactory.setParameters(factoryConfiguration.getParameters());
+					}
+					
 					factories.put(name, factory);
 				} catch (IllegalAccessException e) {
 					throw new FactoryInstantiationError(clazz, name, e.getMessage());
@@ -144,8 +151,27 @@ public class MetaFactory {
 		}
 		return factory.create();
 	}
+	
+	private static <T extends Service> T _create(final Class<T> service, final String serviceKey) throws MetaFactoryException {
+		@SuppressWarnings("unchecked")
+		FactoryHolder<T> factoryConfiguration = factoryClasses.get(serviceKey);
+		if (factoryConfiguration == null)
+			throw new FactoryNotFoundException(serviceKey);
 
-	// */
+		try {
+			ServiceFactory<T> factory = factoryConfiguration.getFactoryClass().newInstance();
+			if (factory instanceof ParameterizedServiceFactory<?>) {
+				ParameterizedServiceFactory<T> parameterizedFactory = (ParameterizedServiceFactory<T>) factory;
+				parameterizedFactory.setParameters(factoryConfiguration.getParameters());
+			}
+
+			return factory.create();
+		} catch (IllegalAccessException e) {
+			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage());
+		} catch (InstantiationException e) {
+			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage());
+		}
+	}
 
 	public static <T extends Service> T get(Class<T> pattern) throws MetaFactoryException {
 		return get(pattern, Extension.NONE);
@@ -171,14 +197,34 @@ public class MetaFactory {
 			return instance;
 
 		synchronized (instances) {
-			// double check
-			// @SuppressWarnings("unchecked")
 			instance = pattern.cast(instances.get(name));
 			if (instance == null) {
 				out("creating new instance of " + name);
 				instance = pattern.cast(_create(pattern, extension, name));
 				out("created new instance of " + name + " ---> " + instance);
 				instances.put(name, instance);
+			}
+		}
+
+		return instance;
+	}
+	
+	public static <T extends Service> T get(final Class<T> service, final String extension) throws MetaFactoryException {
+		if (service == null)
+			throw new IllegalArgumentException("service argument is null.");
+
+		String innerExtension = extension != null ? "." + extension.replaceAll("\\.", "_").toLowerCase() : ".null";
+		String serviceKey = service.getName() + innerExtension;
+
+		T instance = service.cast(instances.get(serviceKey));
+		if (instance != null)
+			return instance;
+
+		synchronized (instances) {
+			instance = service.cast(instances.get(serviceKey));
+			if (instance == null) {
+				instance = service.cast(_create(service, serviceKey));
+				instances.put(serviceKey, instance);
 			}
 		}
 
@@ -229,14 +275,19 @@ public class MetaFactory {
 		addFactoryClass(extension.toName(service), factoryClass);
 	}
 
-	// public static <T extends ASGService, F extends ServiceFactory<T>> void addFactoryClass(String serviceClassName, Extension extension, Class<F>
-	// factoryClass){
-	// addFactoryClass(extension.toName(serviceClassName), factoryClass);
-	// }
-
 	public static <T extends Service> void addFactoryClass(String name, Class<? extends ServiceFactory<T>> factoryClass) {
-		factoryClasses.put(name, factoryClass);
+		factoryClasses.put(name, new FactoryHolder<T>(factoryClass, null));
 	} 
+	
+	public static <T extends Service, V extends ParameterizedServiceFactory<T>> void addParameterizedFactoryClass(final Class<T> service, final String extension, final Class<V> factoryClass, final Map<String, Serializable> parameters) {
+		if (service == null)
+			throw new IllegalArgumentException("service argument is null.");
+		if (factoryClass == null)
+			throw new IllegalArgumentException("factoryClass argument is null.");
+		
+		String innerExtension = extension != null ? "." + extension.replaceAll("\\.", "_").toLowerCase() : ".null";
+		factoryClasses.put(service.getName() + innerExtension, new FactoryHolder<T>(factoryClass, parameters));
+	}
 
 	/**
 	 * Used for debug output.
@@ -245,7 +296,6 @@ public class MetaFactory {
 	 *            output.
 	 */
 	private static void out(Object o) {
-
 		// System.out.println("[MetaFactory] "+o);
 	}
 
@@ -283,6 +333,62 @@ public class MetaFactory {
 	 */
 	public static void addOnTheFlyConflictResolver(OnTheFlyConflictResolver otfCR){
 		otfConflictResolvers.add(otfCR);
+	}
+	
+	/**
+	 * Factory configuration holder.
+	 * 
+	 * @author Alexandr Bolbat
+	 *
+	 * @param <T>
+	 */
+	private static class FactoryHolder<T extends Service> {
+
+		/**
+		 * Factory class.
+		 */
+		private final Class<? extends ServiceFactory<T>> factoryClass;
+
+		/**
+		 * Factory parameters.
+		 */
+		private final Map<String, Serializable> parameters;
+
+		/**
+		 * Default constructor.
+		 * 
+		 * @param aFactoryClass
+		 *            factory class
+		 * @param aParameters
+		 *            factory parameters, can be <code>null</code>
+		 */
+		protected FactoryHolder(final Class<? extends ServiceFactory<T>> aFactoryClass, final Map<String, Serializable> aParameters) {
+			if (aFactoryClass == null)
+				throw new IllegalArgumentException("aFactoryClass argument is null.");
+
+			this.factoryClass = aFactoryClass;
+			this.parameters = aParameters;
+		}
+
+		public Class<? extends ServiceFactory<T>> getFactoryClass() {
+			return factoryClass;
+		}
+
+		public Map<String, Serializable> getParameters() {
+			return parameters;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("FactoryHolder [factoryClass=");
+			builder.append(factoryClass);
+			builder.append(", parameters=");
+			builder.append(parameters);
+			builder.append("]");
+			return builder.toString();
+		}
+
 	}
 
 }
