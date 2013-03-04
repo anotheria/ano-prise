@@ -5,285 +5,291 @@ import java.io.Serializable;
 
 /**
  * Interface of the file system service.
- * 
+ *
  * @author abolbat
  * @version 1.0, 2010/02/11
  */
 public final class FSServiceConfig implements Serializable {
 
-	/**
-	 * Basic serialVersionUID variable.
-	 */
-	private static final long serialVersionUID = -2629878661534470687L;
+    /**
+     * Basic serialVersionUID variable.
+     */
+    private static final long serialVersionUID = -2629878661534470687L;
 
-	/**
-	 * File extension for storing files.
-	 */
-	public static final String DEFAULT_FILE_EXTENSION = "dat";
+    /**
+     * File extension for storing files.
+     */
+    public static final String DEFAULT_FILE_EXTENSION = "dat";
 
-	/**
-	 * Default maximum owner id length.
-	 */
-	public static final int DEFAULT_MAX_OWNER_ID_LENGTH = 10;
-	
-	/**
-	 * Default fragment length.
-	 */
-	public static final int DEFAULT_FRAGMENT_LENGTH = 2;
-	
-	/**
-	 * Text prefix for validation exception message.
-	 */
-	public static final String VALIDATION_ERROR_PREFIX = "Validation error: ";
-	
-	/**
-	 * Root folder in file system for storing service files.
-	 */
-	private String rootFolderPath;
+    /**
+     * Default maximum owner id length.
+     */
+    public static final int DEFAULT_MAX_OWNER_ID_LENGTH = 10;
 
-	/**
-	 * Configurable file Extension.
-	 */
-	private String fileExtension;
+    /**
+     * Default fragment length.
+     */
+    public static final int DEFAULT_FRAGMENT_LENGTH = 2;
 
-	/**
-	 * Maximum owner id length.
-	 */
-	private int maxOwnerIdLength;
+    /**
+     * Text prefix for validation exception message.
+     */
+    public static final String VALIDATION_ERROR_PREFIX = "Validation error: ";
 
-	/**
-	 * Fragment length.
-	 */
-	private int fragmetLegth;
+    /**
+     * Root folder in file system for storing service files.
+     */
+    private String rootFolderPath;
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param aRootFolderPath
-	 *            - root folder in file system for storing service files
-	 * @throws FSServiceConfigException
-	 */
-	public FSServiceConfig(String aRootFolderPath) throws FSServiceConfigException {
-		this(aRootFolderPath, DEFAULT_FILE_EXTENSION, DEFAULT_MAX_OWNER_ID_LENGTH, DEFAULT_FRAGMENT_LENGTH);
-	}
+    /**
+     * Configurable file Extension.
+     */
+    private String fileExtension;
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param aRootFolderPath
-	 *            - root folder in file system for storing service files
-	 * @param aFileExtension
-	 *            - file extension
-	 * @throws FSServiceConfigException
-	 */
-	public FSServiceConfig(String aRootFolderPath, String aFileExtension) throws FSServiceConfigException {
-		this(aRootFolderPath, aFileExtension, DEFAULT_MAX_OWNER_ID_LENGTH, DEFAULT_FRAGMENT_LENGTH);
-	}
+    /**
+     * Maximum owner id length.
+     */
+    private int maxOwnerIdLength;
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param aRootFolderPath
-	 *            - root folder in file system for storing service files
-	 * @param aFileExtension
-	 *            - file extension
-	 * @param aMaxOwnerIdLength
-	 *            - maximum owner id length
-	 * @param aFragmentLength
-	 *            - a fragment length
-	 * @throws FSServiceConfigException
-	 */
-	public FSServiceConfig(String aRootFolderPath, String aFileExtension, int aMaxOwnerIdLength, int aFragmentLength) throws FSServiceConfigException {
-		this.rootFolderPath = validateRootFilderPath(aRootFolderPath);
-		this.fileExtension = validateFileExtension(aFileExtension);
-		this.maxOwnerIdLength = aMaxOwnerIdLength;
-		this.fragmetLegth = aFragmentLength;
-	}
+    /**
+     * Fragment length.
+     */
+    private int fragmetLegth;
+    /**
+     * Allow to use any string as owner id, disabled by default.
+     */
+    private boolean useStringOwnerId = false;
 
-	public String getRootFolderPath() {
-		return rootFolderPath;
-	}
+    /**
+     * Default constructor.
+     *
+     * @param aRootFolderPath - root folder in file system for storing service files
+     * @throws FSServiceConfigException
+     */
+    public FSServiceConfig(String aRootFolderPath) throws FSServiceConfigException {
+        this(aRootFolderPath, DEFAULT_FILE_EXTENSION, DEFAULT_MAX_OWNER_ID_LENGTH, DEFAULT_FRAGMENT_LENGTH);
+    }
 
-	public String getFileExtension() {
-		return fileExtension;
-	}
+    /**
+     * Default constructor.
+     *
+     * @param aRootFolderPath - root folder in file system for storing service files
+     * @param aFileExtension  - file extension
+     * @throws FSServiceConfigException
+     */
+    public FSServiceConfig(String aRootFolderPath, String aFileExtension) throws FSServiceConfigException {
+        this(aRootFolderPath, aFileExtension, DEFAULT_MAX_OWNER_ID_LENGTH, DEFAULT_FRAGMENT_LENGTH);
+    }
 
-	/**
-	 * Return store file name.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @param aFileExtension
-	 *            - file extension
-	 * @return file name
-	 * @throws FSServiceConfigException
-	 */
-	public static String getStoreFileName(String ownerId, String aFileExtension) throws FSServiceConfigException {
-		return validateOwnerId(ownerId) + "." + aFileExtension;
-	}
+    /**
+     * Default constructor.
+     *
+     * @param aRootFolderPath   - root folder in file system for storing service files
+     * @param aFileExtension    - file extension
+     * @param aMaxOwnerIdLength - maximum owner id length
+     * @param aFragmentLength   - a fragment length
+     * @throws FSServiceConfigException
+     */
+    public FSServiceConfig(String aRootFolderPath, String aFileExtension, int aMaxOwnerIdLength, int aFragmentLength) throws FSServiceConfigException {
+        this.rootFolderPath = validateRootFolderPath(aRootFolderPath);
+        this.fileExtension = validateFileExtension(aFileExtension);
+        this.maxOwnerIdLength = aMaxOwnerIdLength;
+        this.fragmetLegth = aFragmentLength;
+        this.useStringOwnerId = false;
+    }
 
-	/**
-	 * Return store file name.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @return file name
-	 * @throws FSServiceConfigException
-	 */
-	public String getStoreFileName(String ownerId) throws FSServiceConfigException {
-		return getStoreFileName(ownerId, fileExtension);
-	}
+    /**
+     * Default constructor.
+     *
+     * @param aRootFolderPath   - root folder in file system for storing service files
+     * @param aFileExtension    - file extension
+     * @param aMaxOwnerIdLength - maximum owner id length
+     * @param aFragmentLength   - a fragment length
+     * @param stringOwnerId     - allow string as owner id
+     * @throws FSServiceConfigException
+     */
+    public FSServiceConfig(String aRootFolderPath, String aFileExtension, int aMaxOwnerIdLength, int aFragmentLength, boolean stringOwnerId) throws FSServiceConfigException {
+        this.rootFolderPath = validateRootFolderPath(aRootFolderPath);
+        this.fileExtension = validateFileExtension(aFileExtension);
+        this.maxOwnerIdLength = aMaxOwnerIdLength;
+        this.fragmetLegth = aFragmentLength;
+        this.useStringOwnerId = stringOwnerId;
 
-	/**
-	 * Internal method for fragmenting owner id by parameters.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @param maxOwnerIdLength
-	 *            - max owner id length
-	 * @param fragmentLength
-	 *            - fragment length
-	 * @return fragments
-	 */
-	private static String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength) {
-		if (ownerId == null || ownerId.length() == 0)
-			throw new IllegalArgumentException("OwnerId is null or empty");
+    }
 
-		while (ownerId.length() < maxOwnerIdLength)
-			ownerId = "0" + ownerId;
 
-		while (ownerId.length() % fragmentLength != 0)
-			ownerId = "0" + ownerId;
+    public String getRootFolderPath() {
+        return rootFolderPath;
+    }
 
-		int fragmentationDepth = ownerId.length() / fragmentLength;
-		String[] ret = new String[fragmentationDepth - 1];
-		for (int i = 0; i < fragmentationDepth - 1; i++) {
-			String fragment = ownerId.substring(i * fragmentLength, i * fragmentLength + fragmentLength);
-			ret[i] = fragment;
-		}
+    public String getFileExtension() {
+        return fileExtension;
+    }
 
-		return ret;
-	}
+    /**
+     * Return store file name.
+     *
+     * @param ownerId          - owner id
+     * @param aFileExtension   - file extension
+     * @param useStringOwnerId - {@code true} if user id represented as string/ false  if it's int
+     * @return file name
+     * @throws FSServiceConfigException
+     */
+    public static String getStoreFileName(String ownerId, String aFileExtension, boolean useStringOwnerId) throws FSServiceConfigException {
+        return validateOwnerId(ownerId, useStringOwnerId) + "." + aFileExtension;
+    }
 
-	/**
-	 * Return store folder path.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @param maxOwnerIdLength
-	 *            - max owner id length
-	 * @param fragmentLength
-	 *            - fragments length
-	 * @return folder name
-	 * @throws FSServiceConfigException
-	 */
-	public static String getStoreFolderPath(String ownerId, int maxOwnerIdLength, int fragmentLength) throws FSServiceConfigException {
-		String id = validateOwnerId(ownerId);
-		String[] fragments = fragmentOwnerId(id, maxOwnerIdLength, fragmentLength);
-		StringBuilder ret = new StringBuilder();
-		for (String f : fragments) {
-			ret.append(f).append(File.separatorChar);
-		}
-		return ret.toString();
-	}
+    /**
+     * Return store file name.
+     *
+     * @param ownerId - owner id
+     * @return file name
+     * @throws FSServiceConfigException
+     */
+    public String getStoreFileName(String ownerId) throws FSServiceConfigException {
+        return getStoreFileName(ownerId, fileExtension, useStringOwnerId);
+    }
 
-	/**
-	 * Return store folder path.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @return folder name
-	 * @throws FSServiceConfigException
-	 */
-	public String getStoreFolderPath(String ownerId) throws FSServiceConfigException {
-		String path = rootFolderPath;
-		String lastChar = path.substring(path.length() - 1, path.length());
-		if (!lastChar.equals(File.separator))
-			path += File.separator;
+    /**
+     * Internal method for fragmenting owner id by parameters.
+     *
+     * @param ownerId          - owner id
+     * @param maxOwnerIdLength - max owner id length
+     * @param fragmentLength   - fragment length
+     * @return fragments
+     */
+    private static String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength) {
+        if (ownerId == null || ownerId.length() == 0)
+            throw new IllegalArgumentException("OwnerId is null or empty");
 
-		return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth);
-	}
+        while (ownerId.length() < maxOwnerIdLength)
+            ownerId = "0" + ownerId;
 
-	/**
-	 * Return store file path with file name for given owner id.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @param maxOwnerIdLength
-	 *            - max owner id length
-	 * @param fragmentLength
-	 *            - fragments length
-	 * @param aFileExtension
-	 *            - file extension
-	 * @return storing file path with file name
-	 * @throws FSServiceConfigException
-	 */
-	public static String getStoreFilePath(String ownerId, int maxOwnerIdLength, int fragmentLength, String aFileExtension) throws FSServiceConfigException {
-		return getStoreFolderPath(ownerId, maxOwnerIdLength, fragmentLength) + getStoreFileName(ownerId, aFileExtension);
-	}
+        while (ownerId.length() % fragmentLength != 0)
+            ownerId = "0" + ownerId;
 
-	/**
-	 * Return store file path with file name for given owner id.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @return storing file path with file name
-	 * @throws FSServiceConfigException
-	 */
-	public String getStoreFilePath(String ownerId) throws FSServiceConfigException {
-		return getStoreFolderPath(ownerId) + getStoreFileName(ownerId);
-	}
+        int fragmentationDepth = ownerId.length() / fragmentLength;
+        String[] ret = new String[fragmentationDepth - 1];
+        for (int i = 0; i < fragmentationDepth - 1; i++) {
+            String fragment = ownerId.substring(i * fragmentLength, i * fragmentLength + fragmentLength);
+            ret[i] = fragment;
+        }
 
-	/**
-	 * Validation method.
-	 * 
-	 * @param ownerId
-	 *            - owner id
-	 * @return validated owner id
-	 * @throws FSServiceConfigException
-	 */
-	private static String validateOwnerId(String ownerId) throws FSServiceConfigException {
-		if (ownerId == null)
-			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Null ownerId argument.");
+        return ret;
+    }
 
-		if (ownerId.length() < 1)
-			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Minimum length for ownerId: 1.");
+    /**
+     * Return store folder path.
+     *
+     * @param ownerId          - owner id
+     * @param maxOwnerIdLength - max owner id length
+     * @param fragmentLength   - fragments length
+     * @param useStringOwnerId - is user id represented as string
+     * @return folder name
+     * @throws FSServiceConfigException
+     */
+    public static String getStoreFolderPath(String ownerId, int maxOwnerIdLength, int fragmentLength, boolean useStringOwnerId) throws FSServiceConfigException {
+        String id = validateOwnerId(ownerId, useStringOwnerId);
+        String[] fragments = fragmentOwnerId(id, maxOwnerIdLength, fragmentLength);
+        StringBuilder ret = new StringBuilder();
+        for (String f : fragments) {
+            ret.append(f).append(File.separatorChar);
+        }
+        return ret.toString();
+    }
 
-		try {
-			return Integer.valueOf(ownerId).toString();
-		} catch (NumberFormatException nfe) {
-			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "NumberFormatException on parsing ownerId argument: " + nfe.getMessage());
-		}
-	}
+    /**
+     * Return store folder path.
+     *
+     * @param ownerId - owner id
+     * @return folder name
+     * @throws FSServiceConfigException
+     */
+    public String getStoreFolderPath(String ownerId) throws FSServiceConfigException {
+        String path = rootFolderPath;
+        String lastChar = path.substring(path.length() - 1, path.length());
+        if (!lastChar.equals(File.separator))
+            path += File.separator;
 
-	/**
-	 * Validation method.
-	 * 
-	 * @param aRootFolderPath
-	 *            - root folder path
-	 * @return a root folder path
-	 * @throws FSServiceConfigException
-	 */
-	private static String validateRootFilderPath(String aRootFolderPath) throws FSServiceConfigException {
-		if (aRootFolderPath == null)
-			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Null aRootFolderPath argument.");
+        return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId);
+    }
 
-		return aRootFolderPath;
-	}
+    /**
+     * Return store file path with file name for given owner id.
+     *
+     * @param ownerId          - owner id
+     * @param maxOwnerIdLength - max owner id length
+     * @param fragmentLength   - fragments length
+     * @param aFileExtension   - file extension
+     * @param useStringOwnerId - is user id represented as string
+     * @return storing file path with file name
+     * @throws FSServiceConfigException
+     */
+    public static String getStoreFilePath(String ownerId, int maxOwnerIdLength, int fragmentLength, String aFileExtension, boolean useStringOwnerId) throws FSServiceConfigException {
+        return getStoreFolderPath(ownerId, maxOwnerIdLength, fragmentLength, useStringOwnerId) + getStoreFileName(ownerId, aFileExtension, useStringOwnerId);
+    }
 
-	/**
-	 * Validation method.
-	 * 
-	 * @param aFileExtension
-	 *            - file extension
-	 * @return file extension
-	 * @throws FSServiceConfigException
-	 */
-	private static String validateFileExtension(String aFileExtension) throws FSServiceConfigException {
-		if (aFileExtension == null)
-			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Null aServiceName argument.");
+    /**
+     * Return store file path with file name for given owner id.
+     *
+     * @param ownerId - owner id
+     * @return storing file path with file name
+     * @throws FSServiceConfigException
+     */
+    public String getStoreFilePath(String ownerId) throws FSServiceConfigException {
+        return getStoreFolderPath(ownerId) + getStoreFileName(ownerId);
+    }
 
-		return aFileExtension;
-	}
+    /**
+     * Validation method.
+     *
+     * @param ownerId          - owner id
+     * @param useStringOwnerId - allow/disalow user id as String usage
+     * @return validated owner id
+     * @throws FSServiceConfigException
+     */
+    private static String validateOwnerId(String ownerId, boolean useStringOwnerId) throws FSServiceConfigException {
+        if (ownerId == null)
+            throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Null ownerId argument.");
+
+        if (ownerId.length() < 1)
+            throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Minimum length for ownerId: 1.");
+
+        try {
+            if (!useStringOwnerId)
+                return Integer.valueOf(ownerId).toString();
+            return ownerId;
+        } catch (NumberFormatException nfe) {
+            throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "NumberFormatException on parsing ownerId argument: " + nfe.getMessage());
+        }
+    }
+
+    /**
+     * Validation method.
+     *
+     * @param aRootFolderPath - root folder path
+     * @return a root folder path
+     * @throws FSServiceConfigException
+     */
+    private static String validateRootFolderPath(String aRootFolderPath) throws FSServiceConfigException {
+        if (aRootFolderPath == null)
+            throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Null aRootFolderPath argument.");
+
+        return aRootFolderPath;
+    }
+
+    /**
+     * Validation method.
+     *
+     * @param aFileExtension - file extension
+     * @return file extension
+     * @throws FSServiceConfigException
+     */
+    private static String validateFileExtension(String aFileExtension) throws FSServiceConfigException {
+        if (aFileExtension == null)
+            throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "Null aServiceName argument.");
+
+        return aFileExtension;
+    }
 
 }
