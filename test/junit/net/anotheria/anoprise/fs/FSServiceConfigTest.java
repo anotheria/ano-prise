@@ -104,6 +104,13 @@ public class FSServiceConfigTest {
         Assert.assertEquals("t/e/s/t/_/t/e/s/test_test.dat",FSServiceConfig.getStoreFilePath(ownerId12345678910, ownerId12345678910.length()-1, 1, "dat", true));
     }
 
+	@Test
+	public void testConfigurableConfig() throws FSServiceConfigException {
+		FSServiceConfig FSServiceConfigConfigurable = FSServiceConfig.getInstance("ano-prise-fs-config", null);
+		Assert.assertEquals(("/work/fsstorage/"), (FSServiceConfigConfigurable.getRootFolderPath()));
+		Assert.assertEquals(("test"), (FSServiceConfigConfigurable.getFileExtension()));
+	}
+
     @Test
     public void testValidation() throws FSServiceConfigException {
         try {
