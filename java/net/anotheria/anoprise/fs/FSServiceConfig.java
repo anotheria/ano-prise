@@ -217,6 +217,17 @@ public final class FSServiceConfig implements Serializable {
 	}
 
 	/**
+	 * Get configured instance of {@link FSServiceConfig}.
+	 *
+	 * @param configuration
+	 * 		configuration name, can be <code>null</code> or empty
+	 * @return {@link FSServiceConfig}
+	 */
+	public static FSServiceConfig getInstance(final String configuration) {
+		return getInstance(configuration, null);
+	}
+
+	/**
 	 * Return store file name.
 	 *
 	 * @param ownerId
@@ -367,8 +378,16 @@ public final class FSServiceConfig implements Serializable {
 		return rootFolderPath;
 	}
 
+	public void setRootFolderPath(String rootFolderPath) {
+		this.rootFolderPath = rootFolderPath;
+	}
+
 	public String getFileExtension() {
 		return fileExtension;
+	}
+
+	public void setFileExtension(String fileExtension) {
+		this.fileExtension = fileExtension;
 	}
 
 	/**
@@ -410,14 +429,6 @@ public final class FSServiceConfig implements Serializable {
 	 */
 	public String getStoreFilePath(String ownerId) throws FSServiceConfigException {
 		return getStoreFolderPath(ownerId) + getStoreFileName(ownerId);
-	}
-
-	public void setRootFolderPath(String rootFolderPath) {
-		this.rootFolderPath = rootFolderPath;
-	}
-
-	public void setFileExtension(String fileExtension) {
-		this.fileExtension = fileExtension;
 	}
 
 	public void setMaxOwnerIdLength(int maxOwnerIdLength) {
