@@ -11,6 +11,8 @@ import org.configureme.sources.ConfigurationSourceKey;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Interface of the file system service.
@@ -20,6 +22,11 @@ import java.io.Serializable;
  */
 @ConfigureMe
 public final class FSServiceConfig implements Serializable {
+	/**
+	 * File extension for storing files.
+	 */
+	@DontConfigure
+	public static final String DEFAULT_CONFIG_NAME = "defaultFSConfig";
 	/**
 	 * File extension for storing files.
 	 */
@@ -51,15 +58,15 @@ public final class FSServiceConfig implements Serializable {
 	@DontConfigure
 	private static final Object LOCK = new Object();
 	/**
+	 * Configurations cache.
+	 */
+	@DontConfigure
+	private static final Map<String, FSServiceConfig> CACHE = new HashMap<String, FSServiceConfig>();
+	/**
 	 * Logger.
 	 */
 	@DontConfigure
 	private static Logger LOGGER = Logger.getLogger(FSServiceConfig.class);
-	/**
-	 * {@link FSServiceConfig} instance.
-	 */
-	@DontConfigure
-	private static volatile FSServiceConfig instance;
 	/**
 	 * Root folder in file system for storing service files.
 	 */
@@ -101,20 +108,18 @@ public final class FSServiceConfig implements Serializable {
 			} else {
 				ConfigurationManager.INSTANCE.configureAs(this, environment, configuration, ConfigurationSourceKey.Format.JSON);
 			}
-			if (fileExtension == null)
-				fileExtension = DEFAULT_FILE_EXTENSION;
-			if (maxOwnerIdLength == 0)
-				maxOwnerIdLength = DEFAULT_MAX_OWNER_ID_LENGTH;
-			if (fragmetLegth == 0)
-				fragmetLegth = DEFAULT_FRAGMENT_LENGTH;
-
 		} catch (RuntimeException e) {
 			LOGGER.warn("FSServiceConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
 					+ "]. Relaying on defaults.");
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug(e);
-
 		}
+		if (fileExtension == null)
+			fileExtension = DEFAULT_FILE_EXTENSION;
+		if (maxOwnerIdLength == 0)
+			maxOwnerIdLength = DEFAULT_MAX_OWNER_ID_LENGTH;
+		if (fragmetLegth == 0)
+			fragmetLegth = DEFAULT_FRAGMENT_LENGTH;
 		LOGGER.info("FSServiceConfig(conf:" + configuration + ", env: " + environment + ") Configured with[" + this.toString() + "]");
 	}
 
@@ -197,23 +202,35 @@ public final class FSServiceConfig implements Serializable {
 	 * @return {@link FSServiceConfig}
 	 */
 	public static FSServiceConfig getInstance(final String configuration, final String environment) {
-		if ((configuration == null || configuration.trim().isEmpty()) && (environment == null || environment.trim().isEmpty())) {
-			if (instance != null)
-				return instance;
+		String configName = String.valueOf(configuration) + "/-/" + String.valueOf(environment);
+		if ((configuration == null || configuration.trim().isEmpty()) && (environment == null || environment.trim().isEmpty()))
+			configName = DEFAULT_CONFIG_NAME;
 
-			synchronized (LOCK) {
-				if (instance == null)
-					instance = new FSServiceConfig(null, ConfigurationManager.INSTANCE.getDefaultEnvironment());
-			}
-
-			return instance;
-		}
+		FSServiceConfig config = CACHE.get(configName);
+		if (config != null)
+			return config;
 
 		Environment env = ConfigurationManager.INSTANCE.getDefaultEnvironment();
 		if (environment != null && !environment.trim().isEmpty())
 			env = DynamicEnvironment.parse(environment);
 
-		return new FSServiceConfig(configuration, env);
+		synchronized (LOCK) {
+			config = CACHE.get(configName);
+			if (config == null)
+				config = new FSServiceConfig(configuration, env);
+			CACHE.put(configName, config);
+		}
+
+		return config;
+	}
+
+	/**
+	 * Get configured instance of {@link FSServiceConfig}.
+	 *
+	 * @return {@link FSServiceConfig}
+	 */
+	public static FSServiceConfig getInstance() {
+		return getInstance(null, null);
 	}
 
 	/**

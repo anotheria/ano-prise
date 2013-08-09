@@ -107,8 +107,11 @@ public class FSServiceConfigTest {
 	@Test
 	public void testConfigurableConfig() throws FSServiceConfigException {
 		FSServiceConfig FSServiceConfigConfigurable = FSServiceConfig.getInstance("ano-prise-fs-config", null);
+		FSServiceConfig FSServiceConfigConfigurableNull = FSServiceConfig.getInstance(null, null);
 		Assert.assertEquals(("/work/fsstorage/"), (FSServiceConfigConfigurable.getRootFolderPath()));
 		Assert.assertEquals(("test"), (FSServiceConfigConfigurable.getFileExtension()));
+		Assert.assertNull(FSServiceConfigConfigurableNull.getRootFolderPath());
+		Assert.assertEquals(("dat"), (FSServiceConfigConfigurableNull.getFileExtension()));
 	}
 
     @Test
