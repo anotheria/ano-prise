@@ -1,14 +1,15 @@
 package net.anotheria.anoprise.eventservice;
 
-import java.rmi.RemoteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.rmi.RemoteException;
 
 public class RemoteEventServicePushConsumerProxy implements EventServicePushConsumer {
 
 	private RemoteEventServicePushConsumer consumer;
 
-	private Logger logger = Logger.getLogger(RemoteEventServicePushConsumerProxy.class.getName());
+	private Logger logger = LoggerFactory.getLogger(RemoteEventServicePushConsumerProxy.class.getName());
 
 	public RemoteEventServicePushConsumerProxy(RemoteEventServicePushConsumer aConsumer) {
 		this.consumer = aConsumer;

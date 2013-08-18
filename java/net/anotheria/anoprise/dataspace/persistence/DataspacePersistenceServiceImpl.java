@@ -1,12 +1,5 @@
 package net.anotheria.anoprise.dataspace.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.anotheria.anoprise.dataspace.Dataspace;
 import net.anotheria.anoprise.dataspace.DataspaceType;
 import net.anotheria.anoprise.dataspace.attribute.Attribute;
@@ -14,8 +7,15 @@ import net.anotheria.db.service.GenericPersistenceService;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DataspacePersistenceService implementation.
@@ -27,7 +27,7 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 	/**
 	 * Logger.
 	 */
-	private final Logger log = Logger.getLogger(DataspacePersistenceServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(DataspacePersistenceServiceImpl.class);
 
 	/**
 	 * String prefix for logging.

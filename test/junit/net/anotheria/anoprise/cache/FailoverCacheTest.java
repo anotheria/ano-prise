@@ -1,10 +1,11 @@
 package net.anotheria.anoprise.cache;
 
-import org.apache.log4j.BasicConfigurator;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static net.anotheria.anoprise.cache.CacheTestSettings.*;
+import static net.anotheria.anoprise.cache.CacheTestSettings.CURRENT_INSTANCE_NUMBER;
+import static net.anotheria.anoprise.cache.CacheTestSettings.INSTANCE_AMOUNT;
+import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
+import static net.anotheria.anoprise.cache.CacheTestSettings.START_SIZE;
 
 /**
  * Unit test for net.anotheria.anoprise.cache.RoundRobinSoftReferenceFailoverSupportCache
@@ -12,11 +13,6 @@ import static net.anotheria.anoprise.cache.CacheTestSettings.*;
  * @author ivanbatura
  */
 public class FailoverCacheTest {
-
-	@BeforeClass
-	public static void initlog4j() {
-		BasicConfigurator.configure();
-	}
 
 	@Test
 	public void testBasicFunctionality() throws Exception {

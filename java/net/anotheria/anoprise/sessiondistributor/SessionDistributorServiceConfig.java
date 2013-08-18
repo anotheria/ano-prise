@@ -1,10 +1,10 @@
 package net.anotheria.anoprise.sessiondistributor;
 
 import net.anotheria.util.TimeUnit;
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.slf4j.LoggerFactory;
 
 /**
  * SessionDistributorServiceConfig as ConfigureMe config. Holds main configurable properties for SessionDistributorService.
@@ -289,7 +289,7 @@ public class SessionDistributorServiceConfig {
 			try {
 				ConfigurationManager.INSTANCE.configure(INSTANCE);
 			} catch (Exception e) {
-				Logger.getLogger(SessionDistributorServiceConfig.class).error("SessionDistributorServiceConfig configuration failed. configuring defaults. " + e.getMessage());
+				LoggerFactory.getLogger(SessionDistributorServiceConfig.class).error("SessionDistributorServiceConfig configuration failed. configuring defaults. " + e.getMessage());
 			}
 		}
 

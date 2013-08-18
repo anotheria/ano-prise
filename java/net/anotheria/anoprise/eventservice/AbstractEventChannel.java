@@ -1,6 +1,7 @@
 package net.anotheria.anoprise.eventservice;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for an event channel.
@@ -23,7 +24,7 @@ public abstract class AbstractEventChannel implements EventChannel{
 	 */
 	protected AbstractEventChannel(String aName){
 		setName(aName);
-		log = Logger.getLogger(this.getClass());
+		log = LoggerFactory.getLogger(this.getClass());
 	}
 	
 	/**

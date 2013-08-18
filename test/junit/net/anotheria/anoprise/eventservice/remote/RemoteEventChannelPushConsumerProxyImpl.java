@@ -7,7 +7,8 @@ import net.anotheria.anoprise.eventservice.EventTransportShell;
 import net.anotheria.anoprise.eventservice.RemoteEventChannelConsumerProxy;
 import net.anotheria.anoprise.eventservice.RemoteEventServiceConsumer;
 import net.anotheria.net.util.ByteArraySerializer;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,7 +17,7 @@ public class RemoteEventChannelPushConsumerProxyImpl extends AbstractEventChanne
 	
 	private List<RemoteEventServiceConsumer> consumers;
 	
-	private static Logger log = Logger.getLogger(RemoteEventChannelPushConsumerProxyImpl.class);
+	private static Logger log = LoggerFactory.getLogger(RemoteEventChannelPushConsumerProxyImpl.class);
 	
 	public RemoteEventChannelPushConsumerProxyImpl(String aName){
 		super(aName);

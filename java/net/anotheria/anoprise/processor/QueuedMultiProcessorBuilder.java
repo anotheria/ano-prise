@@ -1,11 +1,10 @@
 package net.anotheria.anoprise.processor;
 
-import java.util.List;
-
 import net.anotheria.anoprise.queue.BoundedFifoQueueFactory;
 import net.anotheria.anoprise.queue.EnterpriseQueueFactory;
+import org.slf4j.Logger;
 
-import org.apache.log4j.Logger;
+import java.util.List;
 
 /**
  * 

@@ -1,9 +1,10 @@
 package net.anotheria.anoprise.metafactory;
 
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.SetAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +29,7 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 	/**
 	 * Resolver logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(ConfigurableFactoryResolver.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ConfigurableFactoryResolver.class);
 
 	/**
 	 * Static factory creation method.

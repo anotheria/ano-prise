@@ -1,6 +1,5 @@
 package net.anotheria.anoprise.fs;
 
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.Environment;
 import org.configureme.annotations.Configure;
@@ -8,6 +7,8 @@ import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
 import org.configureme.environments.DynamicEnvironment;
 import org.configureme.sources.ConfigurationSourceKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.Serializable;
@@ -66,7 +67,7 @@ public final class FSServiceConfig implements Serializable {
 	 * Logger.
 	 */
 	@DontConfigure
-	private static Logger LOGGER = Logger.getLogger(FSServiceConfig.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(FSServiceConfig.class);
 	/**
 	 * Root folder in file system for storing service files.
 	 */
@@ -112,7 +113,7 @@ public final class FSServiceConfig implements Serializable {
 			LOGGER.warn("FSServiceConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
 					+ "]. Relaying on defaults.");
 			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(e);
+				LOGGER.debug("FSServiceConfig("+configuration+", "+environment+")", e);
 		}
 		if (fileExtension == null)
 			fileExtension = DEFAULT_FILE_EXTENSION;

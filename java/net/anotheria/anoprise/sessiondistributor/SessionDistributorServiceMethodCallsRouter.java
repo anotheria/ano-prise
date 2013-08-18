@@ -1,10 +1,11 @@
 package net.anotheria.anoprise.sessiondistributor;
 
-import org.apache.log4j.Logger;
 import org.distributeme.core.ClientSideCallContext;
 import org.distributeme.core.failing.FailDecision;
 import org.distributeme.core.failing.FailingStrategy;
 import org.distributeme.core.routing.Router;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(SessionDistributorServiceMethodCallsRouter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SessionDistributorServiceMethodCallsRouter.class);
 
 	/**
 	 * Routing parameter position in method definition.

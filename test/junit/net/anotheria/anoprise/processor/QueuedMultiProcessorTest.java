@@ -1,7 +1,8 @@
 package net.anotheria.anoprise.processor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import net.anotheria.util.ThreadUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Collections;
 import java.util.Random;
@@ -11,12 +12,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.anotheria.util.ThreadUtils;
-
-import org.apache.log4j.BasicConfigurator;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class QueuedMultiProcessorTest {
@@ -30,12 +27,6 @@ public class QueuedMultiProcessorTest {
 	private AtomicLong elementCount;
 	private Random rnd;
 	private Set<Integer> worksRegression; 
-	
-	
-	@BeforeClass public static void setup(){
-		BasicConfigurator.configure();
-//		DOMConfigurator.configure("etc/appdata/log4j.xml");
-	}
 	
 	@Before public void reset(){
 		elementCount = new AtomicLong();

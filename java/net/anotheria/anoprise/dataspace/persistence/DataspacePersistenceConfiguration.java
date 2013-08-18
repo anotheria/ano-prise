@@ -1,10 +1,11 @@
 package net.anotheria.anoprise.dataspace.persistence;
 
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link DataspacePersistenceService} configuration.
@@ -18,7 +19,7 @@ public class DataspacePersistenceConfiguration {
 	 * Logger.
 	 */
 	@DontConfigure
-	private static final Logger LOGGER = Logger.getLogger(DataspacePersistenceConfiguration.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(DataspacePersistenceConfiguration.class.getName());
 
 	/**
 	 * Field separator for queries.

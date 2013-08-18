@@ -2,11 +2,11 @@ package net.anotheria.anoprise.processor;
 
 import net.anotheria.moskito.core.logging.DefaultStatsLogger;
 import net.anotheria.moskito.core.logging.IntervalStatsLogger;
-import net.anotheria.moskito.core.logging.Log4JOutput;
+import net.anotheria.moskito.core.logging.SL4JLogOutput;
 import net.anotheria.moskito.core.producers.IStats;
 import net.anotheria.moskito.core.producers.IStatsProducer;
 import net.anotheria.moskito.core.stats.DefaultIntervals;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +69,11 @@ public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
 	}
 	
 	public void attachToMoskitoLoggers(){
-		new DefaultStatsLogger(this, new Log4JOutput(Logger.getLogger("MoskitoDefault")));
-		new IntervalStatsLogger(this, DefaultIntervals.FIVE_MINUTES, new Log4JOutput(Logger.getLogger("Moskito5m")));
-		new IntervalStatsLogger(this, DefaultIntervals.FIFTEEN_MINUTES, new Log4JOutput(Logger.getLogger("Moskito15m")));
-		new IntervalStatsLogger(this, DefaultIntervals.ONE_HOUR, new Log4JOutput(Logger.getLogger("Moskito1h")));
-		new IntervalStatsLogger(this, DefaultIntervals.ONE_DAY, new Log4JOutput(Logger.getLogger("Moskito1d")));
+		new DefaultStatsLogger(this, new SL4JLogOutput(LoggerFactory.getLogger("MoskitoDefault")));
+		new IntervalStatsLogger(this, DefaultIntervals.FIVE_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("Moskito5m")));
+		new IntervalStatsLogger(this, DefaultIntervals.FIFTEEN_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("Moskito15m")));
+		new IntervalStatsLogger(this, DefaultIntervals.ONE_HOUR, new SL4JLogOutput(LoggerFactory.getLogger("Moskito1h")));
+		new IntervalStatsLogger(this, DefaultIntervals.ONE_DAY, new SL4JLogOutput(LoggerFactory.getLogger("Moskito1d")));
 		
 	}
 

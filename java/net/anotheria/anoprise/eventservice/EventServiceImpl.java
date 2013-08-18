@@ -1,12 +1,13 @@
 package net.anotheria.anoprise.eventservice;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.log4j.Logger;
 
 /**
  * The implementation of the event service.
@@ -15,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class EventServiceImpl implements EventService {
 
-	private static Logger log = Logger.getLogger(EventServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 	private static EventServiceImpl instance = new EventServiceImpl();
 
 	private ConcurrentMap<String, EventChannelPushConsumerProxy>	pushConsumerProxies;

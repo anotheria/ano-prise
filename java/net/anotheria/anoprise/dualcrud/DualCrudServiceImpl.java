@@ -1,6 +1,7 @@
 package net.anotheria.anoprise.dualcrud;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The implementation of the DualCrudService which supports two instances of a CrudService and a dual link config.
@@ -26,7 +27,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(DualCrudServiceImpl.class);
+	private static Logger log = LoggerFactory.getLogger(DualCrudServiceImpl.class);
 
 	protected DualCrudServiceImpl(DualCrudConfig aConfig, CrudService<T> aLeft, CrudService<T> aRight) {
 		config = aConfig;

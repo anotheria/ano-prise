@@ -1,12 +1,15 @@
 package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
-import org.apache.log4j.Logger;
 import org.configureme.annotations.AfterConfiguration;
 import org.configureme.annotations.BeforeConfiguration;
 import org.configureme.annotations.BeforeInitialConfiguration;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 
 /**
@@ -21,6 +24,12 @@ import org.configureme.annotations.ConfigureMe;
  */
 @ConfigureMe
 public class CacheController<K, V> implements Cache<K, V> {
+
+	/**
+	 * Fatal marker for logback.
+	 */
+	private static final Marker FATAL = MarkerFactory.getMarker("FATAL");
+
 	/**
 	 * If true the cache is on.
 	 */
@@ -138,7 +147,7 @@ public class CacheController<K, V> implements Cache<K, V> {
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(CacheController.class);
+	private static Logger log = LoggerFactory.getLogger(CacheController.class);
 
 	/**
 	 * Factory for underlying cache creation.
@@ -199,13 +208,13 @@ public class CacheController<K, V> implements Cache<K, V> {
 				CacheFactory<K, V> newFactory = (CacheFactory<K, V>) Class.forName(factoryClazz).newInstance();
 				factory = newFactory;
 			} catch (ClassNotFoundException e) {
-				log.fatal("can't init cache", e);
+				log.error(FATAL, "can't init cache", e);
 				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			} catch (InstantiationException e) {
-				log.fatal("can't init cache", e);
+				log.error(FATAL, "can't init cache", e);
 				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			} catch (IllegalAccessException e) {
-				log.fatal("can't init cache", e);
+				log.error(FATAL, "can't init cache", e);
 				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			}
 		}

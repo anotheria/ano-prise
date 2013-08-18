@@ -1,14 +1,8 @@
 package net.anotheria.anoprise.cache;
 
-import org.apache.log4j.BasicConfigurator;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class RequestBasedCacheTest {
-	
-	@BeforeClass public static void initlog4j(){
-		BasicConfigurator.configure();
-	}
 	
 	@Test public void testBasicFunctionality() throws Exception{
 		RequestBasedCache<Integer, String> cache = new RequestBasedCache<Integer, String>();

@@ -1,17 +1,11 @@
 package net.anotheria.anoprise.cache;
 
+import org.junit.Test;
+
 import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
 import static net.anotheria.anoprise.cache.CacheTestSettings.START_SIZE;
 
-import org.apache.log4j.BasicConfigurator;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 public class RoundRobinHardwiredCacheTest {
-	
-	@BeforeClass public static void initlog4j(){
-		BasicConfigurator.configure();
-	}
 	
 	@Test public void testBasicFunctionality() throws Exception{
 		RoundRobinHardwiredCache<Integer, String> cache = new RoundRobinHardwiredCache<Integer, String>(START_SIZE, MAX_SIZE);

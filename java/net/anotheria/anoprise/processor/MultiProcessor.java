@@ -1,13 +1,14 @@
 package net.anotheria.anoprise.processor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author denis
@@ -47,7 +48,7 @@ public class MultiProcessor<T>{
 	 *            logger for output. If null default will be used.
 	 */
 	public MultiProcessor(int aChannelsNumber, PackageWorker<T> aWorker, Logger aLog){
-		log = aLog != null? aLog: Logger.getLogger(MultiProcessor.class);
+		log = aLog != null? aLog: LoggerFactory.getLogger(MultiProcessor.class);
 		channelsNumber = aChannelsNumber;
 		executorsPool = new ThreadPoolExecutor(aChannelsNumber, aChannelsNumber, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(aChannelsNumber * 2){
 			private static final long serialVersionUID = 1L;

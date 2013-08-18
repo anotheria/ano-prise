@@ -10,9 +10,14 @@ import net.anotheria.anoprise.sessiondistributor.cache.SDCache;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCacheUtil;
 import net.anotheria.anoprise.sessiondistributor.events.SessionDistributorESConstants;
 import net.anotheria.anoprise.sessiondistributor.events.SessionDistributorEvent;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * SessionDistributorService implementation.
@@ -25,7 +30,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	/**
 	 * Log4j logger.
 	 */
-	private static Logger LOG = Logger.getLogger(SessionDistributorServiceImpl.class);
+	private static Logger LOG = LoggerFactory.getLogger(SessionDistributorServiceImpl.class);
 	/**
 	 * Length constant.
 	 */

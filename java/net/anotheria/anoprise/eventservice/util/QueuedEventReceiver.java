@@ -5,15 +5,15 @@ import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
 import net.anotheria.util.queue.IQueue;
 import net.anotheria.util.queue.QueueOverflowException;
 import net.anotheria.util.queue.StandardQueueFactory;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QueuedEventReceiver extends Thread implements EventServicePushConsumer {
 
 	/**
 	 * Default logger.
 	 */
-	private static final Logger DEFAULT_LOGGER = Logger.getLogger(QueuedEventReceiver.class.getName());
+	private static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(QueuedEventReceiver.class.getName());
 
 	/**
 	 * Logger.
@@ -113,7 +113,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	 *            - queue size
 	 * @param aSleepTime
 	 *            - queue sleep time
-	 * @param aLog
+	 * @param aLogger
 	 *            - logger
 	 */
 	public QueuedEventReceiver(String aName, String aChannelName, EventServicePushConsumer aEventConsumer, int aQueueSize, long aSleepTime, Logger aLogger) {

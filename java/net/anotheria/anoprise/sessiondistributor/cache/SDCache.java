@@ -18,7 +18,8 @@ import net.anotheria.util.StringUtils;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,7 +45,7 @@ public final class SDCache implements FSSaveable {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(SDCache.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SDCache.class);
 	/**
 	 * {@link IdBasedLockManager} instance.
 	 */
@@ -498,7 +499,7 @@ public final class SDCache implements FSSaveable {
 		/**
 		 * {@link Logger} instance.
 		 */
-		private final Logger log = Logger.getLogger(SDCacheEventsConsumer.class);
+		private final Logger log = LoggerFactory.getLogger(SDCacheEventsConsumer.class);
 
 		@Override
 		public void push(Event incomingEvent) {

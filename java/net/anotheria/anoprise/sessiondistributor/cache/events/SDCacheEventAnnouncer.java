@@ -8,7 +8,8 @@ import net.anotheria.anoprise.eventservice.util.QueueFullException;
 import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
 import net.anotheria.anoprise.sessiondistributor.DistributedSessionVO;
 import net.anotheria.anoprise.sessiondistributor.SessionDistributorServiceConfig;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,7 +37,7 @@ public final class SDCacheEventAnnouncer implements EventServicePushSupplier {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(SDCacheEventAnnouncer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SDCacheEventAnnouncer.class);
 
 	/**
 	 * Constructor.

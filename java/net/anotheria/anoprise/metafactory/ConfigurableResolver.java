@@ -1,12 +1,13 @@
 package net.anotheria.anoprise.metafactory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.SetAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Alias resolver that works with factories.json via configureme framework.
@@ -28,7 +29,7 @@ public class ConfigurableResolver implements AliasResolver {
 	/**
 	 * Resolver logger.
 	 */
-	private static final Logger log = Logger.getLogger(ConfigurableResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(ConfigurableResolver.class);
 
 	/**
 	 * Static factory creation method.

@@ -1,5 +1,9 @@
 package net.anotheria.anoprise.fs;
 
+import net.anotheria.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -8,10 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import net.anotheria.util.IOUtils;
-
-import org.apache.log4j.Logger;
 
 /**
  * Main implementation for file system service.
@@ -31,7 +31,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(FSServiceImpl.class.getName());
+	private static Logger log = LoggerFactory.getLogger(FSServiceImpl.class.getName());
 
 	/**
 	 * Prefix for logging.

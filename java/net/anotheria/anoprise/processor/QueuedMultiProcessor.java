@@ -6,7 +6,8 @@ import net.anotheria.anoprise.queue.EnterpriseQueueFactory;
 import net.anotheria.moskito.core.predefined.QueueStats;
 import net.anotheria.moskito.core.predefined.QueuingSystemStats;
 import net.anotheria.util.ThreadUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 		super(aName);
 		setDaemon(true);
 
-		log = aLog != null? aLog: Logger.getLogger(QueuedMultiProcessor.class);
+		log = aLog != null? aLog: LoggerFactory.getLogger(QueuedMultiProcessor.class);
 		
 		stats = new QueuingSystemStats(aName);
 		stats.setServersSize(aProcessingChannels);

@@ -1,16 +1,10 @@
 package net.anotheria.anoprise.cache;
 
-import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
-
-import org.apache.log4j.BasicConfigurator;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
+
 public class BoundedHardwiredCacheTest {
-	@BeforeClass public static void initlog4j(){
-		BasicConfigurator.configure();
-	}
-	
 	@Test public void testBasicFunctionality() throws Exception{
 		BoundedHardwiredCache<Integer, String> cache = new BoundedHardwiredCache<Integer, String>(MAX_SIZE);
 		BoundedCacheTester.testBasicFunctionality(cache);

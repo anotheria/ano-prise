@@ -1,9 +1,16 @@
 package net.anotheria.anoprise.sessiondistributor.cache;
 
-import net.anotheria.anoprise.fs.*;
+import net.anotheria.anoprise.fs.FSService;
+import net.anotheria.anoprise.fs.FSServiceConfig;
+import net.anotheria.anoprise.fs.FSServiceConfigException;
+import net.anotheria.anoprise.fs.FSServiceException;
+import net.anotheria.anoprise.fs.FSServiceFactory;
 import net.anotheria.anoprise.sessiondistributor.SessionDistributorServiceConfig;
 import net.anotheria.util.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
  * SDCacheUtil - provides FS persistence functionality for  {@link SDCache}.
@@ -11,10 +18,15 @@ import org.apache.log4j.Logger;
  * @author h3ll
  */
 public final class SDCacheUtil {
+
+	/**
+	 * Fatal marker for logback.
+	 */
+	private static final Marker FATAL = MarkerFactory.getMarker("FATAL");
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(SDCacheUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SDCacheUtil.class);
 
 	/**
 	 * Prefix for LOG message.
@@ -35,7 +47,7 @@ public final class SDCacheUtil {
 			FSServiceConfig config = new FSServiceConfig(serviceConfig.getSdSessionsFSRootFolder(), serviceConfig.getSdSessionsFileExtension());
 			fsPersistence = FSServiceFactory.createFSService(config);
 		} catch (FSServiceConfigException fSSce) {
-			LOG.fatal(LOG_PREFIX + "Unable to initialize FSService. ", fSSce);
+			LOG.error(FATAL, LOG_PREFIX + "Unable to initialize FSService. ", fSSce);
 			throw new RuntimeException(fSSce);
 		}
 	}

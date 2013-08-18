@@ -7,8 +7,8 @@ import net.anotheria.anoprise.eventservice.ProxyType;
 import net.anotheria.util.queue.IQueue;
 import net.anotheria.util.queue.QueueOverflowException;
 import net.anotheria.util.queue.StandardQueueFactory;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This utility helps to push events away without waiting for their delivery. Usually if you push an event into the channel you will have to wait atleast until the event 
@@ -69,7 +69,7 @@ public class QueuedEventSender extends Thread {
 	private volatile boolean synchedMode = false;
 	
 	static{
-		defLogger = Logger.getLogger(QueuedEventSender.class);
+		defLogger = LoggerFactory.getLogger(QueuedEventSender.class);
 	}
 	
 	public QueuedEventSender(String aName, EventChannel aChannel, int queueSize, long aSleepTime, Logger aLog ){

@@ -1,16 +1,11 @@
 package net.anotheria.anoprise.cache;
 
-import org.apache.log4j.BasicConfigurator;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ConfigurableRoundRobinHardwiredCacheTest {
-	
-	@BeforeClass public static void initlog4j(){
-		BasicConfigurator.configure();
-	}
 	
 	@BeforeClass public static void initconfigurationmanager(){
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("unittest"));

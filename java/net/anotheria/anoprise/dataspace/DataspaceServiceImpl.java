@@ -7,8 +7,8 @@ import net.anotheria.anoprise.dataspace.persistence.DataspacePersistenceService;
 import net.anotheria.anoprise.dataspace.persistence.DataspacePersistenceServiceException;
 import net.anotheria.anoprise.dataspace.persistence.DataspacePersistenceServiceFactory;
 import net.anotheria.util.BasicComparable;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DataspaceService implementation.
@@ -40,7 +40,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 	/**
 	 * Logger.
 	 */
-	private static final Logger log = Logger.getLogger(DataspaceServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(DataspaceServiceImpl.class);
 
 	/**
 	 * Default constructor.
