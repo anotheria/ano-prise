@@ -1,2 +1,6 @@
 .idea/**
 *.iml
+target/*
+testdata/*
+sessionDistributorService_sessionsState/*
+
