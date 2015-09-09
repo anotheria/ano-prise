@@ -33,10 +33,6 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 	 */
 	private static Logger log = LoggerFactory.getLogger(FSServiceImpl.class.getName());
 
-	/**
-	 * Prefix for logging.
-	 */
-	private static final String SERVICE_LOG_PREFIX = "FS_SERVICE: ";
 
 	/**
 	 * Default constructor.
@@ -54,7 +50,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 		File file = new File(filePath);
 
 		if (!file.exists()) {
-			log.debug(SERVICE_LOG_PREFIX + "Item not found. Owner id: " + ownerId + ". File path: " + filePath);
+			log.debug("read("+ownerId+") " + "Item not found. Owner id: " + ownerId + ". File path: " + filePath);
 			throw new FSItemNotFoundException(ownerId);
 		}
 
@@ -67,10 +63,10 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 				return result;
 			}
 		} catch (IOException ioe) {
-			log.error(SERVICE_LOG_PREFIX + "IOException: " + ioe.getMessage());
+			log.error("read("+ownerId+")", ioe);
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} catch (ClassNotFoundException cnfe) {
-			log.error(SERVICE_LOG_PREFIX + "ClassNotFoundException: " + cnfe.getMessage());
+			log.error("read("+ownerId+")", cnfe);
 			throw new FSServiceException(cnfe.getMessage(), cnfe);
 		} finally {
 			IOUtils.closeIgnoringException(in);
@@ -83,9 +79,11 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 		String filePath = config.getStoreFilePath(t.getOwnerId());
 
 		File file = new File(folderPath);
-		if (!file.exists())
-			if (!file.mkdirs())
-				throw new FSServiceException(SERVICE_LOG_PREFIX + "Can't create needed folder structure");
+		if (!file.exists()){
+			boolean madeDir = file.mkdirs();
+			if (!madeDir && !file.exists())
+				throw new FSServiceException("save("+t.getOwnerId()+") - can't create needed folder structure - "+folderPath);
+		}
 
 		file = new File(filePath);
 
@@ -97,7 +95,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 				out.flush();
 			}
 		} catch (IOException ioe) {
-			log.error(SERVICE_LOG_PREFIX + "IOException: " + ioe.getMessage());
+			log.error("save("+t.getOwnerId()+")", ioe);
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} finally {
 			IOUtils.closeIgnoringException(out);
