@@ -167,7 +167,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	}
 
 	@Override
-	public void customize(String parameter) {
+	public void customize(String serviceId, String parameter) {
 		//in current implementation it's not required! at all :)
 	}
 }
