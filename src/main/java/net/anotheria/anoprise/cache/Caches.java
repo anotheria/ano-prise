@@ -65,6 +65,16 @@ public final class Caches {
 		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
 	}
 
+	/**
+	 * Creates a soft reference expiring cache.
+	 * @param name name of the cache.
+	 * @param startSize start size of the cache.
+	 * @param maxSize max size of the cache.
+	 * @param expirationTime expiration time for the elements.
+	 * @param <K> type for the keys.
+	 * @param <V> type for the values.
+	 * @return
+	 */
 	public static <K, V> Cache<K, V> createSoftReferenceExpiringCache(String name, int startSize, int maxSize, int expirationTime) {
 		Cache<K, CachedObjectWrapper<V>> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
 		return new ExpiringCache<K, V>(name, expirationTime, underlyingCache);
@@ -194,15 +204,5 @@ public final class Caches {
 
 	private Caches() {
 		//protect from instantiation.
-	}
-
-	public static enum Strategy {
-		ROUNDROBIN,
-		EXPIRATION
-	}
-
-	public static enum Wiring {
-		HARDWIRED,
-		SOFTREFERENCE,
 	}
 }
