@@ -1,15 +1,17 @@
 package net.anotheria.anoprise.eventservice.util;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventChannel;
 import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
 import net.anotheria.anoprise.eventservice.ProxyType;
 import net.anotheria.util.IdCodeGenerator;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class QueuedEventSenderTest {
 	static class QueuedEventSenderConsumer implements EventServicePushConsumer{
@@ -66,5 +68,7 @@ public class QueuedEventSenderTest {
 		assertTrue("should have slept longer than sleep time", duration>sleep);
 				
 	}
+
+
 	
 }
