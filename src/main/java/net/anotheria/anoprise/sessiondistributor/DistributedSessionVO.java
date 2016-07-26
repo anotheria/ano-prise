@@ -66,7 +66,7 @@ public class DistributedSessionVO implements Serializable {
 	 */
 	public DistributedSessionVO(String aName) {
 		name = aName;
-		distributedAttributes = new ConcurrentHashMap<String, DistributedSessionAttribute>();
+		distributedAttributes = new ConcurrentHashMap<>();
 		lastChangeTime = System.currentTimeMillis();
 	}
 
@@ -147,6 +147,6 @@ public class DistributedSessionVO implements Serializable {
 	 * @return boolean value
 	 */
 	public boolean isExpired() {
-		return System.currentTimeMillis() - getLastChangeTime() > serviceConfig.getDistributedSessionMaxAge();
+        return System.currentTimeMillis() - lastChangeTime > serviceConfig.getDistributedSessionMaxAge();
 	}
 }

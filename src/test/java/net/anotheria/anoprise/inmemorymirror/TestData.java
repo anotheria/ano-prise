@@ -27,7 +27,7 @@ public class TestData implements Mirrorable<String>, Cloneable{
 	}
 	
 	@Override public String toString(){
-		return getKey()+" = "+getValue();
+        return key +" = "+ value;
 	}
 
 	public void setId(String string) {

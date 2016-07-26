@@ -8,7 +8,7 @@ import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 public class VerySimpleTest {
 
@@ -28,7 +28,7 @@ public class VerySimpleTest {
 		
 	}
 	
-	private void test() throws MetaFactoryException{
+	private static void test() throws MetaFactoryException{
 		CalculatorService service = MetaFactory.get(CalculatorService.class);
 		assertEquals("Expected 4", 4, service.plus(2, 2));
 	}

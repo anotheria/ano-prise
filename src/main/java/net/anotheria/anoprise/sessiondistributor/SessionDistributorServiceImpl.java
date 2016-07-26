@@ -111,7 +111,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public String createDistributedSession(String sessionId) throws SessionDistributorServiceException {
-		LOG.debug("createDistributedSession(" + sessionId + ")");
+		LOG.debug("createDistributedSession({})", sessionId);
 
 		if (!serviceConfig.isSessionsLimitEnabled())
 			return sessions.createSession(sessionId);
@@ -127,13 +127,13 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public void deleteDistributedSession(String sessionId) throws SessionDistributorServiceException {
-		LOG.debug("deleteDistributedSession(" + sessionId + ")");
+		LOG.debug("deleteDistributedSession({})", sessionId);
 		sessions.removeSession(sessionId);
 		Event delete = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.delete(sessionId));
 		try {
 			eventSender.push(delete);
 		} catch (QueueFullException e) {
-			LOG.error("Can't push Session delete event. Queue is Full. Event:" + delete);
+			LOG.error("Can't push Session delete event. Queue is Full. Event: " + delete, e);
 		}
 
 	}
@@ -141,15 +141,15 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 
 	@Override
 	public DistributedSessionVO restoreDistributedSession(String sessionId, String callerId) throws SessionDistributorServiceException {
-		LOG.debug("restoreDistributedSession(" + sessionId + ", " + callerId + ")");
+		LOG.debug("restoreDistributedSession({}, {})", sessionId, callerId);
 		DistributedSessionVO session = sessions.getSession(sessionId);
 
 		Event restore = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.restore(session.getName(), callerId));
-		LOG.debug("pushing event: " + restore);
+		LOG.debug("pushing event: {}", restore);
 		try {
 			eventSender.push(restore);
 		} catch (QueueFullException e) {
-			LOG.error("Can't push Session restore event. Queue is Full. Event:" + restore);
+			LOG.error("Can't push Session restore event. Queue is Full. Event: " + restore, e);
 		}
 
 		LOG.debug("pushing finished");
@@ -158,36 +158,36 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	}
 
 	@Override
-	public List<String> getDistributedSessionNames() throws SessionDistributorServiceException {
+	public List<String> getDistributedSessionNames() {
 		return sessions.getSessionIds();
 	}
 
 	public void updateSessionUserId(String sessionId, String userId) throws SessionDistributorServiceException {
-		LOG.debug("updateSessionUserId(" + sessionId + ", " + userId + ")");
+		LOG.debug("updateSessionUserId({}, {})", sessionId, userId);
 		sessions.updateSessionUserId(sessionId, userId);
 
 	}
 
 	public void updateSessionEditorId(String sessionId, String editorId) throws SessionDistributorServiceException {
-		LOG.debug("updateSessionEditorId(" + sessionId + ", " + editorId + ")");
+		LOG.debug("updateSessionEditorId({}, {})", sessionId, editorId);
 		sessions.updateSessionEditorId(sessionId, editorId);
 	}
 
 
 	public void addDistributedAttribute(String sessionId, DistributedSessionAttribute attribute) throws SessionDistributorServiceException {
-		LOG.debug("addDistributedAttribute(" + sessionId + ", " + attribute + ")");
+		LOG.debug("addDistributedAttribute({}, {})", sessionId, attribute);
 		sessions.addAttribute(sessionId, attribute);
 
 	}
 
 	public void removeDistributedAttribute(String sessionId, String attributeName) throws SessionDistributorServiceException {
-		LOG.debug("removeDistributedAttribute(" + sessionId + ", " + attributeName + ")");
+		LOG.debug("removeDistributedAttribute({}, {})", sessionId, attributeName);
 		sessions.removeAttribute(sessionId, attributeName);
 	}
 
 	@Override
 	public void keepDistributedSessionAlive(String sessionId) throws SessionDistributorServiceException {
-		LOG.debug("keepDistributedSessionAlive(" + sessionId + ")");
+		LOG.debug("keepDistributedSessionAlive({})", sessionId);
 		sessions.updateCallTime(sessionId);
 
 	}
@@ -200,7 +200,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 	private void cleanup() {
 		int expiredCount = 0;
 		int sizeBefore = sessions.getCount();
-		List<String> cleanedSessionsIds = new ArrayList<String>();
+		List<String> cleanedSessionsIds = new ArrayList<>();
 		Collection<DistributedSessionVO> holders = sessions.getSessions();
 
 		for (DistributedSessionVO session : holders) {
@@ -210,7 +210,7 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 					expiredCount++;
 					cleanedSessionsIds.add(session.getName());
 				} catch (NoSuchDistributedSessionException e) {
-					LOG.warn("cleanup() - detected already removed session [" + session.getName() + "]! clustering enabled : " + serviceConfig.isMultipleInstancesEnabled());
+					LOG.warn("cleanup() - detected already removed session '"+session.getName()+"'! clustering enabled: " + serviceConfig.isMultipleInstancesEnabled(), e);
 				}
 
 			}
@@ -219,15 +219,14 @@ public class SessionDistributorServiceImpl implements SessionDistributorService 
 		if (!cleanedSessionsIds.isEmpty()) {
 			Event cleanUp = new Event(SessionDistributorESConstants.ORIGINATOR, SessionDistributorEvent.cleanUp(cleanedSessionsIds));
 			try {
-				LOG.debug("cleanup event sending: " + cleanUp);
+				LOG.debug("cleanup event sending: {}", cleanUp);
 				eventSender.push(cleanUp);
 			} catch (QueueFullException e) {
-				LOG.error("Can't push Session cleanUp event. Queue is Full. Event:" + cleanUp);
+				LOG.error("Can't push session clean up event. Queue is full. Event:" + cleanUp, e);
 			}
 		}
 
-		LOG.info("Finished session distributor cleanup run, removed sessions: " + expiredCount + ", sizeBefore: " + sizeBefore + ", sizeAfter: "
-				+ sessions.getCount());
+		LOG.info("Finished session distributor cleanup run, removed sessions: {}, sizeBefore: {}, sizeAfter: {}", expiredCount, sizeBefore, sessions.getCount());
 	}
 
 }

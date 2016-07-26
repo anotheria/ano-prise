@@ -21,13 +21,13 @@ public class RemoteEventChannelPushConsumerProxyImpl extends AbstractEventChanne
 	
 	public RemoteEventChannelPushConsumerProxyImpl(String aName){
 		super(aName);
-		consumers = new CopyOnWriteArrayList<RemoteEventServiceConsumer>();
+		consumers = new CopyOnWriteArrayList<>();
 	}
 
 	@Override
 	public void addRemoteConsumer(RemoteEventServiceConsumer consumer) {
 		if (consumers.indexOf(consumer)!=-1){
-			log.info("Consumer already registered, skipping "+consumer);
+            log.info("Consumer already registered, skipping {}", consumer);
 		}
 		consumers.add(consumer);
 			

@@ -41,7 +41,7 @@ public class EventTransportShell implements Serializable{
 	}
 	
 	@Override public String toString(){
-		return (data == null ? "no" : ""+data.length) + " bytes for "+channelName;
+		return (data == null ? "no" : String.valueOf(data.length)) + " bytes for "+channelName;
 	}
 
 }

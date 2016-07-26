@@ -14,7 +14,7 @@ public final class CrudServiceFixtureFactory {
 	 * @return {@link CrudService}
 	 */
 	public static <T extends CrudSaveable> CrudService<T> create() {
-		return new CrudServiceFixture<T>();
+		return new CrudServiceFixture<>();
 	}
 
 }

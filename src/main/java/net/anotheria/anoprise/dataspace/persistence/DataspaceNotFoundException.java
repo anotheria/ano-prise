@@ -8,11 +8,6 @@ package net.anotheria.anoprise.dataspace.persistence;
 public class DataspaceNotFoundException extends DataspacePersistenceServiceException {
 
 	/**
-	 * Basic serialVersionUID variable.
-	 */
-	private static final long serialVersionUID = 4675725133571302930L;
-
-	/**
 	 * Public constructor.
 	 * 
 	 * @param userId

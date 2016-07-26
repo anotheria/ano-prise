@@ -56,7 +56,7 @@ public class InMemoryMirrorTest {
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i=0; i<100; i++){
-			String id = ""+i;
+			String id = String.valueOf(i);
 			TestData firstCallResult = mirror.remove(id);
 			TestData secondCallResult = mirror.remove(id);
 
@@ -73,7 +73,7 @@ public class InMemoryMirrorTest {
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i = 0; i < 100; i++) {
-			String id = "" + i;
+			String id = String.valueOf(i);
 			TestData result = mirror.removeLocalOnly(id);
 			assertEquals(id, result.getKey());
 			try {
@@ -92,7 +92,7 @@ public class InMemoryMirrorTest {
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i=0; i<100; i++){
-			String id = ""+i;
+			String id = String.valueOf(i);
 			TestData oldData = mirror.get(id);
 			TestData newData = oldData.clone();//make a copy to ensure that the object is really new. 
 
@@ -119,7 +119,7 @@ public class InMemoryMirrorTest {
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i = 0; i < 100; i++) {
-			String id = "" + i;
+			String id = String.valueOf(i);
 			TestData oldData = mirror.get(id);
 			TestData newData = oldData.clone();//make a copy to ensure that the object is really new.
 
@@ -156,11 +156,11 @@ public class InMemoryMirrorTest {
 
 	static class MySupport implements InMemorySupport<String, TestData>{
 
-		private Map<String, TestData> data = new HashMap<String, TestData>();
+		private Map<String, TestData> data = new HashMap<>();
 		private AtomicLong id = new AtomicLong(0);
 		public MySupport(){
 			for (int i=0; i<100; i++){
-				data.put(""+i, new TestData(""+i, "val"+i));
+				data.put(String.valueOf(i), new TestData(String.valueOf(i), "val"+i));
 			}
 			id.set(99);
 		}
@@ -172,7 +172,7 @@ public class InMemoryMirrorTest {
 
 		@Override
 		public TestData create(TestData element) {
-			element.setId(""+id.incrementAndGet());
+			element.setId(String.valueOf(id.incrementAndGet()));
 			data.put(element.getKey(), element);
 			return element;
 		}

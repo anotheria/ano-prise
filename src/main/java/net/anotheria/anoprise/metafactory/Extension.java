@@ -89,6 +89,6 @@ public enum Extension {
 
     public String toName(String clazzName) {
         return this == NONE ? clazzName :
-                clazzName + "." + toExt();
+                clazzName + '.' + toExt();
     }
 }

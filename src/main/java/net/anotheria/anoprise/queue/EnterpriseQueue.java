@@ -25,7 +25,7 @@ public interface EnterpriseQueue<E> {
 	 * @throws QueueOverflowException
 	 *             if no left space
 	 */
-	void add(E element) throws QueueOverflowException;
+	void add(E element);
 
 	/**
 	 * Inserts an element to the queue if it possible due to capacity
@@ -46,7 +46,7 @@ public interface EnterpriseQueue<E> {
 	 * @throws QueueEmptyException
 	 *             if this queue is empty
 	 */
-	E remove() throws QueueEmptyException;
+	E remove();
 
 	/**
 	 * Retrieves and removes the head of this queue, or returns <tt>null</tt> if

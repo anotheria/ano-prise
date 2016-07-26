@@ -9,7 +9,7 @@ import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 public class VerySimpleTestWithExtensionsTest {
 
@@ -30,7 +30,7 @@ public class VerySimpleTestWithExtensionsTest {
 		
 	}
 	
-	private void test() throws MetaFactoryException{
+	private static void test() throws MetaFactoryException{
 		//no need to cast and compile time safety, that you'll get something of your type.
 		CalculatorService service = MetaFactory.get(CalculatorService.class);
 		assertEquals("Expected 4", 4, service.plus(2, 2));

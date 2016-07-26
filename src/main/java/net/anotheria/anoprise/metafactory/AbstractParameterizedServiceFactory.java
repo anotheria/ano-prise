@@ -40,7 +40,7 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 		if (parameters == null)
 			synchronized (this) {
 				if (parameters == null)
-					parameters = new HashMap<String, Serializable>();
+					parameters = new HashMap<>();
 			}
 
 		parameters.put(parameterName, parameterValue);
@@ -52,7 +52,7 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 	 * @return {@link Map}
 	 */
 	protected Map<String, Serializable> getParameters() {
-		return parameters != null ? new HashMap<String, Serializable>(parameters) : new HashMap<String, Serializable>();
+		return parameters != null ? new HashMap<>(parameters) : new HashMap<String, Serializable>();
 	}
 
 	/**
@@ -61,7 +61,7 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 	 * @return {@link List} of {@link String}
 	 */
 	protected List<String> getParametersNames() {
-		return parameters != null ? new ArrayList<String>(parameters.keySet()) : new ArrayList<String>();
+		return parameters != null ? new ArrayList<>(parameters.keySet()) : new ArrayList<String>();
 	}
 
 	/**

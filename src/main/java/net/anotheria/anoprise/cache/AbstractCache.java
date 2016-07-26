@@ -42,7 +42,7 @@ public abstract class AbstractCache implements IStatsProducer{
 	protected AbstractCache(String aName){
 		name = aName;
 		
-		stats = new ArrayList<IStats>();
+		stats = new ArrayList<>();
 		cacheStats = new CacheStats(name, Constants.getDefaultIntervals());
 		stats.add(cacheStats);
 		
@@ -54,7 +54,7 @@ public abstract class AbstractCache implements IStatsProducer{
 		}else{
 			String myName = null;
 			do{
-				myName = name+"-"+instanceCounter.incrementAndGet();
+				myName = name+ '-' +instanceCounter.incrementAndGet();
 			}while(reg.getProducer(myName)!=null);
 			name = myName;
 			reg.registerProducer(this);
@@ -63,7 +63,7 @@ public abstract class AbstractCache implements IStatsProducer{
 	}
 	
 	protected static String getUnnamedInstanceName(Class<?> that){
-		return that.getSimpleName()+"-"+instanceCounter.incrementAndGet();
+		return that.getSimpleName()+ '-' +instanceCounter.incrementAndGet();
 	}
 	
 	@Override public String getCategory() {
@@ -71,7 +71,7 @@ public abstract class AbstractCache implements IStatsProducer{
 	}
 
 	@Override public String getProducerId() {
-		return getName();
+		return name;
 	}
 
 	@Override public List<IStats> getStats() {

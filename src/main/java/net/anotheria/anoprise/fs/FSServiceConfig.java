@@ -62,7 +62,7 @@ public final class FSServiceConfig implements Serializable {
 	 * Configurations cache.
 	 */
 	@DontConfigure
-	private static final Map<String, FSServiceConfig> CACHE = new HashMap<String, FSServiceConfig>();
+	private static final Map<String, FSServiceConfig> CACHE = new HashMap<>();
 	/**
 	 * Logger.
 	 */
@@ -110,10 +110,7 @@ public final class FSServiceConfig implements Serializable {
 				ConfigurationManager.INSTANCE.configureAs(this, environment, configuration, ConfigurationSourceKey.Format.JSON);
 			}
 		} catch (RuntimeException e) {
-			LOGGER.warn("FSServiceConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
-					+ "]. Relaying on defaults.");
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug("FSServiceConfig("+configuration+", "+environment+")", e);
+			LOGGER.warn("FSServiceConfig(conf: '"+configuration+"', environment: '"+environment+"') Configuration fail[{}]. Relaying on defaults.", e);
 		}
 		if (fileExtension == null)
 			fileExtension = DEFAULT_FILE_EXTENSION;
@@ -121,7 +118,7 @@ public final class FSServiceConfig implements Serializable {
 			maxOwnerIdLength = DEFAULT_MAX_OWNER_ID_LENGTH;
 		if (fragmetLegth == 0)
 			fragmetLegth = DEFAULT_FRAGMENT_LENGTH;
-		LOGGER.info("FSServiceConfig(conf:" + configuration + ", env: " + environment + ") Configured with[" + this.toString() + "]");
+		LOGGER.info("FSServiceConfig(conf:{}, env: {}) Configured with[{}]", configuration, environment, this);
 	}
 
 	/**
@@ -258,7 +255,7 @@ public final class FSServiceConfig implements Serializable {
 	 * @throws FSServiceConfigException
 	 */
 	public static String getStoreFileName(String ownerId, String aFileExtension, boolean useStringOwnerId) throws FSServiceConfigException {
-		return validateOwnerId(ownerId, useStringOwnerId) + "." + aFileExtension;
+		return validateOwnerId(ownerId, useStringOwnerId) + '.' + aFileExtension;
 	}
 
 	/**
@@ -277,10 +274,10 @@ public final class FSServiceConfig implements Serializable {
 			throw new IllegalArgumentException("OwnerId is null or empty");
 
 		while (ownerId.length() < maxOwnerIdLength)
-			ownerId = "0" + ownerId;
+			ownerId = '0' + ownerId;
 
 		while (ownerId.length() % fragmentLength != 0)
-			ownerId = "0" + ownerId;
+			ownerId = '0' + ownerId;
 
 		int fragmentationDepth = ownerId.length() / fragmentLength;
 		String[] ret = new String[fragmentationDepth - 1];
@@ -358,7 +355,7 @@ public final class FSServiceConfig implements Serializable {
 				return Integer.valueOf(ownerId).toString();
 			return ownerId;
 		} catch (NumberFormatException nfe) {
-			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "NumberFormatException on parsing ownerId argument: " + nfe.getMessage());
+			throw new FSServiceConfigException(VALIDATION_ERROR_PREFIX + "NumberFormatException on parsing ownerId argument: " + nfe.getMessage(), nfe);
 		}
 	}
 

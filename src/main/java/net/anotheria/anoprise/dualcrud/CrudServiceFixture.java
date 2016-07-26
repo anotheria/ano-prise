@@ -9,7 +9,7 @@ public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T
 	private final ConcurrentHashMap<String, T> holder;
 
 	public CrudServiceFixture() {
-		holder = new ConcurrentHashMap<String, T>();
+		holder = new ConcurrentHashMap<>();
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T
 	}
 
 	@Override
-	public T read(String ownerId) throws CrudServiceException, ItemNotFoundException {
+	public T read(String ownerId) throws CrudServiceException {
 		if (!exist(ownerId))
 			throw new ItemNotFoundException(ownerId);
 
@@ -37,7 +37,7 @@ public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T
 	}
 
 	@Override
-	public void delete(T t) throws CrudServiceException {
+	public void delete(T t) {
 		holder.remove(t.getOwnerId());
 	}
 
@@ -47,7 +47,7 @@ public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T
 	}
 
 	@Override
-	public boolean exists(T t) throws CrudServiceException {
+	public boolean exists(T t) {
 		return exist(t.getOwnerId());
 	}
 
@@ -63,8 +63,8 @@ public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T
 	}
 
 	@Override
-	public List<T> query(Query q) throws CrudServiceException {
-		return new ArrayList<T>();
+	public List<T> query(Query q) {
+		return new ArrayList<>();
 	}
 
 }

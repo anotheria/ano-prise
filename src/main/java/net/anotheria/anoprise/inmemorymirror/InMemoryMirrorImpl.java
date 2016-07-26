@@ -23,7 +23,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 		getCache();
 		try{
 			lock.readLock().lock();
-			return new ArrayList<V>(cache.values());
+			return new ArrayList<>(cache.values());
 		}finally{
 			lock.readLock().unlock();
 		}
@@ -44,7 +44,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 				return cache;
 			
 			Collection<V> fromSupport = support.readAll();
-			HashMap<K, V> map = new HashMap<K, V>(fromSupport.size());
+			Map<K, V> map = new HashMap<>(fromSupport.size());
 			for (V v : fromSupport)
 				map.put(v.getKey(), v);
 			cache = map;
@@ -90,7 +90,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	}
 
 	@Override
-	public void updateLocalOnly(V element) throws InMemoryMirrorException, ElementNotFoundException {
+	public void updateLocalOnly(V element) throws InMemoryMirrorException {
 		update(element, true);
 	}
 
@@ -126,7 +126,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 			getCache().put(created.getKey(), created);
 			return created;
 		}catch(Exception exception){
-			throw new InMemoryMirrorException("create(" + element + ")", exception);
+			throw new InMemoryMirrorException("create(" + element + ')', exception);
 		}finally{
 			lock.writeLock().unlock();
 		}

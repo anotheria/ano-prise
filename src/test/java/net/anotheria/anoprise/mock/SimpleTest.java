@@ -21,7 +21,7 @@ public class SimpleTest {
 	 *
 	 */
 	public static class MyMocking implements Mocking{
-		public String askService(String param){
+		public static String askService(String param){
 			return "Service said: "+param+" accepted.";
 		}
 	}

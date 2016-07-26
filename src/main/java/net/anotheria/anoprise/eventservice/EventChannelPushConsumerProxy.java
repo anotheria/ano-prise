@@ -17,7 +17,7 @@ public class EventChannelPushConsumerProxy extends AbstractEventChannel implemen
 	public EventChannelPushConsumerProxy(String name){
 		super(name);
 		
-		consumers = new ArrayList<EventServiceConsumer>(10);	
+		consumers = new ArrayList<>(10);
 	}
 	
 	/**
@@ -39,8 +39,8 @@ public class EventChannelPushConsumerProxy extends AbstractEventChannel implemen
 			EventServicePushConsumer consumer = (EventServicePushConsumer) consumers.get(i);
 			try{
 				consumer.push(e);
-			}catch(Exception ex){
-				log.error("Pushing to consumer "+consumer+" caused an error:", ex);
+			}catch(RuntimeException ex){
+                log.error("Pushing to consumer '"+consumer+"' caused an error:", ex);
 			}
 		}
 	}

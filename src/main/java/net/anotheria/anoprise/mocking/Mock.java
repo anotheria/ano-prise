@@ -27,7 +27,7 @@ public class Mock implements InvocationHandler{
 	/**
 	 * Internal cache to reduce lookups.
 	 */
-	private Map<Method, MockingAndMethod> cache = new HashMap<Method, MockingAndMethod>();
+	private Map<Method, MockingAndMethod> cache = new HashMap<>();
 
 	/**
 	 * Creates a new mock.
@@ -39,10 +39,10 @@ public class Mock implements InvocationHandler{
 		targets = findInterfaces(aTarget);
 	}
 	
-	private List<Class<?>> findInterfaces(Class<?> source){
-		ArrayList<Class<?>> ret = new ArrayList<Class<?>>();
+	private static List<Class<?>> findInterfaces(Class<?> source){
+		List<Class<?>> ret = new ArrayList<>();
 		ret.add(source);
-		Class<?> interfaces[] = source.getInterfaces();
+		Class<?>[] interfaces = source.getInterfaces();
 		for (Class<?> i : interfaces)
 			ret.addAll(findInterfaces(i));
 		return ret;
@@ -58,10 +58,9 @@ public class Mock implements InvocationHandler{
 		MockingAndMethod implementor = findImplementor(method);
 		if (implementor==null)
 			throw new IllegalArgumentException("Method: "+method+" is not mocked");
-		
+
 		try{
-			Object ret = implementor.getMethod().invoke(implementor.getMocking(), args);
-			return ret;
+            return implementor.getMethod().invoke(implementor.getMocking(), args);
 		}catch(InvocationTargetException e){
 			throw e.getCause();
 		}
@@ -98,7 +97,7 @@ public class Mock implements InvocationHandler{
 	 * @param second second method to compare.
 	 * @return true if the methods are equal (even they are declared in different classes).
 	 */
-	private boolean areMethodsEqual(Method first, Method second){
+	private static boolean areMethodsEqual(Method first, Method second){
 		if (!(first.getName().equals(second.getName()))){
 			return false;
 		}

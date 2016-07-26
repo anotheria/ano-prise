@@ -204,22 +204,20 @@ public class CacheController<K, V> implements Cache<K, V> {
 
 		if (factory == null) {
 			try {
-				@SuppressWarnings("unchecked")
-				CacheFactory<K, V> newFactory = (CacheFactory<K, V>) Class.forName(factoryClazz).newInstance();
-				factory = newFactory;
+				factory = (CacheFactory<K, V>) Class.forName(factoryClazz).newInstance();
 			} catch (ClassNotFoundException e) {
 				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
+				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage(), e);
 			} catch (InstantiationException e) {
 				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
+				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage(), e);
 			} catch (IllegalAccessException e) {
 				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
+				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage(), e);
 			}
 		}
 
-		log.debug("reiniting cache for " + configurationName);
+        log.debug("reiniting cache for {}", configurationName);
 		if (!cacheOn) {
 			if (prevCacheOn) {
 				log.debug("switching cache off.");
@@ -274,7 +272,7 @@ public class CacheController<K, V> implements Cache<K, V> {
 		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		Cache<K, V> underlyingCache = factory.create(configurationName, aStartSize, aMaxSize);
-		return new FailoverCache<K, V>(configurationName, instanceAmount, currentInstanceNumber, typeHandler, underlyingCache);
+		return new FailoverCache<>(configurationName, instanceAmount, currentInstanceNumber, typeHandler, underlyingCache);
 	}
 
 	protected Cache<K, V> createExpiringCacheFailover(int aStartSize, int aMaxSize, long expirationTime, int aInstanceAmount, int aCurrentInstanceNumber) {
@@ -282,7 +280,7 @@ public class CacheController<K, V> implements Cache<K, V> {
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		Cache<K, V> underlyingCache = factory.createExpiring(configurationName, aStartSize, aMaxSize, expirationTime);
 
-		return new FailoverCache<K, V>(configurationName, aStartSize, aMaxSize, typeHandler, underlyingCache);
+		return new FailoverCache<>(configurationName, aStartSize, aMaxSize, typeHandler, underlyingCache);
 	}
 
 	/**
@@ -338,11 +336,11 @@ public class CacheController<K, V> implements Cache<K, V> {
 
 	@AfterConfiguration
 	public void configurationFinished() {
-		log.info("configuration " + configurationName + " finished, settings are:");
-		log.info("cacheOn " + prevCacheOn + " -> " + cacheOn);
-		log.info("startSize " + prevStartSize + " -> " + startSize);
-		log.info("maxSize " + prevMaxSize + " -> " + maxSize);
-		log.info("expirationTime " + preExpirationTime + " -> " + expirationTime);
+        log.info("configuration {} finished, settings are:", configurationName);
+        log.info("cacheOn {} -> {}", prevCacheOn, cacheOn);
+        log.info("startSize {} -> {}", prevStartSize, startSize);
+        log.info("maxSize {} -> {}", prevMaxSize, maxSize);
+        log.info("expirationTime {} -> {}", preExpirationTime, expirationTime);
 		init();
 	}
 
@@ -362,7 +360,7 @@ public class CacheController<K, V> implements Cache<K, V> {
 	public String getStats() {
 		String stats = cacheOn ? "On, " + startSize + ", " + maxSize : "Off";
 		if (cacheOn)
-			stats += " " + cache.getCacheStats().toString() + ", OOME: " + outOfMemoryErrors;
+			stats += ' ' + cache.getCacheStats().toString() + ", OOME: " + outOfMemoryErrors;
 		return stats;
 	}
 
@@ -381,8 +379,7 @@ public class CacheController<K, V> implements Cache<K, V> {
 	public CacheStats getCacheStats() {
 		if (!cacheOn)
 			return new CacheStats();
-		CacheStats stats = getCache().getCacheStats();
-		return stats;
+		return cache.getCacheStats();
 	}
 
 	public void setCacheOn(boolean cacheOn) {

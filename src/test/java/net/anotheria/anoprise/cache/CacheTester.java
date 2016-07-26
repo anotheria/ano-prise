@@ -12,7 +12,7 @@ public class CacheTester {
 	public static void testBasicFunctionality(Cache<Integer, String> cache) throws Exception{
 		
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i,""+i);
+			cache.put(i, String.valueOf(i));
 		}
 		
 		for (int i=0; i<MAX_SIZE; i++){
@@ -30,7 +30,7 @@ public class CacheTester {
 		
 		//put again.
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i,""+i);
+			cache.put(i, String.valueOf(i));
 		}
 		
 		for (int i=0; i<MAX_SIZE; i++){
@@ -47,11 +47,11 @@ public class CacheTester {
 	
 	public static void testOverwrite(Cache<Integer, String> cache) throws Exception{
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i,""+i);
+			cache.put(i, String.valueOf(i));
 		}
 		//cache is full now, fill it again.
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i,""+(i+MAX_SIZE));
+			cache.put(i, String.valueOf(i + MAX_SIZE));
 		}
 
 		for (int i=0; i<MAX_SIZE; i++){
@@ -65,17 +65,16 @@ public class CacheTester {
 
 	public static void testRollover(Cache<Integer, String> cache) throws Exception{
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i,""+i);
+			cache.put(i, String.valueOf(i));
 		}
 		//cache is full now, fill it again.
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i+MAX_SIZE,""+(i+MAX_SIZE));
+			cache.put(i+MAX_SIZE, String.valueOf(i + MAX_SIZE));
 		}
 
 		for (int i=0; i<MAX_SIZE; i++){
-			int key1 = i;
 			int key2 = i+MAX_SIZE;
-			String s = cache.get(key1);
+			String s = cache.get(i);
 			assertNull("First key should have been deleted (rolled over)", s);
 			s = cache.get(key2);
 			assertNotNull(s);
@@ -120,7 +119,7 @@ public class CacheTester {
 										stats.addRead();
 										if (value==null){
 											stats.addMiss();
-											cache.put(i, ""+i);
+											cache.put(i, String.valueOf(i));
 											stats.addWrite();
 										}else{
 											stats.addHit();
@@ -163,10 +162,10 @@ public class CacheTester {
 				emptySpots++;
 			}
 		}
-		
-		
-		long timeInMs = (endTime-startTime)/1000/1000;
+
+
 		System.out.println("All threads finished: totals "+totals+" empty spots: "+emptySpots+" of "+MAX_SIZE);
+		long timeInMs = (endTime - startTime) / 1000 / 1000;
 		System.out.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
 		System.out.println("Stats: "+cache.getCacheStats().toStatsString());
 		
@@ -192,12 +191,12 @@ public class CacheTester {
 				@Override
 				public void run() {
 					int identity = rnd.nextInt(100);
-					String sIdentity = ""+identity;
-					boolean doWrite = false;
 					try{
 						RunnerStats stats = new RunnerStats(Thread.currentThread().getName(), identity);
 						startLatch.await();
-						for (int l=0; l<loops; l++){
+						boolean doWrite = false;
+						String sIdentity = String.valueOf(identity);
+						for (int l = 0; l<loops; l++){
 							int step = rnd.nextInt(3)+1;
 							//System.out.println(sIdentity+", "+step);
 							for (int i=0; i<MAX_SIZE; i+=step){
@@ -243,7 +242,7 @@ public class CacheTester {
 		//perform sanity check
 		int emptySpots = 0;
 		
-		HashMap<String, Integer> countersByIdentity = new HashMap<String, Integer>();
+		HashMap<String, Integer> countersByIdentity = new HashMap<>();
 		
 		for (int i=0; i<MAX_SIZE; i++){
 			String v = cache.get(i);
@@ -258,9 +257,9 @@ public class CacheTester {
 				emptySpots++;
 			}
 		}
-		
-		long timeInMs = (endTime-startTime)/1000/1000;
+
 		System.out.println("All threads finished: totals "+totals+" empty spots: "+emptySpots+" of "+MAX_SIZE);
+		long timeInMs = (endTime - startTime) / 1000 / 1000;
 		System.out.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
 		System.out.println("Stats: "+cache.getCacheStats().toStatsString());
 		System.out.println("Counters by Identity: "+countersByIdentity);
@@ -268,7 +267,7 @@ public class CacheTester {
 
 	public static void testFailOverFunctionality(Cache<Integer, String> cache) throws Exception{
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.put(i,""+i);
+			cache.put(i, String.valueOf(i));
 		}
 
 		for (int i=0; i<MAX_SIZE; i++){
@@ -301,14 +300,16 @@ public class CacheTester {
 			modulo = aModulo;
 			readCount = writeCount = removeCount = errorCount = missCount = 0; 
 		}
-		
-		public synchronized void add(RunnerStats anotherStats){
-			readCount += anotherStats.readCount;
-			writeCount += anotherStats.writeCount;
-			removeCount += anotherStats.removeCount;
-			errorCount += anotherStats.errorCount;
-			missCount += anotherStats.missCount;
-			hitCount += anotherStats.hitCount;
+
+		public void add(RunnerStats anotherStats) {
+			synchronized (this) {
+				readCount += anotherStats.readCount;
+				writeCount += anotherStats.writeCount;
+				removeCount += anotherStats.removeCount;
+				errorCount += anotherStats.errorCount;
+				missCount += anotherStats.missCount;
+				hitCount += anotherStats.hitCount;
+			}
 		}
 		
 		public String toString(){

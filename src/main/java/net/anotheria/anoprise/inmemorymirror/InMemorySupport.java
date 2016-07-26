@@ -9,11 +9,11 @@ import java.util.Collection;
  * @param <V>
  */
 public interface InMemorySupport<K,V extends Mirrorable<K>> {
-	Collection<V> readAll() throws InMemoryMirrorException;
+	Collection<V> readAll();
 	
-	V create(V element) throws InMemoryMirrorException;
+	V create(V element);
 	
-	V update(V element) throws InMemoryMirrorException, ElementNotFoundException;
+	V update(V element) throws InMemoryMirrorException;
 	
-	V remove (K key) throws InMemoryMirrorException;
+	V remove (K key);
 }

@@ -38,7 +38,7 @@ public class MockErrorsTest {
 		assertTrue(test.askService("").equals("OK"));
 	}
 	
-	private void test(TestInterface testInstance){
+	private static void test(TestInterface testInstance){
 		try{
 			testInstance.askService("foo");
 			fail("expected illegal argument exception.");
@@ -47,27 +47,27 @@ public class MockErrorsTest {
 	}
 
 	public static class WrongParameterTypeMock implements Mocking{
-		public String askService(int intParamInsteadOfString){
+		public static String askService(int intParamInsteadOfString){
 			return null;
 		}
 	}
 	public static class WrongParameterCountMock implements Mocking{
-		public String askService(boolean firstParam, boolean secondParam){
+		public static String askService(boolean firstParam, boolean secondParam){
 			return null;
 		}
 	}
 	public static class WrongReturnTypeMock implements Mocking{
-		public int askService(String aParam){
+		public static int askService(String aParam){
 			return 0;
 		}
 	}
 	public static class WrongNameMock implements Mocking{
-		public String aSkService(String aParam){
+		public static String aSkService(String aParam){
 			return "";
 		}
 	}
 	public static class ProperMock implements Mocking{
-		public String askService(String aParam){
+		public static String askService(String aParam){
 			return "OK";
 		}
 	}

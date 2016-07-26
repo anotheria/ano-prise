@@ -37,10 +37,9 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 
 	@Override
 	public T create(T t) throws CrudServiceException {
-		T result = null;
 		CrudService<T> primary = config.getPrimaryWriter(left, right);
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
-		result = primary.create(t);
+		T result = primary.create(t);
 		if (config.writeToBoth() && !(secondary == primary))
 			secondary.create(t);
 
@@ -53,11 +52,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
 		primary.delete(t);
 		if (primary != secondary) {
-			try {
-				secondary.delete(t);
-			} catch (CrudServiceException e) {
-				log.warn("delete on secondary writer failed, ignored, delete(" + t + ")", e);
-			}
+			secondary.delete(t);
 		}
 	}
 
@@ -69,12 +64,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			throw new CrudServiceException("Noop migration request");
 		T t = secondaryWriter.read(ownerId);
 		primaryWriter.save(t);
-		try {
-			secondaryWriter.delete(t);
-		} catch (CrudServiceException e) {
-			log.warn("delete on secondary writer failed, ignored, migrate(" + t + ")", e);
-		}
-
+		secondaryWriter.delete(t);
 	}
 
 	@Override
@@ -83,12 +73,12 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		CrudService<T> secondary = config.getSecondaryReader(left, right);
 
 		try {
-			T t = primary.read(ownerId);
-			return t;
+			return primary.read(ownerId);
 		} catch (ItemNotFoundException e) {
 			if (!config.readFromBoth())
 				throw e;
 		} catch (CrudServiceException e) {
+			log.error("Could not read owner id '" + ownerId + '\'', e);
 			throw e;
 		}
 
@@ -102,7 +92,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 					secondary.delete(fromSecondary);
 				}
 			} catch (CrudServiceException e) {
-				log.warn("migrate on the fly failed, ignored, read(" + ownerId + ")", e);
+				log.warn("migrate on the fly failed, ignored, read("+ownerId+ ')', e);
 			}
 
 		}
@@ -113,16 +103,11 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 
 	@Override
 	public T save(T t) throws CrudServiceException {
-		T result = null;
 		CrudService<T> primary = config.getPrimaryWriter(left, right);
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);
-		result = primary.save(t);
+		T result = primary.save(t);
 		if (config.migrateOnWrite()) {
-			try {
-				secondary.delete(t);
-			} catch (CrudServiceException e) {
-				log.warn("delete on secondary writer failed, ignored, save(" + t + ")", e);
-			}
+			secondary.delete(t);
 		}
 
 		if (config.writeToBoth()) {
@@ -142,11 +127,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		if (primary.exists(t)) {
 			result = primary.update(t);
 			if (config.migrateOnWrite()) {
-				try {
-					secondary.delete(t);
-				} catch (CrudServiceException e) {
-					log.warn("delete on secondary writer failed, ignored, update(" + t + ")", e);
-				}
+				secondary.delete(t);
 			}
 
 			if (config.writeToBoth()) {
@@ -162,11 +143,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 			}
 			// if we are here, it doesnt exist on the primary, but exists on the secondary and we need to migrate on write.
 			result = primary.create(t);
-			try {
-				secondary.delete(t);
-			} catch (CrudServiceException e) {
-				log.warn("delete on secondary writer failed, ignored, save(" + t + ")", e);
-			}
+			secondary.delete(t);
 			return result;
 		}
 
@@ -187,7 +164,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 		CrudService<T> primary = config.getPrimaryReader(left, right);
 		CrudService<T> secondary = config.getSecondaryReader(left, right);
 
-		return new QueryResult<T>(primary.query(q), secondary.query(q));
+		return new QueryResult<>(primary.query(q), secondary.query(q));
 	}
 
 }

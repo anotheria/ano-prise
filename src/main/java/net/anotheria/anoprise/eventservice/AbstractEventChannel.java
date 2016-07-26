@@ -23,8 +23,8 @@ public abstract class AbstractEventChannel implements EventChannel{
 	 * @param aName
 	 */
 	protected AbstractEventChannel(String aName){
-		setName(aName);
-		log = LoggerFactory.getLogger(this.getClass());
+        name = aName;
+        log = LoggerFactory.getLogger(this.getClass());
 	}
 	
 	/**
@@ -46,7 +46,7 @@ public abstract class AbstractEventChannel implements EventChannel{
 	 * @param msg
 	 */
 	protected void out(String msg){
-		log.debug("["+name+"] "+msg);
+		log.debug('[' +name+"] "+msg);
 	}
 
 }

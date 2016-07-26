@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.dualcrud;
 
-import java.util.List;
-
 import net.anotheria.anoprise.metafactory.Service;
+
+import java.util.List;
 
 public interface CrudService<T extends CrudSaveable> extends Service {
 	/**
@@ -22,7 +22,7 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 * @throws CrudServiceException
 	 * @throws ItemNotFoundException
 	 */
-	T read(String ownerId) throws CrudServiceException, ItemNotFoundException;
+	T read(String ownerId) throws CrudServiceException;
 
 	/**
 	 * Updates an existing instance of T. Fails if there is no previously saved instance.
@@ -39,7 +39,7 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 * @param t
 	 * @throws CrudServiceException
 	 */
-	void delete(T t) throws CrudServiceException;
+	void delete(T t);
 
 	/**
 	 * Saves an instance of T, regardless, whether its an update or new creation.
@@ -58,7 +58,7 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 * @return
 	 * @throws CrudServiceException
 	 */
-	boolean exists(T t) throws CrudServiceException;
+	boolean exists(T t);
 
 	/**
 	 * Make query to service.
@@ -68,6 +68,6 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 * @return {@link List} of T
 	 * @throws CrudServiceException
 	 */
-	List<T> query(Query q) throws CrudServiceException;
+	List<T> query(Query q);
 
 }

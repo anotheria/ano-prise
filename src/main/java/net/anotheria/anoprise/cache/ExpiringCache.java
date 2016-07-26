@@ -52,7 +52,7 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	}
 
 	public void put(K id, V cacheable) {
-		cache.put(id, new CachedObjectWrapper<V>(cacheable));
+		cache.put(id, new CachedObjectWrapper<>(cacheable));
 	}
 	
 	@Override public String toString(){

@@ -76,7 +76,7 @@ public final class SDCache implements FSSaveable {
 	 * Constructor.
 	 */
 	protected SDCache() {
-		sessions = new ConcurrentHashMap<String, DistributedSessionVO>();
+		sessions = new ConcurrentHashMap<>();
 		init();
 	}
 
@@ -98,8 +98,7 @@ public final class SDCache implements FSSaveable {
 		LOG.info("Cluster integration configuration started");
 		String systemPropertyNodeId = System.getProperty(config.getNodeIdSystemPropertyName());
 		if (StringUtils.isEmpty(systemPropertyNodeId)) {
-			LOG.warn("SD -  Cluster configuration FAILED. Required nodeId property[" + config.getNodeIdSystemPropertyName() + "] is absent in SystemProperties, or badly configured!" +
-					" Working in standAlone mode!");
+			LOG.warn("SD -  Cluster configuration FAILED. Required nodeId property[{}] is absent in SystemProperties, or badly configured! Working in standAlone mode!", config.getNodeIdSystemPropertyName());
 			return;
 		}
 		nodeId = systemPropertyNodeId;
@@ -117,7 +116,7 @@ public final class SDCache implements FSSaveable {
 		EventServiceFactory.createEventService().obtainEventChannel(SDCacheEventAnnouncer.EVENT_CHANNEL_NAME, sdCacheEventReceiver).addConsumer(cacheConsumer);
 		sdCacheEventReceiver.start();
 
-		LOG.info("Cluster integration stuff successfully configured! NodeId{" + nodeId + "}");
+		LOG.info("Cluster integration stuff successfully configured! NodeId{{}}", nodeId);
 	}
 
 	/**
@@ -135,7 +134,7 @@ public final class SDCache implements FSSaveable {
 	 * @return {@link java.util.List <DistributedSessionVO>}
 	 */
 	public List<DistributedSessionVO> getSessions() {
-		return new ArrayList<DistributedSessionVO>(sessions.values());
+		return new ArrayList<>(sessions.values());
 	}
 
 	/**
@@ -144,7 +143,7 @@ public final class SDCache implements FSSaveable {
 	 * @return ids collection
 	 */
 	public List<String> getSessionIds() {
-		return new ArrayList<String>(sessions.keySet());
+		return new ArrayList<>(sessions.keySet());
 	}
 
 	/**
@@ -338,9 +337,9 @@ public final class SDCache implements FSSaveable {
 
 	@Override
 	public String toString() {
-		return "SDCache{" +
+        return "SDCache{" +
 				"sessions-size=" + sessions.size() +
-				", ownerId='" + getOwnerId() + '\'' +
+				", ownerId='" + nodeId + '\'' +
 				'}';
 	}
 
@@ -363,11 +362,11 @@ public final class SDCache implements FSSaveable {
 	 * @throws ClassNotFoundException on DeSerialization errors
 	 * @throws java.io.IOException	on DeSerialization errors
 	 */
-	@SuppressWarnings("unchecked")
+
 	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
 		ObjectInputStream.GetField fields = ois.readFields();
 		sessions = (ConcurrentMap<String, DistributedSessionVO>) fields.get("sessions", new ConcurrentHashMap<String, DistributedSessionVO>());
-		LOG.info("Reading persisted Sessions - started");
+		LOG.info("Reading persisted sessions started");
 		//prolong life time! after reading from file!
 		long time = System.currentTimeMillis();
 		for (DistributedSessionVO session : sessions.values())
@@ -375,7 +374,7 @@ public final class SDCache implements FSSaveable {
 
 		//execute initialization!
 		init();
-		LOG.info("Reading persisted Sessions - completed! " + sessions.size() + "Read successfully, LastChangeTime updated!");
+		LOG.info("Reading persisted Sessions completed. {} sessions read successfully. Last change time was updated.", sessions.size());
 	}
 
 
@@ -416,7 +415,7 @@ public final class SDCache implements FSSaveable {
 	private void remove(String incomingNodeId, DistributedSessionVO session) {
 		boolean isDebug = LOG.isDebugEnabled();
 		if (isDebug)
-			LOG.debug("Called remove(" + incomingNodeId + "," + session + ")");
+			LOG.debug("Called remove({},{})", incomingNodeId, session);
 		//should not handle! This is the event from current SDCache!
 		if (nodeId.equals(incomingNodeId))
 			return;
@@ -431,18 +430,15 @@ public final class SDCache implements FSSaveable {
 				if (onCurrentNode.getLastChangeTime() <= session.getLastChangeTime()) {
 					sessions.remove(session.getName());
 					if (isDebug)
-						LOG.debug("Session[" + session.getName() + "] removed by delete event, on node[" + nodeId + "] - event comes from remote node[" + incomingNodeId + "] ");
+						LOG.debug("Session '{}' removed by delete event, on node '{}'. Event comes from remote node[{}] ", session.getName(), nodeId, incomingNodeId);
 				}
 
 				if (isDebug)
-					LOG.debug("Session[" + session.getName() + "] can't be removed by delete event, on node[" + nodeId + "], cause It is still in use!!!!! - " +
-							"event comes by remote node[" + incomingNodeId + "] ");
+					LOG.debug("Session '{}' can't be removed by delete event on node '{}', because it is still in use. Event sent by remote node '{}'", session.getName(), nodeId, incomingNodeId);
 
 
 			} catch (NoSuchDistributedSessionException e) {
-				// Session  does not exists on current node!!
-				LOG.warn("NoSuchDistributedSessionException - occurred on delete try of session with name [" + session.getName() + "] on node : [" + nodeId + "]," +
-						" -  deletion event comes from remote_node:[" + incomingNodeId + "]");
+				LOG.warn("Session '"+session.getName()+"' does not exist on node '"+nodeId+"'. Exception occurred on delete try of session. Deletion event sent by remote node '"+incomingNodeId+ '\'', e);
 			}
 
 		} finally {
@@ -460,7 +456,7 @@ public final class SDCache implements FSSaveable {
 	private void save(String incomingNodeId, DistributedSessionVO session) {
 		boolean isDebug = LOG.isDebugEnabled();
 		if (isDebug)
-			LOG.debug("Called save(" + incomingNodeId + "," + session + ")");
+			LOG.debug("Called save({},{})", incomingNodeId, session);
 		//should not handle! This is the event from current SDCache!
 		if (nodeId.equals(incomingNodeId))
 			return;
@@ -476,13 +472,12 @@ public final class SDCache implements FSSaveable {
 				if (onCurrentNode.getLastChangeTime() < session.getLastChangeTime()) {
 					sessions.put(session.getName(), session);
 					if (isDebug)
-						LOG.debug("Session[" + session.getName() + "] updated on node[" + nodeId + "] by event from remote_node[" + incomingNodeId + "]");
+						LOG.debug("Session[{}] updated on node[{}] by event from remote_node[{}]", session.getName(), nodeId, incomingNodeId);
 				}
 
 			} catch (NoSuchDistributedSessionException e) {
 				sessions.put(session.getName(), session);
-				if (isDebug)
-					LOG.debug("Session [" + session.getName() + "] created on node[" + nodeId + "], by event from remote_node[" + incomingNodeId + "]");
+				LOG.error("Session '"+session.getName()+"' created on node '"+nodeId+"', by event sent from remote_node '"+incomingNodeId+ '\'', e);
 			}
 
 		} finally {
@@ -504,7 +499,7 @@ public final class SDCache implements FSSaveable {
 		@Override
 		public void push(Event incomingEvent) {
 			if (log.isDebugEnabled())
-				log.debug("SDCacheEvent : " + incomingEvent);
+				log.debug("SDCacheEvent: {}", incomingEvent);
 			if (incomingEvent == null || incomingEvent.getData() == null || !(incomingEvent.getData() instanceof SDCacheEvent))
 				return;
 
@@ -520,7 +515,7 @@ public final class SDCache implements FSSaveable {
 
 
 				default:
-					log.warn(cacheEvent.getOperation().name() + " NOT supported in current implementation");
+					log.warn("{} NOT supported in current implementation", cacheEvent.getOperation().name());
 			}
 
 		}

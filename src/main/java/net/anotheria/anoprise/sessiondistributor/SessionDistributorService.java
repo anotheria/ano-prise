@@ -52,7 +52,7 @@ public interface SessionDistributorService extends Service {
 	 * @throws SessionDistributorServiceException
 	 *          on errors
 	 */
-	List<String> getDistributedSessionNames() throws SessionDistributorServiceException;
+	List<String> getDistributedSessionNames();
 
 	/**
 	 * Updates DistributedSession userId property.

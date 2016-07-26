@@ -22,7 +22,7 @@ public class ImplTest {
 
 	private SessionDistributorService service;
 
-	private final String testSessionId = "123123123";
+	private static final String testSessionId = "123123123";
 
 	@Before
 	public void init() {
@@ -37,8 +37,8 @@ public class ImplTest {
 
 	@Test
 	public void testCreateAndRestore() throws SessionDistributorServiceException {
-		String name = "bla";
 		try {
+			String name = "bla";
 			try {
 				service = MetaFactory.get(SessionDistributorService.class);
 				service.restoreDistributedSession(name, "");
@@ -129,12 +129,12 @@ public class ImplTest {
 		service.restoreDistributedSession(name, "").setLastChangeTime(sessionCreateTime);
 
 		List<DistributedSessionAttribute> dummy1 = createDummy();
-		long lastChangeTime = 0;
 		for (DistributedSessionAttribute attribute : dummy1) {
 			service.addDistributedAttribute(name, attribute);
 			assertTrue(service.restoreDistributedSession(name, "").getLastChangeTime() > sessionCreateTime);
 		}
 		assertEquals(dummy1.size(), service.restoreDistributedSession(name, "").getDistributedAttributes().size());
+		long lastChangeTime = 0;
 		for (DistributedSessionAttribute attribute : attributesDummy) {
 			lastChangeTime = service.restoreDistributedSession(name, "").getLastChangeTime();
 
@@ -193,17 +193,16 @@ public class ImplTest {
 		} catch (MetaFactoryException e) {
 			throw new RuntimeException(e);
 		}
-		List<String> names = new ArrayList<String>();
 		assertEquals(0, service.getDistributedSessionNames().size());
 
+		List<String> names = new ArrayList<>();
 		for (int i = 0; i < 10; i++)
 			names.add(service.createDistributedSession(testSessionId));
 
 		assertEquals(10, service.getDistributedSessionNames().size());
 
-		HashSet<String> namesSet = new HashSet<String>();
-		namesSet.addAll(service.getDistributedSessionNames());
-		assertEquals(10, namesSet.size());
+		HashSet<String> namesSet = new HashSet<>(service.getDistributedSessionNames());
+        assertEquals(10, namesSet.size());
 
 		for (int i = 0; i < 10; i++)
 			namesSet.remove(names.get(i));
@@ -215,8 +214,8 @@ public class ImplTest {
 		assertEquals(0, service.getDistributedSessionNames().size());
 	}
 
-	private List<DistributedSessionAttribute> createDummy() {
-		ArrayList<DistributedSessionAttribute> attributeDistributeds = new ArrayList<DistributedSessionAttribute>();
+	private static List<DistributedSessionAttribute> createDummy() {
+		ArrayList<DistributedSessionAttribute> attributeDistributeds = new ArrayList<>();
 
 		attributeDistributeds.add(new DistributedSessionAttribute("a1", null));
 		attributeDistributeds.add(new DistributedSessionAttribute("a2", new byte[]{1, 2, 3}));
@@ -251,8 +250,6 @@ public class ImplTest {
 				Assert.assertEquals("Should be  same size!!!", 15, sdService.getDistributedSessionNames().size());
 
 			}
-		} catch (SessionDistributorServiceException e) {
-			Assert.fail("Should not happen!");
 		} catch (Throwable throwable) {
 		}
 	}
@@ -283,8 +280,6 @@ public class ImplTest {
 				Assert.assertEquals("Should be  same size!!!", 15, sdService.getDistributedSessionNames().size());
 
 			}
-		} catch (SessionDistributorServiceException e) {
-			Assert.fail("Should not happen!");
 		} catch (Throwable throwable) {
 		}
 	}
@@ -292,7 +287,6 @@ public class ImplTest {
 
 	@Test
 	public void testCreationWithLimiting() {
-		final int sessionsLimit = 2;
 		MetaFactory.reset();
 		try {
 			MetaFactory.addAlias(SessionDistributorService.class, Extension.LOCAL);
@@ -300,6 +294,7 @@ public class ImplTest {
 
 			final SessionDistributorService sdService = MetaFactory.get(SessionDistributorService.class);
 
+			final int sessionsLimit = 2;
 			SessionDistributorServiceConfig.getInstance().setMaxSessionsCount(sessionsLimit);
 			SessionDistributorServiceConfig.getInstance().setSessionsLimitEnabled(true);
 

@@ -73,11 +73,11 @@ public final class SDCacheUtil {
 			try {
 				fsPersistence.delete(cacheId);
 			} catch (FSServiceException e) {
-				LOG.warn(LOG_PREFIX + "Deleting restored sessions cache  failed! CAUSE : " + e.getMessage());
+				LOG.warn(LOG_PREFIX + "Deleting restored sessions cache  failed.", e);
 			}
 			return cache;
 		} catch (FSServiceException fSSe) {
-			LOG.warn(LOG_PREFIX + " read(" + cacheId + ") failed - creating empty cache!", fSSe);
+			LOG.warn(LOG_PREFIX + " read("+cacheId+") failed - creating empty cache!", fSSe);
 			return new SDCache();
 		}
 	}
@@ -93,7 +93,7 @@ public final class SDCacheUtil {
 		try {
 			fsPersistence.save(sessionsCache);
 		} catch (FSServiceException e) {
-			LOG.warn(LOG_PREFIX + " save(" + sessionsCache + ") failed!", e);
+			LOG.warn(LOG_PREFIX + " save("+sessionsCache+") failed!", e);
 		}
 	}
 }

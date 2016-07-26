@@ -38,7 +38,7 @@ public class CacheProducerWrapper implements IStatsProducer{
 		category = aCategory;
 		subsystem = aSubsystem;
 		cache = aCache;
-		stats = new ArrayList<IStats>();
+		stats = new ArrayList<>();
 		stats.add(cache.getCacheStats());
 	}
 

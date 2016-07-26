@@ -4,7 +4,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 public class ConfigurableResolverTest {
 	

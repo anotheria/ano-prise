@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class CalculatorServiceMock implements CalculatorService{
 
-	private Map<String, Integer> fixtures = new HashMap<String, Integer>();
+	private Map<String, Integer> fixtures = new HashMap<>();
 	
 	public CalculatorServiceMock() {
 		fixtures.put("2+2", 4);

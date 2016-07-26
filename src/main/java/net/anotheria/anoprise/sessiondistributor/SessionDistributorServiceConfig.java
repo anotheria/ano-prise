@@ -4,6 +4,7 @@ import net.anotheria.util.TimeUnit;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -27,6 +28,7 @@ public class SessionDistributorServiceConfig {
 	 * Default max amount of sessions.
 	 */
 	protected static final int MAX_SESSIONS_COUNT = 1000;
+	public static final Logger LOGGER = LoggerFactory.getLogger(SessionDistributorServiceConfig.class);
 
 
 	/**
@@ -289,7 +291,7 @@ public class SessionDistributorServiceConfig {
 			try {
 				ConfigurationManager.INSTANCE.configure(INSTANCE);
 			} catch (Exception e) {
-				LoggerFactory.getLogger(SessionDistributorServiceConfig.class).error("SessionDistributorServiceConfig configuration failed. configuring defaults. " + e.getMessage());
+				LOGGER.error("SessionDistributorServiceConfig configuration failed. configuring defaults.", e);
 			}
 		}
 

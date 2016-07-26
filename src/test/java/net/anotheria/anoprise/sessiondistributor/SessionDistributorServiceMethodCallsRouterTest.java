@@ -4,7 +4,7 @@ import org.distributeme.core.ClientSideCallContext;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Simplest Junit test fro SD router!!!
@@ -18,7 +18,7 @@ public class SessionDistributorServiceMethodCallsRouterTest {
 		SessionDistributorServiceMethodCallsRouter router = new SessionDistributorServiceMethodCallsRouter();
 		ClientSideCallContext context = new ClientSideCallContext("createDistributedSession");
 		context.setServiceId("simpleService");
-		context.setParameters(Arrays.asList("qweqweqweqwefsdf"));
+		context.setParameters(Collections.singletonList("qweqweqweqwefsdf"));
 		SessionDistributorServiceConfig config = SessionDistributorServiceConfig.getInstance();
 		String service = router.getServiceIdForCall(context);
 		Assert.assertEquals("Only 1 node! do nothing!", service, "simpleService");
@@ -48,7 +48,7 @@ public class SessionDistributorServiceMethodCallsRouterTest {
 		context.setCallCount(2);
 		context.setServiceId("simpleService_1");
 		String call = router.getServiceIdForCall(context);
-		Assert.assertTrue(call.contains("_") && call.lastIndexOf("_") == call.length() - 2);
+		Assert.assertTrue(call.contains("_") && call.lastIndexOf('_') == call.length() - 2);
 
 		//when only 1 service!
 		config.setSessionDistributorServersAmount(1);

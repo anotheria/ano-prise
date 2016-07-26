@@ -93,7 +93,7 @@ public abstract class Attribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getName() + " = " + getValueAsString();
+        return name + " = " + getValueAsString();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public abstract class Attribute implements Serializable {
 
 	@Override
 	public final boolean equals(Object o) {
-		return o instanceof Attribute ? BasicComparable.compareString(getName(), ((Attribute) o).getName()) == 0 && getType() == ((Attribute) o).getType()
-				&& BasicComparable.compareString(getValueAsString(), ((Attribute) o).getValueAsString()) == 0 : false;
+        return o instanceof Attribute && (BasicComparable.compareString(name, ((Attribute) o).name) == 0 && getType() == ((Attribute) o).getType()
+                && BasicComparable.compareString(getValueAsString(), ((Attribute) o).getValueAsString()) == 0);
 	}
 }

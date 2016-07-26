@@ -19,10 +19,9 @@ public class CacheUtilTest {
 
 	@BeforeClass
 	public static void before() {
-		FSServiceConfig config = null;
-		try {
-			config = new FSServiceConfig(SessionDistributorServiceConfig.getInstance().getSdSessionsFSRootFolder(), SessionDistributorServiceConfig.getInstance().getSdSessionsFileExtension());
-			FSService<SDCache> fsPersistence = FSServiceFactory.createFSService(config);
+        try {
+            FSServiceConfig config = new FSServiceConfig(SessionDistributorServiceConfig.getInstance().getSdSessionsFSRootFolder(), SessionDistributorServiceConfig.getInstance().getSdSessionsFileExtension());
+            FSService<SDCache> fsPersistence = FSServiceFactory.createFSService(config);
 			//remove stored cache fro 0 instance
 			fsPersistence.delete(NODE_0_VALUE);
 			//remove stored cache fro 1 instance
@@ -114,10 +113,8 @@ public class CacheUtilTest {
 	@Test
 	public void testSyncInCluster() {
 		SessionDistributorServiceConfig.getInstance().setMultipleInstancesEnabled(true);
-		final String sessionId1 = "100";
-		final String sessionId2 = "200";
 
-		//prevent errors
+        //prevent errors
 		System.setProperty("JUNITTEST", String.valueOf(true));
 
 		//Setting proper  Node ID  via system property!  before cache creation  --  0 id for this node
@@ -130,14 +127,16 @@ public class CacheUtilTest {
 		SDCache cacheInstance2 = SDCacheUtil.createCache();
 		Assert.assertNotNull("Is null", cacheInstance2);
 
-		String id1 = cacheInstance1.createSession(sessionId1);
+        final String sessionId1 = "100";
+        String id1 = cacheInstance1.createSession(sessionId1);
 		Assert.assertEquals(id1, sessionId1);
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			Assert.fail();
 		}
-		String id2 = cacheInstance1.createSession(sessionId2);
+        final String sessionId2 = "200";
+        String id2 = cacheInstance1.createSession(sessionId2);
 		Assert.assertEquals(id2, sessionId2);
 
 		//try to get first session from secondCache
@@ -157,9 +156,9 @@ public class CacheUtilTest {
 
 
 		// adding some attribute!!!!!
-		final String attributeName = "att1";
-		try {
-			cacheInstance1.addAttribute(sessionId1, new DistributedSessionAttribute(attributeName, new byte[0]));
+        try {
+            final String attributeName = "att1";
+            cacheInstance1.addAttribute(sessionId1, new DistributedSessionAttribute(attributeName, new byte[0]));
 			DistributedSessionVO session = cacheInstance1.getSession(sessionId1);
 			try {
 				Thread.sleep(500);
@@ -177,16 +176,16 @@ public class CacheUtilTest {
 		}
 
 		// set UserID
-		final String userID = "userID";
-		final String editorId = "editorId";
-		try {
-			cacheInstance1.updateSessionUserId(sessionId1, userID);
+        try {
+            final String userID = "userID";
+            cacheInstance1.updateSessionUserId(sessionId1, userID);
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				Assert.fail();
 			}
-			cacheInstance1.updateSessionEditorId(sessionId1, editorId);
+            final String editorId = "editorId";
+            cacheInstance1.updateSessionEditorId(sessionId1, editorId);
 
 			DistributedSessionVO session = cacheInstance1.getSession(sessionId1);
 			try {

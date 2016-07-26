@@ -64,7 +64,7 @@ public class MultiProcessor<T>{
 			}
 		});
 		worker = aWorker; 
-		listeners = new CopyOnWriteArrayList<WorkProcessingListener<T>>();
+		listeners = new CopyOnWriteArrayList<>();
 	}
 	
 	

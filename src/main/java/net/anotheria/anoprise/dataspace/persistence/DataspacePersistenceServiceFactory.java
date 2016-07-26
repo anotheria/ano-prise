@@ -13,22 +13,26 @@ public final class DataspacePersistenceServiceFactory {
 	private DataspacePersistenceServiceFactory() {
 	}
 
-	/**
-	 * Get instance of {@link DataspacePersistenceServiceImpl}.
-	 * 
-	 * @return {@link DataspacePersistenceServiceImpl}
-	 */
-	public static synchronized DataspacePersistenceService getInstance() {
-		return new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance());
-	}
+    /**
+     * Get instance of {@link DataspacePersistenceServiceImpl}.
+     *
+     * @return {@link DataspacePersistenceServiceImpl}
+     */
+    public static DataspacePersistenceService getInstance() {
+        synchronized (DataspacePersistenceServiceFactory.class) {
+            return new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance());
+        }
+    }
 
-	/**
-	 * Get instance of {@link DataspacePersistenceServiceImpl} with custom configuration.
-	 * 
-	 * @return {@link DataspacePersistenceServiceImpl}
-	 */
-	public static synchronized DataspacePersistenceService getInstance(String configurationFileName) {
-		return new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance(configurationFileName));
-	}
+    /**
+     * Get instance of {@link DataspacePersistenceServiceImpl} with custom configuration.
+     *
+     * @return {@link DataspacePersistenceServiceImpl}
+     */
+    public static DataspacePersistenceService getInstance(String configurationFileName) {
+        synchronized (DataspacePersistenceServiceFactory.class) {
+            return new DataspacePersistenceServiceImpl(DataspacePersistenceConfiguration.getInstance(configurationFileName));
+        }
+    }
 
 }

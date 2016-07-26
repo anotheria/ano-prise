@@ -41,7 +41,7 @@ public class ConfigurableResolver implements AliasResolver {
 		try{
 			ConfigurationManager.INSTANCE.configure(resolver);
 		}catch(IllegalArgumentException e){
-			log.warn("create() - no factory config found, configurable resolver remains unused.");
+			log.warn("create() - no factory config found, configurable resolver remains unused.", e);
 		}catch(RuntimeException e){
 			log.warn("create() - couldn't find aliases.json file, probably packed in a jar, ignored.", e);
 		}
@@ -53,7 +53,7 @@ public class ConfigurableResolver implements AliasResolver {
 	 */
 	private ConfigurableResolver(){
 		priority = 50;
-		aliasMap = new ConcurrentHashMap<String, String>();
+		aliasMap = new ConcurrentHashMap<>();
 	}
 
 	/**

@@ -85,7 +85,7 @@ public final class SDCacheEventAnnouncer implements EventServicePushSupplier {
 		try {
 			eventSender.push(event);
 		} catch (QueueFullException e) {
-			LOG.error("Couldn't publish event due to queue overflow " + event);
+			LOG.error("Couldn't publish event '"+event+"' due to queue overflow", e);
 		}
 	}
 }

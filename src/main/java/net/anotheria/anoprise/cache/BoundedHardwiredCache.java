@@ -105,16 +105,19 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	private void init(){
 		clear();
 	}
-	
-	@Override public synchronized void clear(){
-		cache = new ConcurrentHashMap<K, V>(maxSize);
-		lock = new Semaphore(maxSize);
+
+	@Override
+	public void clear() {
+		synchronized (this) {
+			cache = new ConcurrentHashMap<>(maxSize);
+			lock = new Semaphore(maxSize);
+		}
 	}
 	
 	@Override public String toString(){
 		if (cache==null)
 			return getName()+" - not initialized.";
-		String ret = getName()+" ";
+		String ret = getName()+ ' ';
 		ret += " MaxSize: "+maxSize+", remaining elements: "+lock.availablePermits()+", realSize: "+cache.size();
 		return ret;
 	}

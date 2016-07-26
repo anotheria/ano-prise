@@ -58,7 +58,7 @@ public class QueuedMultiProcessorBuilder<E>{
 	/**
 	 * Creates new builder
 	 */
-	@SuppressWarnings("unchecked")
+
 	public QueuedMultiProcessorBuilder() {
 		queueSize = DEF_QUEUE_SIZE;
 		processorChannels = DEF_PROCESSOR_CHANNELS;
@@ -79,7 +79,7 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * @return processor
 	 */
 	public QueuedMultiProcessor<E> build(String name, ElementWorker<E> worker) {
-		return build(name, new PackageWorkerAdapter<E>(worker));
+		return build(name, new PackageWorkerAdapter<>(worker));
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class QueuedMultiProcessorBuilder<E>{
 	public QueuedMultiProcessor<E> build(String name, PackageWorker<E> worker) {
 		try {
 			EnterpriseQueueFactory<E> queueFactory = queueFactoryClass.newInstance();
-			QueuedMultiProcessor<E> ret = new QueuedMultiProcessor<E>(name, worker, queueFactory, queueSize, processorChannels, sleepTime, processingLog); 
+			QueuedMultiProcessor<E> ret = new QueuedMultiProcessor<>(name, worker, queueFactory, queueSize, processorChannels, sleepTime, processingLog);
 			if(attachMoskitoLoggers)
 				new QueuedMultiProcessorProducerWrapper(ret, moskitoProducerId, moskitoCategory, moskitoSubsystem).attachToMoskitoLoggers();
 			return ret;
@@ -170,7 +170,7 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * 
 	 * @param <T>
 	 */
-	private class PackageWorkerAdapter<T> implements PackageWorker<T> {
+	private static class PackageWorkerAdapter<T> implements PackageWorker<T> {
 
 		private ElementWorker<T> elementWorker;
 
