@@ -34,10 +34,10 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 	private CacheStats moskitoCacheStats;
 
 	public FailoverCache(String name, int aStartSize, int aMaxSize, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, CacheFactory<K, V> underlyingCacheFactory) {
-		this(name, aInstanceAmount, aCurrentInstanceNumber, aModableTypeHandler, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
+		this(aInstanceAmount, aCurrentInstanceNumber, aModableTypeHandler, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
 	}
 
-	public FailoverCache(String name, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, Cache<K, V> underlyingCache) {
+	public FailoverCache(int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, Cache<K, V> underlyingCache) {
 		cache = underlyingCache;
 		instanceAmount = aInstanceAmount > 0 ? aInstanceAmount : 1;
 		currentInstanceNumber = aCurrentInstanceNumber;

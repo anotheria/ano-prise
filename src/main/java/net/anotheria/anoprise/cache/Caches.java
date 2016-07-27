@@ -51,7 +51,7 @@ public final class Caches {
 
 	public static <K, V> Cache<K, V> createHardwiredExpiringCache(String name, int startSize, int maxSize, int expirationTime) {
 		Cache<K, CachedObjectWrapper<V>> underlyingCache = createHardwiredCache(name, startSize, maxSize);
-		return new ExpiringCache<>(name, expirationTime, underlyingCache);
+		return new ExpiringCache<>(expirationTime, underlyingCache);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public final class Caches {
 	 */
 	public static <K, V> Cache<K, V> createSoftReferenceExpiringCache(String name, int startSize, int maxSize, int expirationTime) {
 		Cache<K, CachedObjectWrapper<V>> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
-		return new ExpiringCache<>(name, expirationTime, underlyingCache);
+		return new ExpiringCache<>(expirationTime, underlyingCache);
 	}
 
 	public static <K, V> Cache<K, V> createConfigurableSoftReferenceCache(String name) {
@@ -109,7 +109,7 @@ public final class Caches {
 	 */
 	public static <K, V> Cache<K, V> createSoftReferenceFailoverSupportCache(String name, int startSize, int maxSize, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		Cache<K, V> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
-		return new FailoverCache<>(name, instanceAmount, currentInstanceNumber, modableTypeHandler, underlyingCache);
+		return new FailoverCache<>(instanceAmount, currentInstanceNumber, modableTypeHandler, underlyingCache);
 	}
 
 
@@ -130,7 +130,7 @@ public final class Caches {
 
 	public static <K, V> Cache<K, V> createSoftReferenceExpiringFailoverSupportCache(String name, int startSize, int maxSize, int expirationTime, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		Cache<K, V> underlyingCache = createSoftReferenceExpiringCache(name, startSize, maxSize, expirationTime);
-		return new FailoverCache<>(name, instanceAmount, currentInstanceNumber, modableTypeHandler, underlyingCache);
+		return new FailoverCache<>(instanceAmount, currentInstanceNumber, modableTypeHandler, underlyingCache);
 	}
 
 	/**

@@ -14,7 +14,7 @@ public class InMemoryMirrorImpl<K, V extends Mirrorable<K>> implements InMemoryM
 	private volatile Map<K,V> cache = null;
 	private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-	public InMemoryMirrorImpl(String configName, InMemorySupport<K, V> aSupport) {
+	public InMemoryMirrorImpl(InMemorySupport<K, V> aSupport) {
 		support = aSupport;
 	}
 	

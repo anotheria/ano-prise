@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 public class InMemoryMirrorTest {
 
 	@Test public void testInMemoryMirror()  throws InMemoryMirrorException{
-		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, new MySupport());
+		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(new MySupport());
 
 		assertEquals(100, mirror.getAll().size());
 
@@ -38,7 +38,7 @@ public class InMemoryMirrorTest {
 
 	@Test public void testCreateLocalOnly()  throws InMemoryMirrorException{
 		MySupport support = new MySupport();
-		InMemoryMirror<String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, support);
+		InMemoryMirror<String, TestData> mirror = InMemoryMirrorFactory.createMirror(support);
 
 		assertEquals(100, mirror.getAll().size());
 
@@ -52,7 +52,7 @@ public class InMemoryMirrorTest {
 	}
 
 	@Test public void testDelete()  throws InMemoryMirrorException{
-		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, new MySupport());
+		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(new MySupport());
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i=0; i<100; i++){
@@ -69,7 +69,7 @@ public class InMemoryMirrorTest {
 
 	@Test public void testDeleteLocalOnly()  throws InMemoryMirrorException{
 		MySupport support = new MySupport();
-		InMemoryMirror<String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, support);
+		InMemoryMirror<String, TestData> mirror = InMemoryMirrorFactory.createMirror(support);
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i = 0; i < 100; i++) {
@@ -88,7 +88,7 @@ public class InMemoryMirrorTest {
 
 	@Test public void testUpdate() throws InMemoryMirrorException{
 		MySupport support = new MySupport();
-		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, support);
+		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(support);
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i=0; i<100; i++){
@@ -115,7 +115,7 @@ public class InMemoryMirrorTest {
 
 	@Test public void testUpdateLocalOnly() throws InMemoryMirrorException{
 		MySupport support = new MySupport();
-		InMemoryMirror<String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, support);
+		InMemoryMirror<String, TestData> mirror = InMemoryMirrorFactory.createMirror(support);
 
 		assertEquals(100, mirror.getAll().size());
 		for (int i = 0; i < 100; i++) {
@@ -139,7 +139,7 @@ public class InMemoryMirrorTest {
 
 	@Test public void testNegativeBehaviour() throws InMemoryMirrorException{
 		MySupport support = new MySupport();
-		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(null, support);
+		InMemoryMirror< String, TestData> mirror = InMemoryMirrorFactory.createMirror(support);
 
 		try{
 			mirror.get("foo");

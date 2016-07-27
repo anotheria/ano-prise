@@ -268,19 +268,19 @@ public class CacheController<K, V> implements Cache<K, V> {
 		return factory.createExpiring(configurationName, aStartSize, aMaxSize, expirationTime);
 	}
 
-	protected Cache<K, V> createCacheFailover(int aStartSize, int aMaxSize, int aInstanceAmount, int aCurrentInstanceNumber) {
+	protected Cache<K, V> createCacheFailover(int aStartSize, int aMaxSize) {
 		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		Cache<K, V> underlyingCache = factory.create(configurationName, aStartSize, aMaxSize);
-		return new FailoverCache<>(configurationName, instanceAmount, currentInstanceNumber, typeHandler, underlyingCache);
+		return new FailoverCache<>(instanceAmount, currentInstanceNumber, typeHandler, underlyingCache);
 	}
 
-	protected Cache<K, V> createExpiringCacheFailover(int aStartSize, int aMaxSize, long expirationTime, int aInstanceAmount, int aCurrentInstanceNumber) {
+	protected Cache<K, V> createExpiringCacheFailover(int aStartSize, int aMaxSize, long expirationTime) {
 		if (factory == null)
 			throw new IllegalStateException("No factory is configured or submitted for cache creation!");
 		Cache<K, V> underlyingCache = factory.createExpiring(configurationName, aStartSize, aMaxSize, expirationTime);
 
-		return new FailoverCache<>(configurationName, aStartSize, aMaxSize, typeHandler, underlyingCache);
+		return new FailoverCache<>(aStartSize, aMaxSize, typeHandler, underlyingCache);
 	}
 
 	/**
@@ -296,9 +296,9 @@ public class CacheController<K, V> implements Cache<K, V> {
 				return createExpiringCache(startSize, maxSize, expirationTime);
 		} else {
 			if (expirationTime == DEF_EXPIRATION_TIME)
-				return createCacheFailover(startSize, maxSize, instanceAmount, currentInstanceNumber);
+				return createCacheFailover(startSize, maxSize);
 			else
-				return createExpiringCacheFailover(startSize, maxSize, expirationTime, instanceAmount, currentInstanceNumber);
+				return createExpiringCacheFailover(startSize, maxSize, expirationTime);
 		}
 	}
 

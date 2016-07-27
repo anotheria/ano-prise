@@ -293,16 +293,6 @@ public class MetaFactory {
 		factoryClasses.put(service.getName() + innerExtension, new FactoryHolder<>(factoryClass, parameters));
 	}
 
-	/**
-	 * Used for debug output.
-	 * 
-	 * @param o
-	 *            output.
-	 */
-	private static void out(Object o) {
-		// System.out.println("[MetaFactory] "+o);
-	}
-
 	public static void debugDumpAliasMap() {
 		Set<String> keys = aliases.keySet();
 		for (String key : keys) {
