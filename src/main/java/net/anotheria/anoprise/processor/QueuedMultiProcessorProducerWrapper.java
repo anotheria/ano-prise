@@ -16,7 +16,7 @@ import java.util.List;
  * @author another, dmetelin
  *
  */
-public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
+public class QueuedMultiProcessorProducerWrapper implements IStatsProducer<IStats> {
 	/**
 	 * Wrapped QueuedMultiProcessor.
 	 */

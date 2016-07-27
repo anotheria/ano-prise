@@ -11,7 +11,7 @@ import java.util.List;
  * @author another
  *
  */
-public class CacheProducerWrapper implements IStatsProducer{
+public class CacheProducerWrapper implements IStatsProducer<IStats> {
 	/**
 	 * Wrapped cache.
 	 */

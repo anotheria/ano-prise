@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Base class for cache implementations. Implements support for moskito monitoring in caches.
  * @author lrosenberg
  */
-public abstract class AbstractCache implements IStatsProducer{
+public abstract class AbstractCache implements IStatsProducer<IStats>{
 
 	/**
 	 * List of stats as required by the IStatsProducer interface.
