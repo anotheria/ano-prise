@@ -178,19 +178,13 @@ public class MetaFactory {
 
 	public static <T extends Service> T get(Class<T> pattern, Extension extension) throws MetaFactoryException {
 
-		out("get called, pattern: " + pattern + ", extension: " + extension);
-
 		if (extension == null)
 			extension = Extension.NONE;
 		String name = extension.toName(pattern);
-		out("name is " + name);
 
 		name = resolveAlias(name);
-		out("resolved alias to " + name);
 
 		T instance = pattern.cast(instances.get(name));
-
-		out("instance of " + name + " is: " + instance);
 
 		if (instance != null)
 			return instance;
@@ -198,9 +192,7 @@ public class MetaFactory {
 		synchronized (instances) {
 			instance = pattern.cast(instances.get(name));
 			if (instance == null) {
-				out("creating new instance of " + name);
 				instance = pattern.cast(_create(pattern, extension, name));
-				out("created new instance of " + name + " ---> " + instance);
 				instances.put(name, instance);
 			}
 		}
