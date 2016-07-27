@@ -6,5 +6,5 @@ package net.anotheria.anoprise.eventservice;
  * Created on 22.09.2004
  */
 public interface EventServiceConstants {
-	public static final String NO_EVENT_ORIGINATOR = "Unknown";
+	String NO_EVENT_ORIGINATOR = "Unknown";
 }

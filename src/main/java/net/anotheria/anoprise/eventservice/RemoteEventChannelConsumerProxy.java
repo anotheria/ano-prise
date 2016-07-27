@@ -7,6 +7,6 @@ package net.anotheria.anoprise.eventservice;
  * Created on 22.09.2004
  */
 public interface RemoteEventChannelConsumerProxy extends EventChannelConsumerProxy , EventChannel{
-	public void addRemoteConsumer(RemoteEventServiceConsumer consumer);		
-	public void removeRemoteConsumer(RemoteEventServiceConsumer consumer);		
+	void addRemoteConsumer(RemoteEventServiceConsumer consumer);
+	void removeRemoteConsumer(RemoteEventServiceConsumer consumer);
 }

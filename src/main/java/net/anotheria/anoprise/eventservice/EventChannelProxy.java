@@ -5,5 +5,5 @@ package net.anotheria.anoprise.eventservice;
  * @author another
  */
 public interface EventChannelProxy {
-	public boolean isLocal();
+	boolean isLocal();
 }

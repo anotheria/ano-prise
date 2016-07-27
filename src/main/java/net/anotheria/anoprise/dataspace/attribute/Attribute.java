@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.dataspace.attribute;
 
-import java.io.Serializable;
-
 import net.anotheria.util.BasicComparable;
+
+import java.io.Serializable;
 
 /**
  * Abstract attribute used in dataspace.
@@ -22,13 +22,12 @@ public abstract class Attribute implements Serializable {
 	 */
 	private String name;
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param aName
-	 *            - attribute name
-	 */
-	public Attribute(String aName) {
+    /**
+     * Default constructor.
+     *
+     * @param aName - attribute name
+     */
+    public Attribute(String aName) {
 		name = aName;
 	}
 

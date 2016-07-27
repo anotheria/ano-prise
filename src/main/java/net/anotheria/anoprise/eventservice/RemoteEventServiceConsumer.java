@@ -7,5 +7,5 @@ package net.anotheria.anoprise.eventservice;
  * Created on 22.09.2004
  */
 public interface RemoteEventServiceConsumer extends EventServiceConsumer{
-	public void deliverEvent(EventTransportShell event);
+	void deliverEvent(EventTransportShell event);
 }
