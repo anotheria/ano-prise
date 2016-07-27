@@ -51,15 +51,12 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	
 	/**
 	 * Creates a new named cache with default start and max size and increment.
-	 * @param name
 	 */
 	public BoundedHardwiredCache(String name){
 		this(name, DEF_MAX_SIZE);
 	}
 	/**
 	 * Creates a new named cache with given start and max size.
-	 * @param name
-	 * @param aMaxSize
 	 */
 	public BoundedHardwiredCache(String name, int aMaxSize){
 		super(name);

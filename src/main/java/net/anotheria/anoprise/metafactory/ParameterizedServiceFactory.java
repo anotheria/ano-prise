@@ -8,7 +8,6 @@ import java.util.Map;
  * 
  * @author Alexandr Bolbat
  * 
- * @param <T>
  */
 public interface ParameterizedServiceFactory<T extends Service> extends ServiceFactory<T> {
 

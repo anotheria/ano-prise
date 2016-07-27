@@ -11,7 +11,6 @@ import java.util.Map;
  * 
  * @author Alexandr Bolbat
  * 
- * @param <T>
  */
 public abstract class AbstractParameterizedServiceFactory<T extends Service> implements ParameterizedServiceFactory<T> {
 

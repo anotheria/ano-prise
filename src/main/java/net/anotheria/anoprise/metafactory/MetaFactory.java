@@ -332,7 +332,6 @@ public class MetaFactory {
 
 	/**
 	 * Adds a new conflict resolver to be used whenever onthefly impl lookup returns multiple candidates.
-	 * @param otfCR
 	 */
 	public static void addOnTheFlyConflictResolver(OnTheFlyConflictResolver otfCR){
 		otfConflictResolvers.add(otfCR);
@@ -343,7 +342,6 @@ public class MetaFactory {
 	 * 
 	 * @author Alexandr Bolbat
 	 *
-	 * @param <T>
 	 */
 	private static class FactoryHolder<T extends Service> {
 

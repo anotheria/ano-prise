@@ -128,8 +128,6 @@ public class Mock implements InvocationHandler{
 		
 		/**
 		 * Creates a new mockingandmethod pair.
-		 * @param aMocking
-		 * @param aMethod
 		 */
 		MockingAndMethod(Mocking aMocking, Method aMethod){
 			mocking = aMocking;

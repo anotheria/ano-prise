@@ -18,7 +18,6 @@ public interface DataspacePersistenceService {
 	 * @param dataspaceType
 	 *            - dataspace type
 	 * @return loaded dataspace
-	 * @throws DataspacePersistenceServiceException
 	 */
 	Dataspace loadDataspace(String userId, DataspaceType dataspaceType) throws DataspacePersistenceServiceException;
 
@@ -27,7 +26,6 @@ public interface DataspacePersistenceService {
 	 * 
 	 * @param dataspace
 	 *            - dataspace
-	 * @throws DataspacePersistenceServiceException
 	 */
 	void saveDataspace(Dataspace dataspace) throws DataspacePersistenceServiceException;
 

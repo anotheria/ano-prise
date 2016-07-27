@@ -6,13 +6,10 @@ import java.util.List;
  * Interface for a worker class which performs operation on package from elements.
  * @author dmetelin
  *
- * @param <E>
  */
 public interface PackageWorker<E> {
 	/**
 	 * Called to perform some work.
-	 * @param workingElement
-	 * @throws Exception
 	 */
 	void doWork(List<E> workingPackage) throws Exception;
 

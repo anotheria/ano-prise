@@ -54,35 +54,30 @@ public class Event implements Serializable, Cloneable{
 	}
 	
 	/**
-	 * @return
 	 */
 	public Serializable getData() {
 		return data;
 	}
 
 	/**
-	 * @return
 	 */
 	public String getOriginator() {
 		return originator;
 	}
 
 	/**
-	 * @return
 	 */
 	public long getTimestamp() {
 		return timestamp;
 	}
 
 	/**
-	 * @param serializable
 	 */
 	public void setData(Serializable serializable) {
 		data = serializable;
 	}
 
 	/**
-	 * @param string
 	 */
 	public void setOriginator(String string) {
 		originator = string;

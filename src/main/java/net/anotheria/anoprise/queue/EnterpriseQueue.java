@@ -12,7 +12,6 @@ import java.util.List;
  * 
  * @author dmetelin
  * 
- * @param <E>
  */
 public interface EnterpriseQueue<E> {
 
@@ -67,21 +66,18 @@ public interface EnterpriseQueue<E> {
 	/**
 	 * Returns true if the queue doesn't contains elements.
 	 * 
-	 * @return
 	 */
 	boolean isEmpty();
 
 	/**
 	 * Returns the number of elements in the queue.
 	 * 
-	 * @return
 	 */
 	int size();
 
 	/**
 	 * Returns the capacity restriction of the queue.
 	 * 
-	 * @return
 	 */
 	int capacity();
 
@@ -93,21 +89,18 @@ public interface EnterpriseQueue<E> {
 	/**
 	 * Adds a queue listener to the queue.
 	 * 
-	 * @param listener
 	 */
 	void addListener(EnterpriseQueueListener listener);
 
 	/**
 	 * Removes a queue listener from the queue.
 	 * 
-	 * @param listener
 	 */
 	void removeListener(EnterpriseQueueListener listener);
 
 	/**
 	 * Returns the size of the queue.
 	 * 
-	 * @return
 	 */
 
 	QueueStats getQueueStats();

@@ -37,7 +37,6 @@ public abstract class AbstractCache implements IStatsProducer{
 
 	/**
 	 * Creates new AbstractCache and registers it as producer.
-	 * @param aName
 	 */
 	protected AbstractCache(String aName){
 		name = aName;

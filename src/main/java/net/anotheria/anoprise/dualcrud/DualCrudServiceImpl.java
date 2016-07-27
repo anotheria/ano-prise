@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
  * 
  * @author another
  * 
- * @param <T>
  */
 public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudService<T> {
 

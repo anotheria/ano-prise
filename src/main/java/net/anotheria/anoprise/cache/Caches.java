@@ -17,10 +17,6 @@ public final class Caches {
 	/**
 	 * Creates a new softreference cache.
 	 *
-	 * @param <K>
-	 * @param <V>
-	 * @param name
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createSoftReferenceCache(String name) {
 		return new RoundRobinSoftReferenceCache<>(name);
@@ -34,7 +30,6 @@ public final class Caches {
 	 * @param name	  name of the cache.
 	 * @param startSize starting size of the cache.
 	 * @param maxSize   max size of the cache.
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createSoftReferenceCache(String name, int startSize, int maxSize) {
 		return new RoundRobinSoftReferenceCache<>(name, startSize, maxSize);
@@ -42,8 +37,6 @@ public final class Caches {
 
 	/**
 	 * Creates a new hardwired cache with given name and default size.
-	 * @param name
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createHardwiredCache(String name) {
 		return new RoundRobinHardwiredCache<>(name);
@@ -51,10 +44,6 @@ public final class Caches {
 
 	/**
 	 * Creates a new hardwired cache with given name and size.
-	 * @param name
-	 * @param startSize
-	 * @param maxSize
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createHardwiredCache(String name, int startSize, int maxSize) {
 		return new RoundRobinHardwiredCache<>(name, startSize, maxSize);
@@ -73,7 +62,6 @@ public final class Caches {
 	 * @param expirationTime expiration time for the elements.
 	 * @param <K> type for the keys.
 	 * @param <V> type for the values.
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createSoftReferenceExpiringCache(String name, int startSize, int maxSize, int expirationTime) {
 		Cache<K, CachedObjectWrapper<V>> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
@@ -118,7 +106,6 @@ public final class Caches {
 	 * @param modableTypeHandler	instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
 	 * @param <K>                   type used as key in the cache.
 	 * @param <V>                   type used as value in the cache.
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createSoftReferenceFailoverSupportCache(String name, int startSize, int maxSize, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		Cache<K, V> underlyingCache = createSoftReferenceCache(name, startSize, maxSize);
@@ -153,7 +140,6 @@ public final class Caches {
 	 * @param modableTypeHandler instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
 	 * @param <K>                ype used as key in the cache.
 	 * @param <V>                type used as value in the cache.
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createConfigurableSoftReferenceCacheFailoverSupportCache(String name, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<>();
@@ -170,7 +156,6 @@ public final class Caches {
 	 * @param modableTypeHandler instance of the ModableTypeHandler to calculate modable value, can be null if use primitive type the key in the cache.
 	 * @param <K>                ype used as key in the cache.
 	 * @param <V>                type used as value in the cache.
-	 * @return
 	 */
 	public static <K, V> Cache<K, V> createConfigurableSoftReferenceExpiringCacheFailoverSupportCache(String name, int instanceAmount, int currentInstanceNumber, ModableTypeHandler modableTypeHandler) {
 		CacheFactory<K, V> factory = new RoundRobinSoftReferenceCacheFactory<>();

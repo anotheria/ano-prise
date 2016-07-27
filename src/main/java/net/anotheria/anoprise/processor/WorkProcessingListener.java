@@ -6,7 +6,6 @@ import java.util.List;
  * Listener of  
  * @author dmetelin
  *
- * @param <E>
  */
 public interface WorkProcessingListener <E> {
 

@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author dmetelin
  * 
- * @param <T>
  */
 public class QueuedMultiProcessor<T extends Object> extends Thread {
 
@@ -143,7 +142,6 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * Default method to add an element to the queue. Calls addToQueueDontWait
 	 * internally.
 	 * 
-	 * @param aElement
 	 * @throws UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
@@ -205,7 +203,6 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * Inserts the specified element at the tail of the processing queue if the
 	 * queue is not full
 	 * 
-	 * @param element
 	 * @throws UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
@@ -217,7 +214,6 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * Inserts the specified element at the tail of the processing queue if the
 	 * queue is not full
 	 * 
-	 * @param element
 	 * @throws UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */

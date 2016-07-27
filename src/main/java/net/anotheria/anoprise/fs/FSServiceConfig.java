@@ -126,7 +126,6 @@ public final class FSServiceConfig implements Serializable {
 	 *
 	 * @param aRootFolderPath
 	 * 		- root folder in file system for storing service files
-	 * @throws FSServiceConfigException
 	 */
 	public FSServiceConfig(String aRootFolderPath) throws FSServiceConfigException {
 		this(aRootFolderPath, DEFAULT_FILE_EXTENSION, DEFAULT_MAX_OWNER_ID_LENGTH, DEFAULT_FRAGMENT_LENGTH);
@@ -139,7 +138,6 @@ public final class FSServiceConfig implements Serializable {
 	 * 		- root folder in file system for storing service files
 	 * @param aFileExtension
 	 * 		- file extension
-	 * @throws FSServiceConfigException
 	 */
 	public FSServiceConfig(String aRootFolderPath, String aFileExtension) throws FSServiceConfigException {
 		this(aRootFolderPath, aFileExtension, DEFAULT_MAX_OWNER_ID_LENGTH, DEFAULT_FRAGMENT_LENGTH);
@@ -156,7 +154,6 @@ public final class FSServiceConfig implements Serializable {
 	 * 		- maximum owner id length
 	 * @param aFragmentLength
 	 * 		- a fragment length
-	 * @throws FSServiceConfigException
 	 */
 	public FSServiceConfig(String aRootFolderPath, String aFileExtension, int aMaxOwnerIdLength, int aFragmentLength) throws FSServiceConfigException {
 		this.rootFolderPath = validateRootFolderPath(aRootFolderPath);
@@ -179,7 +176,6 @@ public final class FSServiceConfig implements Serializable {
 	 * 		- a fragment length
 	 * @param stringOwnerId
 	 * 		- allow string as owner id
-	 * @throws FSServiceConfigException
 	 */
 	public FSServiceConfig(String aRootFolderPath, String aFileExtension, int aMaxOwnerIdLength, int aFragmentLength, boolean stringOwnerId) throws FSServiceConfigException {
 		this.rootFolderPath = validateRootFolderPath(aRootFolderPath);
@@ -252,7 +248,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param useStringOwnerId
 	 * 		- {@code true} if user id represented as string/ false  if it's int
 	 * @return file name
-	 * @throws FSServiceConfigException
 	 */
 	public static String getStoreFileName(String ownerId, String aFileExtension, boolean useStringOwnerId) throws FSServiceConfigException {
 		return validateOwnerId(ownerId, useStringOwnerId) + '.' + aFileExtension;
@@ -267,7 +262,6 @@ public final class FSServiceConfig implements Serializable {
 	 * 		- max owner id length
 	 * @param fragmentLength
 	 * 		- fragment length
-	 * @return fragments
 	 */
 	private static String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength) {
 		if (ownerId == null || ownerId.length() == 0)
@@ -301,7 +295,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param useStringOwnerId
 	 * 		- is user id represented as string
 	 * @return folder name
-	 * @throws FSServiceConfigException
 	 */
 	public static String getStoreFolderPath(String ownerId, int maxOwnerIdLength, int fragmentLength, boolean useStringOwnerId) throws FSServiceConfigException {
 		String id = validateOwnerId(ownerId, useStringOwnerId);
@@ -327,7 +320,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param useStringOwnerId
 	 * 		- is user id represented as string
 	 * @return storing file path with file name
-	 * @throws FSServiceConfigException
 	 */
 	public static String getStoreFilePath(String ownerId, int maxOwnerIdLength, int fragmentLength, String aFileExtension, boolean useStringOwnerId) throws FSServiceConfigException {
 		return getStoreFolderPath(ownerId, maxOwnerIdLength, fragmentLength, useStringOwnerId) + getStoreFileName(ownerId, aFileExtension, useStringOwnerId);
@@ -341,7 +333,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param useStringOwnerId
 	 * 		- allow/disalow user id as String usage
 	 * @return validated owner id
-	 * @throws FSServiceConfigException
 	 */
 	private static String validateOwnerId(String ownerId, boolean useStringOwnerId) throws FSServiceConfigException {
 		if (ownerId == null)
@@ -365,7 +356,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param aRootFolderPath
 	 * 		- root folder path
 	 * @return a root folder path
-	 * @throws FSServiceConfigException
 	 */
 	private static String validateRootFolderPath(String aRootFolderPath) throws FSServiceConfigException {
 		if (aRootFolderPath == null)
@@ -380,7 +370,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param aFileExtension
 	 * 		- file extension
 	 * @return file extension
-	 * @throws FSServiceConfigException
 	 */
 	private static String validateFileExtension(String aFileExtension) throws FSServiceConfigException {
 		if (aFileExtension == null)
@@ -411,7 +400,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param ownerId
 	 * 		- owner id
 	 * @return file name
-	 * @throws FSServiceConfigException
 	 */
 	public String getStoreFileName(String ownerId) throws FSServiceConfigException {
 		return getStoreFileName(ownerId, fileExtension, useStringOwnerId);
@@ -423,7 +411,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param ownerId
 	 * 		- owner id
 	 * @return folder name
-	 * @throws FSServiceConfigException
 	 */
 	public String getStoreFolderPath(String ownerId) throws FSServiceConfigException {
 		String path = rootFolderPath;
@@ -440,7 +427,6 @@ public final class FSServiceConfig implements Serializable {
 	 * @param ownerId
 	 * 		- owner id
 	 * @return storing file path with file name
-	 * @throws FSServiceConfigException
 	 */
 	public String getStoreFilePath(String ownerId) throws FSServiceConfigException {
 		return getStoreFolderPath(ownerId) + getStoreFileName(ownerId);

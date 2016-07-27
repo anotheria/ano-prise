@@ -181,14 +181,12 @@ public class QueuedEventSender extends Thread {
 		}
 	}
 	/**
-	 * @return
 	 */
 	public int getOverflowCount() {
 		return overflowCount;
 	}
 
 	/**
-	 * @return
 	 */
 	public int getThrowAwayCount() {
 		return throwAwayCount;

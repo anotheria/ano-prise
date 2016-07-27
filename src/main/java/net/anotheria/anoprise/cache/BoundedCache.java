@@ -13,7 +13,6 @@ public interface BoundedCache<K,V> {
 	/**
 	 * Returns the object for the given id from cache, null if no object is in cache.
 	 * @param id the id to retrieve
-	 * @return
 	 */
 	V get(K id);
 	

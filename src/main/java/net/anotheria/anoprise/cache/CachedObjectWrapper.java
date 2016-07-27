@@ -22,7 +22,6 @@ public class CachedObjectWrapper<T> {
 
 	/**
 	 * Returns the underlying object.
-	 * @return
 	 */
 	public T getObj() {
 		return obj;

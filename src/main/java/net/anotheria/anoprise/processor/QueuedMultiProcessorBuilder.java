@@ -71,12 +71,10 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * Builds processor to perform work under single element at one processing
 	 * cycle: single element is dequeued and sent to the element worker.
 	 * 
-	 * @param <T>
 	 * @param name
 	 *            (identifier) for this processor
 	 * @param worker
 	 *            for the package of elements
-	 * @return processor
 	 */
 	public QueuedMultiProcessor<E> build(String name, ElementWorker<E> worker) {
 		return build(name, new PackageWorkerAdapter<>(worker));
@@ -87,12 +85,10 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * cycle: elements from the queue are gathered to the package and sent to
 	 * the package worker
 	 * 
-	 * @param <T>
 	 * @param name
 	 *            (identifier) for this processor
 	 * @param worker
 	 *            for the package of elements
-	 * @return processor
 	 */
 	public QueuedMultiProcessor<E> build(String name, PackageWorker<E> worker) {
 		try {
@@ -109,8 +105,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	/**
 	 * Sets the maximal size of the processor Queue
 	 * 
-	 * @param queueSize
-	 * @return
 	 */
 	public QueuedMultiProcessorBuilder<E> setQueueSize(int queueSize) {
 		this.queueSize = queueSize;
@@ -120,8 +114,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	/**
 	 * Sets factory to be used for creating Queue
 	 * 
-	 * @param queueFactoryClass
-	 * @return
 	 */
 	public QueuedMultiProcessorBuilder<E> setQueueFactoryClass(Class<EnterpriseQueueFactory<E>> queueFactoryClass) {
 		this.queueFactoryClass = queueFactoryClass;
@@ -131,8 +123,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	/**
 	 * Sets number of async channels of processor in which work is performed.
 	 * 
-	 * @param processorChannels
-	 * @return builder
 	 */
 	public QueuedMultiProcessorBuilder<E> setProcessorChannels(int processorChannels) {
 		this.processorChannels = processorChannels;
@@ -147,8 +137,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	/**
 	 * Sets sleep time to wait a new element arriving if queue is empty.
 	 * 
-	 * @param sleepTime
-	 * @return builder
 	 */
 	public QueuedMultiProcessorBuilder<E> setSleepTime(long sleepTime) {
 		this.sleepTime = sleepTime;
@@ -168,7 +156,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * 
 	 * @author dmetelin
 	 * 
-	 * @param <T>
 	 */
 	private static class PackageWorkerAdapter<T> implements PackageWorker<T> {
 

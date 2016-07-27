@@ -6,7 +6,6 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Factory to create bounded FIFO queue.
  * @author dmeltelin
  *
- * @param <E>
  */
 public class BoundedFifoQueueFactory<E> implements EnterpriseQueueFactory<E>{
 

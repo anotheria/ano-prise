@@ -87,25 +87,18 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 	
 	/**
 	 * Creates a new cache with given start and max size, and size increment.
-	 * @param aStartSize
-	 * @param aMaxSize
-	 * @param anIncrement
 	 */
 	public RoundRobinHardwiredCache(int aStartSize, int aMaxSize, float anIncrement){
 		this(getUnnamedInstanceName(RoundRobinHardwiredCache.class), aStartSize, aMaxSize, anIncrement);
 	}
 	/**
 	 * Creates a new named cache with default start and max size and increment.
-	 * @param name
 	 */
 	public RoundRobinHardwiredCache(String name){
 		this(name, DEF_START_SIZE, DEF_MAX_SIZE, DEF_INCREMENT);
 	}
 	/**
 	 * Creates a new named cache with given start and max size.
-	 * @param name
-	 * @param aStartSize
-	 * @param aMaxSize
 	 */
 	public RoundRobinHardwiredCache(String name, int aStartSize, int aMaxSize){
 		this(name, aStartSize, aMaxSize, DEF_INCREMENT);

@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author denis
  *
- * @param <T>
  */
 public class MultiProcessor<T>{
 	
@@ -42,8 +41,6 @@ public class MultiProcessor<T>{
 //	}
 	
 	/**
-	 * @param aChannelsNumber
-	 * @param aWorker
 	 * @param aLog
 	 *            logger for output. If null default will be used.
 	 */

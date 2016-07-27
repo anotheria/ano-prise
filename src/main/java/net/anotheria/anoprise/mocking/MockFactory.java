@@ -14,7 +14,6 @@ public final class MockFactory {
 	 * @param <T> interface type to mock.
 	 * @param clazz class of the interface (T.class).
 	 * @param mockings some mockings with method implementations for methods in T.
-	 * @return
 	 */
 	public static <T> T createMock(Class<T> clazz, Mocking ... mockings){
 		Mock mock = new Mock(clazz, Arrays.asList(mockings));

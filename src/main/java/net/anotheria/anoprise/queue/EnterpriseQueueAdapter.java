@@ -13,7 +13,6 @@ import java.util.concurrent.BlockingQueue;
  * 
  * @author dmetelin
  * 
- * @param <T>
  */
 public class EnterpriseQueueAdapter<T> implements EnterpriseQueue<T> {
 

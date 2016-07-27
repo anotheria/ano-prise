@@ -11,8 +11,6 @@ import java.util.Collection;
 public interface OnTheFlyConflictResolver {
 	/**
 	 * Returns one class of the list, if the conflict resolver knows which to pick, or null.
-	 * @param candidates
-	 * @return
 	 */
 	<T> Class<? extends T> resolveConflict(Collection<Class<? extends T>> candidates);
 }

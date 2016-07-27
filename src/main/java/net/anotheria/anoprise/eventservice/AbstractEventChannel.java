@@ -20,7 +20,6 @@ public abstract class AbstractEventChannel implements EventChannel{
 	protected Logger log;
 	/**
 	 * Creates a new AbstractEventChannel.
-	 * @param aName
 	 */
 	protected AbstractEventChannel(String aName){
         name = aName;
@@ -35,7 +34,6 @@ public abstract class AbstractEventChannel implements EventChannel{
 	}
 
 	/**
-	 * @param string
 	 */
 	protected void setName(String string) {
 		name = string;
@@ -43,7 +41,6 @@ public abstract class AbstractEventChannel implements EventChannel{
 	
 	/**
 	 * Produces a debug message.
-	 * @param msg
 	 */
 	protected void out(String msg){
 		log.debug('[' +name+"] "+msg);

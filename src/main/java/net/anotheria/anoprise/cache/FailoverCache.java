@@ -9,7 +9,7 @@ import net.anotheria.moskito.core.predefined.CacheStats;
  * @param <K> key value
  * @param <V> stored element
  * @author ivanbatura
- * @since: 23.06.12
+ * @since 23.06.12
  */
 public class FailoverCache<K, V> implements Cache<K, V> {
 	/**
@@ -83,7 +83,6 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 	 * Detect if this call was for failover or not
 	 *
 	 * @param id cache key to stored
-	 * @return
 	 */
 	private boolean isFailOverCall(Object id) {
 		if (instanceAmount < 2 || currentInstanceNumber < 0)

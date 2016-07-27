@@ -7,7 +7,7 @@ import org.junit.Test;
 
 /**
  * @author ivanbatura
- * @since: 14.06.12
+ * @since 14.06.12
  */
 public class ConfigurableRoundRobinSoftReferenceCacheTest {
 	@BeforeClass

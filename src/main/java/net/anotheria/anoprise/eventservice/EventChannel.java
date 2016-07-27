@@ -9,7 +9,6 @@ package net.anotheria.anoprise.eventservice;
 public interface EventChannel {
 	/**
 	 * Pushes a new event in the channel.
-	 * @param e
 	 */
     void push(Event e);
 	

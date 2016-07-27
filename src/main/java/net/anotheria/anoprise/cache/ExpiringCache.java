@@ -6,8 +6,6 @@ import net.anotheria.moskito.core.predefined.CacheStats;
  * A cache implementation where elements expire after some time.
  * @author another
  *
- * @param <K>
- * @param <V>
  */
 public class ExpiringCache<K,V> implements Cache<K,V>{
 	/**
