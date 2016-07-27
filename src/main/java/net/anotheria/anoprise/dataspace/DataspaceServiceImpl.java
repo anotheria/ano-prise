@@ -68,7 +68,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 		if (fromCache != null)
 			return fromCache;
 
-		Dataspace fromPersistence = null;
+		Dataspace fromPersistence;
 		try {
 			fromPersistence = persistenceService.loadDataspace(userId, dataspaceType);
 		} catch (DataspaceNotFoundException notFound) {

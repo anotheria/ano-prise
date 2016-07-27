@@ -73,7 +73,7 @@ public class EventServiceImpl implements EventService {
 
 	public  EventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
         log.debug("Creating event channel: {} of type {}", channelName, proxyType);
-        EventChannel ret = null;
+        EventChannel ret;
         switch (proxyType) {
 			case PUSH_CONSUMER_PROXY:
 				ret = _obtainPushConsumerProxy(channelName);

@@ -118,7 +118,7 @@ public class DualCrudServiceImpl<T extends CrudSaveable> implements DualCrudServ
 
 	@Override
 	public T update(T t) throws CrudServiceException {
-		T result = null;
+		T result;
 
 		CrudService<T> primary = config.getPrimaryWriter(left, right);
 		CrudService<T> secondary = config.getSecondaryWriter(left, right);

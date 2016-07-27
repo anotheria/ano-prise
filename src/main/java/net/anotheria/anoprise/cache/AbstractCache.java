@@ -51,7 +51,7 @@ public abstract class AbstractCache implements IStatsProducer<IStats>{
 		if (reg.getProducer(name)==null){
 			reg.registerProducer(this);
 		}else{
-			String myName = null;
+			String myName;
 			do{
 				myName = name+ '-' +instanceCounter.incrementAndGet();
 			}while(reg.getProducer(myName)!=null);
