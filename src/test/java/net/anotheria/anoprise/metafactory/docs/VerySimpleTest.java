@@ -7,6 +7,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -34,12 +35,12 @@ public class VerySimpleTest {
 	}
 	
 	
-	@org.junit.Test public void testWithMock() throws MetaFactoryException{
+	@Test public void testWithMock() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Mock", CalculatorService.class.getName());
 		test();
 	}
 
-	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
+	@Test public void testWithImpl() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Impl", CalculatorService.class.getName());
 		test();
 	}

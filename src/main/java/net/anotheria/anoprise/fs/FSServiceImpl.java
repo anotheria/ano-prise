@@ -60,12 +60,9 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 				in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
 				return (T) in.readObject();
 			}
-		} catch (IOException ioe) {
+		} catch (IOException | ClassNotFoundException ioe) {
             log.error("read("+ownerId+ ')', ioe);
 			throw new FSServiceException(ioe);
-		} catch (ClassNotFoundException cnfe) {
-            log.error("read("+ownerId+ ')', cnfe);
-			throw new FSServiceException(cnfe);
 		} finally {
 			IOUtils.closeIgnoringException(in);
 		}

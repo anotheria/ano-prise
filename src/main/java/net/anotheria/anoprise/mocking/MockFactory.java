@@ -1,5 +1,6 @@
 package net.anotheria.anoprise.mocking;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 
@@ -16,7 +17,7 @@ public final class MockFactory {
 	 * @param mockings some mockings with method implementations for methods in T.
 	 */
 	public static <T> T createMock(Class<T> clazz, Mocking ... mockings){
-		Mock mock = new Mock(clazz, Arrays.asList(mockings));
+		InvocationHandler mock = new Mock(clazz, Arrays.asList(mockings));
 		return clazz.cast(Proxy.newProxyInstance(MockFactory.class.getClassLoader(), new Class[]{ clazz }, mock)); 		
 	}
 	

@@ -205,17 +205,11 @@ public class CacheController<K, V> implements Cache<K, V> {
 		if (factory == null) {
 			try {
 				factory = (CacheFactory<K, V>) Class.forName(factoryClazz).newInstance();
-			} catch (ClassNotFoundException e) {
-				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage(), e);
-			} catch (InstantiationException e) {
-				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage(), e);
-			} catch (IllegalAccessException e) {
+			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
 				log.error(FATAL, "can't init cache", e);
 				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage(), e);
 			}
-		}
+        }
 
         log.debug("reiniting cache for {}", configurationName);
 		if (!cacheOn) {

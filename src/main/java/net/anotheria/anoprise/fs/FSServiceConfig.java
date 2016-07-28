@@ -196,7 +196,7 @@ public final class FSServiceConfig implements Serializable {
 	 * @return {@link FSServiceConfig}
 	 */
 	public static FSServiceConfig getInstance(final String configuration, final String environment) {
-		String configName = String.valueOf(configuration) + "/-/" + String.valueOf(environment);
+		String configName = configuration + "/-/" + environment;
 		if ((configuration == null || configuration.trim().isEmpty()) && (environment == null || environment.trim().isEmpty()))
 			configName = DEFAULT_CONFIG_NAME;
 
@@ -264,7 +264,7 @@ public final class FSServiceConfig implements Serializable {
 	 * 		- fragment length
 	 */
 	private static String[] fragmentOwnerId(String ownerId, int maxOwnerIdLength, int fragmentLength) {
-		if (ownerId == null || ownerId.length() == 0)
+		if (ownerId == null || ownerId.isEmpty())
 			throw new IllegalArgumentException("OwnerId is null or empty");
 
 		while (ownerId.length() < maxOwnerIdLength)

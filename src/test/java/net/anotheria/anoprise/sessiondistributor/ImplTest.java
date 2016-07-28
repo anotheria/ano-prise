@@ -183,7 +183,7 @@ public class ImplTest {
 		} catch (NoSuchDistributedSessionException expected) {
 		}
 
-		assertTrue(service.getDistributedSessionNames().size() == 0);
+		assertTrue(service.getDistributedSessionNames().isEmpty());
 	}
 
 	@Test
@@ -233,7 +233,7 @@ public class ImplTest {
 			MetaFactory.addFactoryClass(SessionDistributorService.class, Extension.LOCAL, SDFactory.class);
 			SessionDistributorService sdService = MetaFactory.get(SessionDistributorService.class);
 
-			if (sdService.getDistributedSessionNames().size() == 0)
+			if (sdService.getDistributedSessionNames().isEmpty())
 				//creating sessions!!
 				for (int i = 0; i < 15; i++)
 					try {
@@ -263,7 +263,7 @@ public class ImplTest {
 			MetaFactory.addFactoryClass(SessionDistributorService.class, Extension.LOCAL, SDFactory.class);
 			SessionDistributorService sdService = MetaFactory.get(SessionDistributorService.class);
 
-			if (sdService.getDistributedSessionNames().size() == 0)
+			if (sdService.getDistributedSessionNames().isEmpty())
 				//creating sessions!!
 				for (int i = 0; i < 15; i++)
 					try {

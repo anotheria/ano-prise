@@ -54,7 +54,7 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	}
 	
 	@Override public String toString(){
-		return cache.toString()+", ExpirationTime: "+expirationTime;
+		return cache +", ExpirationTime: "+expirationTime;
 	}
 	
 	@Override public void clear() {

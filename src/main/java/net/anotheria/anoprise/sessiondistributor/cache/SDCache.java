@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -131,9 +132,9 @@ public final class SDCache implements FSSaveable {
 	/**
 	 * Returns all cached sessions.
 	 *
-	 * @return {@link java.util.List <DistributedSessionVO>}
+	 * @return {@link List <DistributedSessionVO>}
 	 */
-	public List<DistributedSessionVO> getSessions() {
+	public Collection<DistributedSessionVO> getSessions() {
 		return new ArrayList<>(sessions.values());
 	}
 
@@ -187,7 +188,7 @@ public final class SDCache implements FSSaveable {
 	 * Remove session with selected id.
 	 *
 	 * @param sessionId id of session
-	 * @throws net.anotheria.anoprise.sessiondistributor.NoSuchDistributedSessionException
+	 * @throws NoSuchDistributedSessionException
 	 *          if session does not exists
 	 */
 	public void removeSession(String sessionId) throws NoSuchDistributedSessionException {
@@ -267,7 +268,7 @@ public final class SDCache implements FSSaveable {
 	 * Add attribute to session with selected id.
 	 *
 	 * @param sessionId id of the session
-	 * @param attribute {@link net.anotheria.anoprise.sessiondistributor.DistributedSessionAttribute}
+	 * @param attribute {@link DistributedSessionAttribute}
 	 * @throws NoSuchDistributedSessionException
 	 *          if no  such session exists
 	 */
@@ -346,8 +347,8 @@ public final class SDCache implements FSSaveable {
 	/**
 	 * Serialization method.
 	 *
-	 * @param oos - {@link java.io.ObjectOutputStream}
-	 * @throws java.io.IOException on serialization errors
+	 * @param oos - {@link ObjectOutputStream}
+	 * @throws IOException on serialization errors
 	 */
 	private void writeObject(ObjectOutputStream oos) throws IOException {
 		ObjectOutputStream.PutField fields = oos.putFields();
@@ -358,9 +359,9 @@ public final class SDCache implements FSSaveable {
 	/**
 	 * DeSerialization method.
 	 *
-	 * @param ois - {@link java.io.ObjectInputStream}
+	 * @param ois - {@link ObjectInputStream}
 	 * @throws ClassNotFoundException on DeSerialization errors
-	 * @throws java.io.IOException	on DeSerialization errors
+	 * @throws IOException	on DeSerialization errors
 	 */
 
 	private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {

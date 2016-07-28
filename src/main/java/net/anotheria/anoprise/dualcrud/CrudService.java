@@ -30,7 +30,7 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 * Deletes a saved instance of T. Should ignore non existing files.
 	 * 
 	 */
-	void delete(T t);
+	void delete(T t) throws CrudServiceException;
 
 	/**
 	 * Saves an instance of T, regardless, whether its an update or new creation.
@@ -45,7 +45,7 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 * @param t
 	 *            the instance to check.
 	 */
-	boolean exists(T t);
+	boolean exists(T t) throws CrudServiceException;
 
 	/**
 	 * Make query to service.
@@ -54,6 +54,6 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	 *            - {@link Query}
 	 * @return {@link List} of T
 	 */
-	List<T> query(Query q);
+	List<T> query(Query q) throws CrudServiceException;
 
 }

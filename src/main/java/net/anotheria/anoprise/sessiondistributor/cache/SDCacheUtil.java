@@ -34,7 +34,7 @@ public final class SDCacheUtil {
 	private static final String LOG_PREFIX = "SD_FS_PERSISTENCE: ";
 
 	/**
-	 * {@link net.anotheria.anoprise.fs.FSService} for storing service data.
+	 * {@link FSService} for storing service data.
 	 */
 	private static final FSService<SDCache> fsPersistence;
 

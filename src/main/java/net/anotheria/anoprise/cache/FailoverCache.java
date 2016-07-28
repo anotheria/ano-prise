@@ -60,7 +60,7 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 
 	@Override
 	public String toString() {
-		return cache.toString() + ", instanceAmount=" + instanceAmount + ", currentInstanceNumber=" + currentInstanceNumber;
+		return cache + ", instanceAmount=" + instanceAmount + ", currentInstanceNumber=" + currentInstanceNumber;
 	}
 
 	@Override

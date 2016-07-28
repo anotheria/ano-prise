@@ -193,11 +193,11 @@ public class QueuedEventSender extends Thread {
 	}
 	
 	public String getStatsString(){
-		return counter+" elements sent, queue: "+queue.toString()+", OC:"+overflowCount+", TAC:"+throwAwayCount;		
+		return counter+" elements sent, queue: "+ queue +", OC:"+overflowCount+", TAC:"+throwAwayCount;
 	}
 	
 	public void logOutInfo(){
-        log.info("{}: {} elements done. Stats: {}, overflow count: {}, throw-away count: {}", name, counter, queue.toString(), overflowCount, throwAwayCount);
+        log.info("{}: {} elements done. Stats: {}, overflow count: {}, throw-away count: {}", name, counter, queue, overflowCount, throwAwayCount);
 	}
 	
 	public boolean hasUnsentElements(){

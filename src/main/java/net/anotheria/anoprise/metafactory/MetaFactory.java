@@ -140,9 +140,7 @@ public class MetaFactory {
 					}
 					
 					factories.put(name, factory);
-				} catch (IllegalAccessException e) {
-					throw new FactoryInstantiationError(clazz, name, e.getMessage(), e);
-				} catch (InstantiationException e) {
+				} catch (IllegalAccessException | InstantiationException e) {
 					throw new FactoryInstantiationError(clazz, name, e.getMessage(), e);
 				}
 			}
@@ -165,9 +163,7 @@ public class MetaFactory {
 			}
 
 			return factory.create();
-		} catch (IllegalAccessException e) {
-			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage(), e);
-		} catch (InstantiationException e) {
+		} catch (IllegalAccessException | InstantiationException e) {
 			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage(), e);
 		}
 	}
@@ -287,8 +283,8 @@ public class MetaFactory {
 
 	public static void debugDumpAliasMap() {
 		Set<String> keys = aliases.keySet();
-		for (String key : keys) {
-			System.out.println(key + " = " + aliases.get(key));
+		for (Map.Entry<String, String> stringStringEntry : aliases.entrySet()) {
+			System.out.println(stringStringEntry.getKey() + " = " + stringStringEntry.getValue());
 		}
 	}
 

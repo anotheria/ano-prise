@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EventServiceImpl implements EventService {
 
 	private static Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
-	private static EventServiceImpl instance = new EventServiceImpl();
+	private static EventService instance = new EventServiceImpl();
 
 	private ConcurrentMap<String, EventChannelPushConsumerProxy>	pushConsumerProxies;
 	private ConcurrentMap<String, EventChannelPushSupplierProxy>	pushSupplierProxies;
@@ -154,19 +154,19 @@ public class EventServiceImpl implements EventService {
 	private void connectSupplierProxy(String channelName, EventChannelSupplierProxy proxy) {
 		List<EventChannelConsumerProxy> consumers = getConsumerProxies(channelName);
         log.debug("Connecting {} to {}", consumers, proxy);
-		for (int i = 0, n = consumers.size(); i < n; i++) {
-            log.debug("Connecting {}", consumers.get(i));
-			proxy.addConsumerProxy(consumers.get(i));
-		}
+        for (EventChannelConsumerProxy consumer : consumers) {
+            log.debug("Connecting {}", consumer);
+            proxy.addConsumerProxy(consumer);
+        }
 	}
 
 	private void connectConsumerProxy(String channelName, EventChannelConsumerProxy proxy) {
 		List<EventChannelSupplierProxy> suppliers = getSupplierProxies(channelName);
         log.debug("Connecting {} to {}", proxy, suppliers);
-		for (int i = 0, n = suppliers.size(); i < n; i++) {
-            log.debug("Connecting {} to {}", proxy, suppliers.get(i));
-			suppliers.get(i).addConsumerProxy(proxy);
-		}
+        for (EventChannelSupplierProxy supplier : suppliers) {
+            log.debug("Connecting {} to {}", proxy, supplier);
+            supplier.addConsumerProxy(proxy);
+        }
 	}
 
 	private List<EventChannelConsumerProxy> getConsumerProxies(String channelName) {

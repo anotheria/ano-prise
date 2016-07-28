@@ -138,7 +138,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
             index2id.remove(index);
 
             //V v = cache[index.intValue()]; - in case we need to return something
-            cache[index.intValue()] = null;
+            cache[index] = null;
         }
     }
 
@@ -152,7 +152,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
             //System.out.println("Index for id: "+index);
             if (index == null)
                 return null;
-            V toRet = cache[index.intValue()];
+            V toRet = cache[index];
 
             if (toRet == null) {
                 //this can't happen!:-)
@@ -177,14 +177,14 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 
             Integer oldPosition = id2index.get(id);
             if (oldPosition != null) {
-                cache[oldPosition.intValue()] = cacheable;
+                cache[oldPosition] = cacheable;
                 return;
             }
 
             if (lastElement < currentSize - 1 && !firstCycleComplete) {
                 //es ist noch platz im array.
                 lastElement++;
-                Integer tmpIndex = Integer.valueOf(lastElement);
+                Integer tmpIndex = lastElement;
                 index2id.put(tmpIndex, id);
                 id2index.put(id, tmpIndex);
                 cache[lastElement] = cacheable;
@@ -196,7 +196,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
                 lastElement++;
                 if (lastElement == cache.length)
                     lastElement = 0;
-                Integer tmp = Integer.valueOf(lastElement);
+                Integer tmp = lastElement;
                 Object oldId = index2id.get(tmp);
                 if (oldId != null) {
                     id2index.remove(oldId);

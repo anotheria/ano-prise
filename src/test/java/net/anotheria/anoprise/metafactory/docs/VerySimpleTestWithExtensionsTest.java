@@ -8,6 +8,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -36,13 +37,13 @@ public class VerySimpleTestWithExtensionsTest {
 		assertEquals("Expected 4", 4, service.plus(2, 2));
 	}
 	
-	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
+	@Test public void testWithImpl() throws MetaFactoryException{
 		//this line basically says, the LOCAL variant of CalculatorService is now the default one.
 		MetaFactory.addAlias(CalculatorService.class, Extension.DOMAIN);
 		test();
 	}
 
-	@org.junit.Test public void testWithMock() throws MetaFactoryException{
+	@Test public void testWithMock() throws MetaFactoryException{
 		//this line basically says, the FIXTURE variant of CalculatorService is now the default one.
 		MetaFactory.addAlias(CalculatorService.class, Extension.FIXTURE);
 		test();

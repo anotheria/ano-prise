@@ -279,7 +279,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 					queue.notifyAll();
 				}
 				// System.out.println("2");
-				if (elementsPackage.size() > 0) {
+				if (!elementsPackage.isEmpty()) {
 					// System.out.println("3");
 					processor.process(elementsPackage);
 					continue;

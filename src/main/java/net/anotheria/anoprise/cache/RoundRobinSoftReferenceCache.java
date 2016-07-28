@@ -119,8 +119,8 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 			id2index.remove(id);
 			index2id.remove(index);
 
-			SoftReference<V> ref = cache[index.intValue()];
-			cache[index.intValue()] = null;
+			SoftReference<V> ref = cache[index];
+			cache[index] = null;
 
 			if (ref.get() == null) {
 				cacheStatsCopy.addGarbageCollected();
@@ -140,7 +140,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 			Integer index = getCachePosition(id);
 			if (index == null)
 				return null;
-			V toRet = cache[index.intValue()].get();
+			V toRet = cache[index].get();
 
 			if (toRet == null) {
 				cacheStatsCopy.addGarbageCollected();
@@ -169,14 +169,14 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 			Integer oldPosition = getCachePosition(id);
 			if (oldPosition != null) {
 				//System.out.println("replacing old entry.");
-				cache[oldPosition.intValue()] = toPut;
+				cache[oldPosition] = toPut;
 				return;
 			}
 
 			if (lastElement < currentSize - 1 && !firstCycleComplete) {
 				//es ist noch platz im array.
 				lastElement++;
-				Integer tmpIndex = Integer.valueOf(lastElement);
+				Integer tmpIndex = lastElement;
 				index2id.put(tmpIndex, id);
 				id2index.put(id, tmpIndex);
 				cache[lastElement] = toPut;
@@ -188,7 +188,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 				lastElement++;
 				if (lastElement == cache.length)
 					lastElement = 0;
-				Integer tmp = Integer.valueOf(lastElement);
+				Integer tmp = lastElement;
 				Object oldId = index2id.get(tmp);
 				if (oldId != null) {
 					id2index.remove(oldId);
