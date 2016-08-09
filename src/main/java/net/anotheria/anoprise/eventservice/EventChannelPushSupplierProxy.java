@@ -18,7 +18,7 @@ public class EventChannelPushSupplierProxy extends AbstractEventChannel
 	
 	public EventChannelPushSupplierProxy(String name){
 		super(name);
-		consumerProxies = new CopyOnWriteArrayList<EventChannelConsumerProxy>();
+		consumerProxies = new CopyOnWriteArrayList<>();
 	}
 	
 	
@@ -34,13 +34,13 @@ public class EventChannelPushSupplierProxy extends AbstractEventChannel
 	protected void push(Event e, boolean localOnly){
 		for (EventChannelConsumerProxy proxy : consumerProxies){
 			if (localOnly && (!proxy.isLocal())){
-				log.debug("Skiping proxy: "+proxy);
+                log.debug("Skiping proxy: {}", proxy);
 			}else{
 				//log.debug("delivering to proxy: "+proxy);
 				try{
 					proxy.pushEvent(e); 
-				}catch(Exception ex){
-					log.error("pushEvent("+e+")", ex);
+				}catch(RuntimeException ex){
+                    log.error("pushEvent("+e+ ')', ex);
 				}
 			}
 		}

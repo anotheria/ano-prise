@@ -2,7 +2,7 @@ package net.anotheria.anoprise.processor;
 
 import net.anotheria.moskito.core.logging.DefaultStatsLogger;
 import net.anotheria.moskito.core.logging.IntervalStatsLogger;
-import net.anotheria.moskito.core.logging.SL4JLogOutput;
+import net.anotheria.moskito.core.logging.SLF4JLogOutput;
 import net.anotheria.moskito.core.producers.IStats;
 import net.anotheria.moskito.core.producers.IStatsProducer;
 import net.anotheria.moskito.core.stats.DefaultIntervals;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author another, dmetelin
  *
  */
-public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
+public class QueuedMultiProcessorProducerWrapper implements IStatsProducer<IStats> {
 	/**
 	 * Wrapped QueuedMultiProcessor.
 	 */
@@ -43,7 +43,7 @@ public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
 		category = aCategory;
 		subsystem = aSubsystem;
 		processor = aCache;
-		stats = new ArrayList<IStats>();
+		stats = new ArrayList<>();
 		stats.add(processor.getQueueStat());
 		stats.add(processor.getProcessorStats());
 	}
@@ -69,11 +69,11 @@ public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
 	}
 	
 	public void attachToMoskitoLoggers(){
-		new DefaultStatsLogger(this, new SL4JLogOutput(LoggerFactory.getLogger("MoskitoDefault")));
-		new IntervalStatsLogger(this, DefaultIntervals.FIVE_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("Moskito5m")));
-		new IntervalStatsLogger(this, DefaultIntervals.FIFTEEN_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("Moskito15m")));
-		new IntervalStatsLogger(this, DefaultIntervals.ONE_HOUR, new SL4JLogOutput(LoggerFactory.getLogger("Moskito1h")));
-		new IntervalStatsLogger(this, DefaultIntervals.ONE_DAY, new SL4JLogOutput(LoggerFactory.getLogger("Moskito1d")));
+		new DefaultStatsLogger(this, new SLF4JLogOutput(LoggerFactory.getLogger("MoskitoDefault")));
+		new IntervalStatsLogger(this, DefaultIntervals.FIVE_MINUTES, new SLF4JLogOutput(LoggerFactory.getLogger("Moskito5m")));
+		new IntervalStatsLogger(this, DefaultIntervals.FIFTEEN_MINUTES, new SLF4JLogOutput(LoggerFactory.getLogger("Moskito15m")));
+		new IntervalStatsLogger(this, DefaultIntervals.ONE_HOUR, new SLF4JLogOutput(LoggerFactory.getLogger("Moskito1h")));
+		new IntervalStatsLogger(this, DefaultIntervals.ONE_DAY, new SLF4JLogOutput(LoggerFactory.getLogger("Moskito1d")));
 		
 	}
 

@@ -12,14 +12,12 @@ public interface DataspaceType extends Serializable{
 	/**
 	 * Get dataspace type id.
 	 * 
-	 * @return id
 	 */
 	int getId();
 
 	/**
 	 * Get dataspace type name.
 	 * 
-	 * @return id
 	 */
 	String getName();
 

@@ -7,5 +7,5 @@ package net.anotheria.anoprise.eventservice;
  * Created on 22.09.2004
  */
 public interface RemoteEventChannelSupplierProxy extends EventChannelSupplierProxy, EventChannel{
-	public void deliverEvent(byte[] eventData);
+	void deliverEvent(byte[] eventData);
 }

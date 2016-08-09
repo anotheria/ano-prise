@@ -11,7 +11,7 @@ import java.util.List;
  * @author another
  *
  */
-public class CacheProducerWrapper implements IStatsProducer{
+public class CacheProducerWrapper implements IStatsProducer<IStats> {
 	/**
 	 * Wrapped cache.
 	 */
@@ -38,7 +38,7 @@ public class CacheProducerWrapper implements IStatsProducer{
 		category = aCategory;
 		subsystem = aSubsystem;
 		cache = aCache;
-		stats = new ArrayList<IStats>();
+		stats = new ArrayList<>();
 		stats.add(cache.getCacheStats());
 	}
 

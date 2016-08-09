@@ -50,7 +50,7 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 		File file = new File(filePath);
 
 		if (!file.exists()) {
-			log.debug("read("+ownerId+") " + "Item not found. Owner id: " + ownerId + ". File path: " + filePath);
+            log.debug("read({}) Item not found. File path: {}", ownerId, filePath);
 			throw new FSItemNotFoundException(ownerId);
 		}
 
@@ -58,16 +58,11 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 		try {
 			synchronized (this) {
 				in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-				@SuppressWarnings("unchecked")
-				T result = (T) in.readObject();
-				return result;
+				return (T) in.readObject();
 			}
-		} catch (IOException ioe) {
-			log.error("read("+ownerId+")", ioe);
-			throw new FSServiceException(ioe.getMessage(), ioe);
-		} catch (ClassNotFoundException cnfe) {
-			log.error("read("+ownerId+")", cnfe);
-			throw new FSServiceException(cnfe.getMessage(), cnfe);
+		} catch (IOException | ClassNotFoundException ioe) {
+            log.error("read("+ownerId+ ')', ioe);
+			throw new FSServiceException(ioe);
 		} finally {
 			IOUtils.closeIgnoringException(in);
 		}
@@ -95,8 +90,8 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 				out.flush();
 			}
 		} catch (IOException ioe) {
-			log.error("save("+t.getOwnerId()+")", ioe);
-			throw new FSServiceException(ioe.getMessage(), ioe);
+            log.error("save("+t.getOwnerId()+ ')', ioe);
+			throw new FSServiceException(ioe);
 		} finally {
 			IOUtils.closeIgnoringException(out);
 		}

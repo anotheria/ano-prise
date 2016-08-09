@@ -89,21 +89,23 @@ public class DataspacePersistenceConfiguration {
 
 	/**
 	 * Get configuration instance.
-	 * 
+	 *
 	 * @return {@link DataspacePersistenceConfiguration}
 	 */
-	public static synchronized DataspacePersistenceConfiguration getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new DataspacePersistenceConfiguration();
+	public static DataspacePersistenceConfiguration getInstance() {
+		synchronized (DataspacePersistenceConfiguration.class) {
+			if (INSTANCE == null) {
+				INSTANCE = new DataspacePersistenceConfiguration();
 
-			try {
-				ConfigurationManager.INSTANCE.configure(INSTANCE);
-			} catch (Exception e) {
-				LOGGER.error("getInstance() Configuration failed. Configuring with defaults.", e);
+				try {
+					ConfigurationManager.INSTANCE.configure(INSTANCE);
+				} catch (RuntimeException e) {
+					LOGGER.error("getInstance() Configuration failed. Configuring with defaults.", e);
+				}
 			}
-		}
 
-		return INSTANCE;
+			return INSTANCE;
+		}
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class DataspacePersistenceConfiguration {
 
 		try {
 			ConfigurationManager.INSTANCE.configureAs(configuration, configurationFileName);
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			LOGGER.error("getInstance(" + configurationFileName + ") Configuration failed. Configuring with defaults.", e);
 		}
 
@@ -201,18 +203,18 @@ public class DataspacePersistenceConfiguration {
 	 * All fields separated by SEPARATOR.
 	 */
 	public String getTableFields() {
-		return getFieldNameUserId() + SEPARATOR + getFieldNameDataspaceId() + SEPARATOR + getFieldNameAttributeName() + SEPARATOR
-				+ getFieldNameAttributeTypeId() + SEPARATOR + getFieldNameAttributeValue() + SEPARATOR + getFieldNameUpdated();
+        return fieldNameUserId + SEPARATOR + fieldNameDataspaceId + SEPARATOR + fieldNameAttributeName + SEPARATOR
+				+ fieldNameAttributeTypeId + SEPARATOR + fieldNameAttributeValue + SEPARATOR + fieldNameUpdated;
 	}
 
 	/**
 	 * SQL create table.
 	 */
 	public String getDDLCreateTable() {
-		return "CREATE TABLE " + getTableName() + " (" + getFieldNameUserId() + " character varying NOT NULL, " + getFieldNameDataspaceId()
-				+ " integer NOT NULL, " + getFieldNameAttributeName() + " character varying NOT NULL, " + getFieldNameAttributeTypeId() + " integer NOT NULL, "
-				+ getFieldNameAttributeValue() + " character varying NOT NULL, " + getFieldNameUpdated() + " bigint NOT NULL, " + "CONSTRAINT "
-				+ getPrimaryKeyName() + " PRIMARY KEY (" + getFieldNameUserId() + ", " + getFieldNameDataspaceId() + ", " + getFieldNameAttributeName() + ")"
+        return "CREATE TABLE " + tableName + " (" + fieldNameUserId + " character varying NOT NULL, " + fieldNameDataspaceId
+				+ " integer NOT NULL, " + fieldNameAttributeName + " character varying NOT NULL, " + fieldNameAttributeTypeId + " integer NOT NULL, "
+				+ fieldNameAttributeValue + " character varying NOT NULL, " + fieldNameUpdated + " bigint NOT NULL, " + "CONSTRAINT "
+				+ primaryKeyName + " PRIMARY KEY (" + fieldNameUserId + ", " + fieldNameDataspaceId + ", " + fieldNameAttributeName + ')'
 				+ ");";
 	}
 
@@ -220,14 +222,14 @@ public class DataspacePersistenceConfiguration {
 	 * SQL set table owner.
 	 */
 	public String getDDLSetOwner() {
-		return "GRANT ALL ON " + getTableName() + " TO " + getDbOwnerName() + ";";
+        return "GRANT ALL ON " + tableName + " TO " + dbOwnerName + ';';
 	}
 
 	/**
 	 * SQL get dataspace by userId and dataspaceId.
 	 */
 	public String getSQLGetDataspace() {
-		return "SELECT " + getTableFields() + " FROM " + getTableName() + " WHERE " + getFieldNameUserId() + " = ?" + " AND " + getFieldNameDataspaceId()
+        return "SELECT " + getTableFields() + " FROM " + tableName + " WHERE " + fieldNameUserId + " = ?" + " AND " + fieldNameDataspaceId
 				+ "= ?;";
 	}
 
@@ -235,14 +237,14 @@ public class DataspacePersistenceConfiguration {
 	 * SQL insert attribute.
 	 */
 	public String getSQLInsertAttribute() {
-		return "INSERT INTO " + getTableName() + " (" + getTableFields() + ")" + " VALUES (?, ?, ?, ?, ?, ?);";
+        return "INSERT INTO " + tableName + " (" + getTableFields() + ')' + " VALUES (?, ?, ?, ?, ?, ?);";
 	}
 
 	/**
 	 * SQL remove dataspace by userId and dataspaceId.
 	 */
 	public String getSQLRemoveDataspace() {
-		return "DELETE FROM " + getTableName() + " WHERE " + getFieldNameUserId() + " = ?" + " AND " + getFieldNameDataspaceId() + " = ?;";
+        return "DELETE FROM " + tableName + " WHERE " + fieldNameUserId + " = ?" + " AND " + fieldNameDataspaceId + " = ?;";
 	}
 
 	@Override
@@ -250,7 +252,7 @@ public class DataspacePersistenceConfiguration {
 		return "DataspacePersistenceConfiguration [tableName=" + tableName + ", dbOwnerName=" + dbOwnerName + ", primaryKeyName=" + primaryKeyName
 				+ ", fieldNameUserId=" + fieldNameUserId + ", fieldNameDataspaceId=" + fieldNameDataspaceId + ", fieldNameAttributeName="
 				+ fieldNameAttributeName + ", fieldNameAttributeTypeId=" + fieldNameAttributeTypeId + ", fieldNameAttributeValue=" + fieldNameAttributeValue
-				+ ", fieldNameUpdated=" + fieldNameUpdated + "]";
+				+ ", fieldNameUpdated=" + fieldNameUpdated + ']';
 	}
 
 }

@@ -51,7 +51,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 		try {
 			cache = Caches.createConfigurableHardwiredCache("ano-prise-dataspace-cache");
 		} catch (IllegalArgumentException e) {
-			log.warn("Can't find cache configuration for ano-prise-dataspace-cache, falling back to min cache.");
+			log.warn("Can't find cache configuration for ano-prise-dataspace-cache, falling back to min cache.", e);
 			cache = Caches.createHardwiredCache("ano-prise-dataspace-cache", CACHE_START_SIZE, CACHE_MAX_SIZE);
 		}
 	}
@@ -68,7 +68,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 		if (fromCache != null)
 			return fromCache;
 
-		Dataspace fromPersistence = null;
+		Dataspace fromPersistence;
 		try {
 			fromPersistence = persistenceService.loadDataspace(userId, dataspaceType);
 		} catch (DataspaceNotFoundException notFound) {
@@ -108,7 +108,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 	 * 
 	 * @author lrosenberg
 	 */
-	private final class DataspaceKey {
+	private static final class DataspaceKey {
 
 		/**
 		 * User id.
@@ -135,8 +135,8 @@ public class DataspaceServiceImpl implements DataspaceService {
 
 		@Override
 		public boolean equals(Object o) {
-			return o instanceof DataspaceKey ? BasicComparable.compareString(userId, ((DataspaceKey) o).userId) == 0
-					&& dataspaceId == ((DataspaceKey) o).dataspaceId : false;
+			return o instanceof DataspaceKey && (BasicComparable.compareString(userId, ((DataspaceKey) o).userId) == 0
+                    && dataspaceId == ((DataspaceKey) o).dataspaceId);
 		}
 
 		@Override
@@ -150,7 +150,7 @@ public class DataspaceServiceImpl implements DataspaceService {
 
 		@Override
 		public String toString() {
-			return "DataspaceKey [dataspaceId=" + dataspaceId + ", userId=" + userId + "]";
+			return "DataspaceKey [dataspaceId=" + dataspaceId + ", userId=" + userId + ']';
 		}
 	}
 

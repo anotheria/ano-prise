@@ -158,7 +158,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 				queue.putElement(event);
 			} catch (QueueOverflowException e2) {
 				throwAwayCount++;
-				logger.error("Couldn't recover from queue overflow, throwing away " + event);
+				logger.error("Couldn't recover from queue overflow, throwing away '"+event+ '\'', e2);
 			}
 		}
 	}
@@ -224,14 +224,14 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 	 * @return {@link String}
 	 */
 	public String getStatsString() {
-		return "EventsReceived:" + receivedCount + ", Queue: " + queue.toString() + ", OC:" + overflowCount + ", TAC:" + throwAwayCount;
+		return "Events received: " + receivedCount + ", Queue: " + queue + ", overflow count:" + overflowCount + ", throw-away count:" + throwAwayCount;
 	}
 
 	/**
 	 * Log statistic information.
 	 */
 	public void logOutInfo() {
-		logger.info("ReceiverName:" + name + ", ChannelName:" + channelName + ", Stats[" + getStatsString() + "]");
+		logger.info("Receiver name:{}, channel name:{}, stats: {}", name, channelName, getStatsString());
 	}
 
 	/**

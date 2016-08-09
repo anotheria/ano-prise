@@ -16,8 +16,6 @@ public interface DataspaceService extends Service {
 	 *            - user id
 	 * @param dataspaceType
 	 *            - dataspace id
-	 * @return dataspace
-	 * @throws DataspaceServiceException
 	 */
 	Dataspace getDataspace(String userId, DataspaceType dataspaceType) throws DataspaceServiceException;
 
@@ -26,7 +24,6 @@ public interface DataspaceService extends Service {
 	 * 
 	 * @param dataspace
 	 *            - dataspace
-	 * @throws DataspaceServiceException
 	 */
 	void saveDataspace(Dataspace dataspace) throws DataspaceServiceException;
 }

@@ -9,7 +9,7 @@ import net.anotheria.moskito.core.predefined.CacheStats;
  * @param <K> key value
  * @param <V> stored element
  * @author ivanbatura
- * @since: 23.06.12
+ * @since 23.06.12
  */
 public class FailoverCache<K, V> implements Cache<K, V> {
 	/**
@@ -34,10 +34,10 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 	private CacheStats moskitoCacheStats;
 
 	public FailoverCache(String name, int aStartSize, int aMaxSize, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, CacheFactory<K, V> underlyingCacheFactory) {
-		this(name, aInstanceAmount, aCurrentInstanceNumber, aModableTypeHandler, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
+		this(aInstanceAmount, aCurrentInstanceNumber, aModableTypeHandler, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
 	}
 
-	public FailoverCache(String name, int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, Cache<K, V> underlyingCache) {
+	public FailoverCache(int aInstanceAmount, int aCurrentInstanceNumber, ModableTypeHandler aModableTypeHandler, Cache<K, V> underlyingCache) {
 		cache = underlyingCache;
 		instanceAmount = aInstanceAmount > 0 ? aInstanceAmount : 1;
 		currentInstanceNumber = aCurrentInstanceNumber;
@@ -60,7 +60,7 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 
 	@Override
 	public String toString() {
-		return cache.toString() + ", instanceAmount=" + instanceAmount + ", currentInstanceNumber=" + currentInstanceNumber;
+		return cache + ", instanceAmount=" + instanceAmount + ", currentInstanceNumber=" + currentInstanceNumber;
 	}
 
 	@Override
@@ -83,7 +83,6 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 	 * Detect if this call was for failover or not
 	 *
 	 * @param id cache key to stored
-	 * @return
 	 */
 	private boolean isFailOverCall(Object id) {
 		if (instanceAmount < 2 || currentInstanceNumber < 0)

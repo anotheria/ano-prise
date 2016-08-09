@@ -129,14 +129,14 @@ public class QueuedEventSender extends Thread {
 				queue.putElement(event);
 			}catch(QueueOverflowException e2){
 				throwAwayCount++;
-				log.error("couldn't recover from queue overflow, throwing away "+event);
-				throw new QueueFullException(event,"Stats:"+getStatsString());
+                log.error("couldn't recover from queue overflow, throwing away event '"+event+ '\'', e2);
+				throw new QueueFullException(event,"Stats:"+getStatsString(), e2);
 			}
 			
 		}
 	}
 	
-	@Override public void start(){
+	@Override public synchronized void start(){
 		started = true;
 		super.start();
 	}
@@ -181,25 +181,23 @@ public class QueuedEventSender extends Thread {
 		}
 	}
 	/**
-	 * @return
 	 */
 	public int getOverflowCount() {
 		return overflowCount;
 	}
 
 	/**
-	 * @return
 	 */
 	public int getThrowAwayCount() {
 		return throwAwayCount;
 	}
 	
 	public String getStatsString(){
-		return counter+" elements sent, queue: "+queue.toString()+", OC:"+overflowCount+", TAC:"+throwAwayCount;		
+		return counter+" elements sent, queue: "+ queue +", OC:"+overflowCount+", TAC:"+throwAwayCount;
 	}
 	
 	public void logOutInfo(){
-		log.info(name+": "+counter+" elements done, stat: "+queue.toString()+", OC:"+overflowCount+", TAC:"+throwAwayCount);
+        log.info("{}: {} elements done. Stats: {}, overflow count: {}, throw-away count: {}", name, counter, queue, overflowCount, throwAwayCount);
 	}
 	
 	public boolean hasUnsentElements(){

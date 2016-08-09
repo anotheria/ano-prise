@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Base class for cache implementations. Implements support for moskito monitoring in caches.
  * @author lrosenberg
  */
-public abstract class AbstractCache implements IStatsProducer{
+public abstract class AbstractCache implements IStatsProducer<IStats>{
 
 	/**
 	 * List of stats as required by the IStatsProducer interface.
@@ -37,12 +37,11 @@ public abstract class AbstractCache implements IStatsProducer{
 
 	/**
 	 * Creates new AbstractCache and registers it as producer.
-	 * @param aName
 	 */
 	protected AbstractCache(String aName){
 		name = aName;
 		
-		stats = new ArrayList<IStats>();
+		stats = new ArrayList<>();
 		cacheStats = new CacheStats(name, Constants.getDefaultIntervals());
 		stats.add(cacheStats);
 		
@@ -52,9 +51,9 @@ public abstract class AbstractCache implements IStatsProducer{
 		if (reg.getProducer(name)==null){
 			reg.registerProducer(this);
 		}else{
-			String myName = null;
+			String myName;
 			do{
-				myName = name+"-"+instanceCounter.incrementAndGet();
+				myName = name+ '-' +instanceCounter.incrementAndGet();
 			}while(reg.getProducer(myName)!=null);
 			name = myName;
 			reg.registerProducer(this);
@@ -63,7 +62,7 @@ public abstract class AbstractCache implements IStatsProducer{
 	}
 	
 	protected static String getUnnamedInstanceName(Class<?> that){
-		return that.getSimpleName()+"-"+instanceCounter.incrementAndGet();
+		return that.getSimpleName()+ '-' +instanceCounter.incrementAndGet();
 	}
 	
 	@Override public String getCategory() {
@@ -71,7 +70,7 @@ public abstract class AbstractCache implements IStatsProducer{
 	}
 
 	@Override public String getProducerId() {
-		return getName();
+		return name;
 	}
 
 	@Override public List<IStats> getStats() {

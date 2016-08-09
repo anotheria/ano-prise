@@ -34,4 +34,7 @@ public class DataspacePersistenceServiceException extends Exception {
 		super(message, cause);
 	}
 
+	public DataspacePersistenceServiceException(Throwable cause) {
+		super(cause);
+	}
 }

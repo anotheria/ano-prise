@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class AbstractTestCrudService implements CrudService<TestCrudsaveable> {
 
 	@Override
-	public boolean exists(TestCrudsaveable t) throws CrudServiceException {
+	public boolean exists(TestCrudsaveable t) {
 		return getFile(t.getOwnerId()).exists();
 	}
 
@@ -37,14 +37,11 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 		return t;
 	}
 
-	private void writeOut(TestCrudsaveable object, File target) throws CrudServiceException {
-		FileOutputStream fOut = null;
-		try {
-			fOut = new FileOutputStream(target);
-			ObjectOutputStream oOut = new ObjectOutputStream(fOut);
+	private static void writeOut(TestCrudsaveable object, File target) throws CrudServiceException {
+		try (FileOutputStream fOut = new FileOutputStream(target); ObjectOutputStream oOut = new ObjectOutputStream(fOut)) {
 			oOut.writeObject(object);
 		} catch (IOException e) {
-			throw new CrudServiceException("writeOut(" + object + ", " + target + ")", e);
+			throw new CrudServiceException("writeOut(" + object + ", " + target + ')', e);
 		}
 	}
 
@@ -60,22 +57,12 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 		File f = getFile(ownerId);
 		if (!f.exists())
 			throw new ItemNotFoundException(ownerId);
-		FileInputStream fIn = null;
-		try {
-			fIn = new FileInputStream(f);
-			ObjectInputStream oIn = new ObjectInputStream(fIn);
+		try (FileInputStream fIn = new FileInputStream(f); ObjectInputStream oIn = new ObjectInputStream(fIn)){
 			return (TestCrudsaveable) oIn.readObject();
 		} catch (IOException e) {
-			throw new CrudServiceException("read(" + ownerId + ")", e);
+			throw new CrudServiceException("read(" + ownerId + ')', e);
 		} catch (ClassNotFoundException e) {
-			throw new CrudServiceException("read(" + ownerId + ")", e);
-		} finally {
-			if (fIn != null) {
-				try {
-					fIn.close();
-				} catch (IOException ignored) {
-				}
-			}
+			throw new CrudServiceException("read(" + ownerId + ')', e);
 		}
 	}
 
@@ -90,7 +77,7 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 	}
 
 	protected File getFile(String ownerId) {
-		return new File("testdata/" + getSpecialPath() + "/" + ownerId + "." + getExtension());
+		return new File("testdata/" + getSpecialPath() + '/' + ownerId + '.' + getExtension());
 	}
 
 	protected abstract String getSpecialPath();
@@ -98,7 +85,7 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 	protected abstract String getExtension();
 
 	public List<TestCrudsaveable> query(Query q) {
-		return new ArrayList<TestCrudsaveable>();
+		return new ArrayList<>();
 	}
 
 }

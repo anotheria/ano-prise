@@ -7,8 +7,9 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 public class VerySimpleTest {
 
@@ -28,18 +29,18 @@ public class VerySimpleTest {
 		
 	}
 	
-	private void test() throws MetaFactoryException{
+	private static void test() throws MetaFactoryException{
 		CalculatorService service = MetaFactory.get(CalculatorService.class);
 		assertEquals("Expected 4", 4, service.plus(2, 2));
 	}
 	
 	
-	@org.junit.Test public void testWithMock() throws MetaFactoryException{
+	@Test public void testWithMock() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Mock", CalculatorService.class.getName());
 		test();
 	}
 
-	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
+	@Test public void testWithImpl() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Impl", CalculatorService.class.getName());
 		test();
 	}

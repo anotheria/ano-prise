@@ -55,7 +55,7 @@ public enum AttributeType {
 	 */
 	public static AttributeType getTypeById(int aTypeId) {
 		for (AttributeType obj : AttributeType.values()) {
-			if (obj.getTypeId() == aTypeId)
+            if (obj.typeId == aTypeId)
 				return obj;
 		}
 

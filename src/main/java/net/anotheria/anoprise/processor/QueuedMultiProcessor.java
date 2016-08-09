@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 
  * @author dmetelin
  * 
- * @param <T>
  */
 public class QueuedMultiProcessor<T extends Object> extends Thread {
 
@@ -98,7 +97,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 
 		packageCapacity = aWorker.packageCapacity();
 
-		processor = new MultiProcessor<T>(aProcessingChannels, aWorker, aLog);
+		processor = new MultiProcessor<>(aProcessingChannels, aWorker, aLog);
 		processor.addListener(new WorkProcessingListener<T>() {
 			@Override
 			public void workStarted(List<T> workingPackage) {
@@ -143,7 +142,6 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * Default method to add an element to the queue. Calls addToQueueDontWait
 	 * internally.
 	 * 
-	 * @param aElement
 	 * @throws UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
@@ -178,8 +176,9 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 
 		if (stopQueueing.get()) {
 			stats.addThrowedAway();
-			log.error(getName() + ": queueing is stopped! Throwing away " + element + ", " + getStatsString());
-			throw new UnrecoverableQueueOverflowException(getName() + ": queueing is stopped! Throwing away " + element + ", " + getStatsString());
+			UnrecoverableQueueOverflowException exception = new UnrecoverableQueueOverflowException(getName() + ": queueing is stopped! Throwing away " + element + ", " + getStatsString());
+			log.error(getName() + ": queueing is stopped! Throwing away element '"+element+"', " + getStatsString());
+			throw exception;
 		}
 
 		long startTime = System.nanoTime();
@@ -195,15 +194,15 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 			}
 		}
 		stats.addThrowedAway();
-		log.error("Waiting for enqueue timeout. Throwing away " + element + ", " + getStatsString());
-		throw new UnrecoverableQueueOverflowException("Waiting for enqueue timeout. Throwing away : " + element + ", " + getStatsString());
+		UnrecoverableQueueOverflowException exception = new UnrecoverableQueueOverflowException("Waiting for enqueue timeout. Throwing away : " + element + ", " + getStatsString());
+		log.error("Waiting for enqueue timeout. Throwing away element '" + element + "', " + getStatsString(), exception);
+		throw exception;
 	}
 
 	/**
 	 * Inserts the specified element at the tail of the processing queue if the
 	 * queue is not full
 	 * 
-	 * @param element
 	 * @throws UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
@@ -215,7 +214,6 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 * Inserts the specified element at the tail of the processing queue if the
 	 * queue is not full
 	 * 
-	 * @param element
 	 * @throws UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
@@ -224,8 +222,9 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 
 		if (stopQueueing.get()) {
 			stats.addThrowedAway();
-			log.error(getName() + ": queueing is stopped! Throwing away " + element + ", " + getStatsString());
-			throw new UnrecoverableQueueOverflowException(getName() + ": queueing is stopped! Throwing away " + element + ", " + getStatsString());
+			UnrecoverableQueueOverflowException exception = new UnrecoverableQueueOverflowException(getName() + ": queueing is stopped! Throwing away " + element + ", " + getStatsString());
+			log.error(getName() + ": queueing is stopped! Throwing away element '"+element+"', " + getStatsString(), exception);
+			throw exception;
 		}
 
 		for (int i = 0; i < enqueueTries; i++) {
@@ -240,8 +239,9 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 			stats.addWaitingTime(dur);
 		}
 		stats.addThrowedAway();
-		log.error("couldn't recover from queue overflow, throwing away " + element + ", " + getStatsString());
-		throw new UnrecoverableQueueOverflowException("Element: " + element + ", " + getStatsString());
+		UnrecoverableQueueOverflowException exception = new UnrecoverableQueueOverflowException("Element: " + element + ", " + getStatsString());
+        log.error(getName() + ":couldn't recover from queue overflow, throwing away element '"+element+"', " + getStatsString(), exception);
+		throw exception;
 	}
 
 	@Override
@@ -266,7 +266,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 		});
 		try {
 			while (!stopImmediately.get()) {
-				List<T> elementsPackage = new ArrayList<T>();
+				List<T> elementsPackage = new ArrayList<>();
 				T element;
 				while (elementsPackage.size() < packageCapacity && (element = queue.poll()) != null) {
 					// System.out.println("Packaging: " +
@@ -276,10 +276,10 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 
 				// System.out.println("1");
 				synchronized (queue) {
-					queue.notify();
+					queue.notifyAll();
 				}
 				// System.out.println("2");
-				if (elementsPackage.size() > 0) {
+				if (!elementsPackage.isEmpty()) {
 					// System.out.println("3");
 					processor.process(elementsPackage);
 					continue;
@@ -290,7 +290,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 					if (processor.isFinished()) {
 						log.info("Queue is empty and all works are done. Processing completed!");
 						synchronized (shutdown) {
-							shutdown.notify();
+							shutdown.notifyAll();
 						}
 						break;
 					}
@@ -345,7 +345,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	}
 
 	public String getStatsString() {
-		return getProcessorStats().toStatsString() + ",\nQUEUE: " + getQueueStat().toStatsString();
+        return stats.toStatsString() + ",\nQUEUE: " + getQueueStat().toStatsString();
 	}
 
 }

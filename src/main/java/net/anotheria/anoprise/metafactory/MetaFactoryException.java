@@ -8,22 +8,11 @@ package net.anotheria.anoprise.metafactory;
  */
 public class MetaFactoryException extends Exception {
 
-	/**
-	 * Basic serialVersionUID variable.
-	 */
-	private static final long serialVersionUID = -682699140633349261L;
-
-	/**
-	 * Default constructor.
-	 * 
-	 * @param name
-	 *            - exception message
-	 */
 	public MetaFactoryException(String message) {
 		super(message);
 	}
 
-	public MetaFactoryException(String message, Exception e) {
-		super(message, e);
+	public MetaFactoryException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

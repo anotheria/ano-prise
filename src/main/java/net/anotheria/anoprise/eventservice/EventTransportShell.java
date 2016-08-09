@@ -13,35 +13,31 @@ public class EventTransportShell implements Serializable{
 	private String channelName;
 	private byte[] data;
 	/**
-	 * @return
 	 */
 	public String getChannelName() {
 		return channelName;
 	}
 
 	/**
-	 * @return
 	 */
 	public byte[] getData() {
 		return data;
 	}
 
 	/**
-	 * @param string
 	 */
 	public void setChannelName(String string) {
 		channelName = string;
 	}
 
 	/**
-	 * @param bs
 	 */
 	public void setData(byte[] bs) {
 		data = bs;
 	}
 	
 	@Override public String toString(){
-		return (data == null ? "no" : ""+data.length) + " bytes for "+channelName;
+		return (data == null ? "no" : String.valueOf(data.length)) + " bytes for "+channelName;
 	}
 
 }

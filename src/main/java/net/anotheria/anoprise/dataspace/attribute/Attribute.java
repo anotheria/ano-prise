@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.dataspace.attribute;
 
-import java.io.Serializable;
-
 import net.anotheria.util.BasicComparable;
+
+import java.io.Serializable;
 
 /**
  * Abstract attribute used in dataspace.
@@ -22,13 +22,12 @@ public abstract class Attribute implements Serializable {
 	 */
 	private String name;
 
-	/**
-	 * Default constructor.
-	 * 
-	 * @param aName
-	 *            - attribute name
-	 */
-	public Attribute(String aName) {
+    /**
+     * Default constructor.
+     *
+     * @param aName - attribute name
+     */
+    public Attribute(String aName) {
 		name = aName;
 	}
 
@@ -93,7 +92,7 @@ public abstract class Attribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getName() + " = " + getValueAsString();
+        return name + " = " + getValueAsString();
 	}
 
 	@Override
@@ -106,7 +105,7 @@ public abstract class Attribute implements Serializable {
 
 	@Override
 	public final boolean equals(Object o) {
-		return o instanceof Attribute ? BasicComparable.compareString(getName(), ((Attribute) o).getName()) == 0 && getType() == ((Attribute) o).getType()
-				&& BasicComparable.compareString(getValueAsString(), ((Attribute) o).getValueAsString()) == 0 : false;
+        return o instanceof Attribute && (BasicComparable.compareString(name, ((Attribute) o).name) == 0 && getType() == ((Attribute) o).getType()
+                && BasicComparable.compareString(getValueAsString(), ((Attribute) o).getValueAsString()) == 0);
 	}
 }

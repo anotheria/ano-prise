@@ -21,12 +21,12 @@ public class QueryResult<T extends CrudSaveable> implements Serializable {
 		if (primary != null)
 			this.primaryResult = primary;
 		else
-			this.primaryResult = new ArrayList<T>();
+			this.primaryResult = new ArrayList<>();
 
 		if (secondary != null)
 			this.secondaryResult = secondary;
 		else
-			this.secondaryResult = new ArrayList<T>();
+			this.secondaryResult = new ArrayList<>();
 	}
 
 	public List<T> getResult(boolean merge) {
@@ -38,20 +38,20 @@ public class QueryResult<T extends CrudSaveable> implements Serializable {
 	}
 
 	public List<T> getResultPrimary() {
-		return new ArrayList<T>(primaryResult);
+		return new ArrayList<>(primaryResult);
 	}
 
 	public List<T> getResultSecondary() {
-		return new ArrayList<T>(secondaryResult);
+		return new ArrayList<>(secondaryResult);
 	}
 
 	private List<T> merge() {
-		Set<T> result = new HashSet<T>(primaryResult);
+		Set<T> result = new HashSet<>(primaryResult);
 		for (T o : secondaryResult)
 			if (!result.contains(o))
 				result.add(o);
 
-		return new ArrayList<T>(result);
+		return new ArrayList<>(result);
 	}
 
 }

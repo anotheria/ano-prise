@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class EventServiceImpl implements EventService {
 
 	private static Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
-	private static EventServiceImpl instance = new EventServiceImpl();
+	private static EventService instance = new EventServiceImpl();
 
 	private ConcurrentMap<String, EventChannelPushConsumerProxy>	pushConsumerProxies;
 	private ConcurrentMap<String, EventChannelPushSupplierProxy>	pushSupplierProxies;
@@ -33,12 +33,12 @@ public class EventServiceImpl implements EventService {
 	}
 	
 	private void init(){
-		pushConsumerProxies = new ConcurrentHashMap<String, EventChannelPushConsumerProxy>(10);
-		pushSupplierProxies = new ConcurrentHashMap<String, EventChannelPushSupplierProxy>(10);
-		remoteConsumerProxies = new ConcurrentHashMap<String, RemoteEventChannelConsumerProxy>(10);
-		remoteSupplierProxies = new ConcurrentHashMap<String, RemoteEventChannelSupplierProxy>(10);
+		pushConsumerProxies = new ConcurrentHashMap<>(10);
+		pushSupplierProxies = new ConcurrentHashMap<>(10);
+		remoteConsumerProxies = new ConcurrentHashMap<>(10);
+		remoteSupplierProxies = new ConcurrentHashMap<>(10);
 
-		listeners = new CopyOnWriteArrayList<EventServiceListener>();
+		listeners = new CopyOnWriteArrayList<>();
 	}
 	
 	public void resetForUnitTesting(){
@@ -47,7 +47,7 @@ public class EventServiceImpl implements EventService {
 
 	
 	
-	public static EventServiceImpl getInstance() {
+	public static EventService getInstance() {
 		return instance;
 	}
 
@@ -72,9 +72,9 @@ public class EventServiceImpl implements EventService {
 	} 
 
 	public  EventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
-		EventChannel ret = null;
-		log.debug("Creating event channel: " + channelName + " of type " + proxyType);
-		switch (proxyType) {
+        log.debug("Creating event channel: {} of type {}", channelName, proxyType);
+        EventChannel ret;
+        switch (proxyType) {
 			case PUSH_CONSUMER_PROXY:
 				ret = _obtainPushConsumerProxy(channelName);
 				break;
@@ -102,7 +102,7 @@ public class EventServiceImpl implements EventService {
 		RemoteEventChannelConsumerProxy old = remoteConsumerProxies.putIfAbsent(channelName, proxy);
 		if (old!=null)
 			return old;
-		log.debug("Created " + proxy);
+        log.debug("Created {}", proxy);
 		connectConsumerProxy(channelName, proxy);
 		return proxy;
 	}
@@ -115,8 +115,8 @@ public class EventServiceImpl implements EventService {
 		EventChannelPushConsumerProxy old = pushConsumerProxies.putIfAbsent(channelName, proxy);
 		if (old!=null)
 			return old;
-		
-		log.debug("created " + proxy);
+
+        log.debug("Created {}", proxy);
 		connectConsumerProxy(channelName, proxy);
 		notifyChannelCreation(channelName, ProxyType.PUSH_CONSUMER_PROXY);
 		return proxy;
@@ -130,8 +130,8 @@ public class EventServiceImpl implements EventService {
 		EventChannelPushSupplierProxy old = pushSupplierProxies.putIfAbsent(channelName, proxy);
 		if (old!=null)
 			return old;
-		
-		log.debug("Created " + proxy);
+
+        log.debug("Created {}", proxy);
 		connectSupplierProxy(channelName, proxy);
 		notifyChannelCreation(channelName, ProxyType.PUSH_SUPPLIER_PROXY);
 		return proxy;
@@ -145,7 +145,7 @@ public class EventServiceImpl implements EventService {
 		RemoteEventChannelSupplierProxy old = remoteSupplierProxies.putIfAbsent(channelName, proxy);
 		if (old!=null)
 			return old;
-		log.debug("Created " + proxy);
+        log.debug("Created {}", proxy);
 		connectSupplierProxy(channelName, proxy);
 		return proxy;
 	}
@@ -153,24 +153,24 @@ public class EventServiceImpl implements EventService {
 
 	private void connectSupplierProxy(String channelName, EventChannelSupplierProxy proxy) {
 		List<EventChannelConsumerProxy> consumers = getConsumerProxies(channelName);
-		log.debug("Connecting " + consumers + " to " + proxy);
-		for (int i = 0, n = consumers.size(); i < n; i++) {
-			log.debug("connecting " + consumers.get(i));
-			proxy.addConsumerProxy(consumers.get(i));
-		}
+        log.debug("Connecting {} to {}", consumers, proxy);
+        for (EventChannelConsumerProxy consumer : consumers) {
+            log.debug("Connecting {}", consumer);
+            proxy.addConsumerProxy(consumer);
+        }
 	}
 
 	private void connectConsumerProxy(String channelName, EventChannelConsumerProxy proxy) {
 		List<EventChannelSupplierProxy> suppliers = getSupplierProxies(channelName);
-		log.debug("connecting " + proxy + " to " + suppliers);
-		for (int i = 0, n = suppliers.size(); i < n; i++) {
-			log.debug("connecting " + proxy + " to " + suppliers.get(i));
-			suppliers.get(i).addConsumerProxy(proxy);
-		}
+        log.debug("Connecting {} to {}", proxy, suppliers);
+        for (EventChannelSupplierProxy supplier : suppliers) {
+            log.debug("Connecting {} to {}", proxy, supplier);
+            supplier.addConsumerProxy(proxy);
+        }
 	}
 
 	private List<EventChannelConsumerProxy> getConsumerProxies(String channelName) {
-		List<EventChannelConsumerProxy> ret = new ArrayList<EventChannelConsumerProxy>();
+		List<EventChannelConsumerProxy> ret = new ArrayList<>();
 		EventChannelConsumerProxy pushConsumerProxy = pushConsumerProxies.get(channelName);
 		if (pushConsumerProxy != null) 
 			ret.add(pushConsumerProxy);
@@ -183,7 +183,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private List<EventChannelSupplierProxy> getSupplierProxies(String channelName) {
-		List<EventChannelSupplierProxy> ret = new ArrayList<EventChannelSupplierProxy>();
+		List<EventChannelSupplierProxy> ret = new ArrayList<>();
 		EventChannelSupplierProxy pushSupplierProxy = pushSupplierProxies.get(channelName);
 		if (pushSupplierProxy != null)
 			ret.add(pushSupplierProxy);
@@ -196,10 +196,10 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private void dump() {
-		log.debug("Consumer proxies: " + pushConsumerProxies);
-		log.debug("Supplier proxies: " + pushSupplierProxies);
-		log.debug("Remote Consumer proxies: " + remoteConsumerProxies);
-		log.debug("Remote Supplier proxies: " + remoteSupplierProxies);
+        log.debug("Consumer proxies: {}", pushConsumerProxies);
+        log.debug("Supplier proxies: {}", pushSupplierProxies);
+        log.debug("Remote Consumer proxies: {}", remoteConsumerProxies);
+        log.debug("Remote Supplier proxies: {}", remoteSupplierProxies);
 
 	}
 
@@ -215,8 +215,8 @@ public class EventServiceImpl implements EventService {
 		for (EventServiceListener listener : listeners){
 			try{
 				listener.channelCreated(channelName, type);
-			}catch(Exception e){
-				log.error("Unexcepted exception in listener "+listener+", in call notifyChannelCreation(" + channelName+ ", "+ type+")", e);
+			}catch(RuntimeException e){
+                log.error("Unexcepted exception in listener '"+listener+"', in call notifyChannelCreation("+channelName+", "+type+ ')', e);
 			}
 		}
 	}

@@ -13,7 +13,6 @@ import java.util.concurrent.BlockingQueue;
  * 
  * @author dmetelin
  * 
- * @param <T>
  */
 public class EnterpriseQueueAdapter<T> implements EnterpriseQueue<T> {
 
@@ -55,7 +54,7 @@ public class EnterpriseQueueAdapter<T> implements EnterpriseQueue<T> {
 	private EnterpriseQueueAdapter(Queue<T> aDelegateQueue, int aCapacity) {
 		delegate = aDelegateQueue;
 		capacity = aCapacity;
-		listeners = new ArrayList<EnterpriseQueueListener>();
+		listeners = new ArrayList<>();
 		queueStats = new QueueStats(this.getClass().getSimpleName());
 		queueStats.setTotalSize(aCapacity);
 	}
@@ -135,7 +134,7 @@ public class EnterpriseQueueAdapter<T> implements EnterpriseQueue<T> {
 
 	@Override
 	public List<T> drain() {
-		List<T> ret = new ArrayList<T>();
+		List<T> ret = new ArrayList<>();
 
 		for (T element = delegate.poll(); element != null; element = delegate.poll())
 			ret.add(element);

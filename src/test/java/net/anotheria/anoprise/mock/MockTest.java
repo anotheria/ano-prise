@@ -82,7 +82,7 @@ public class MockTest {
 
 	
 	public static class Mock1 implements Mocking{
-		public String askService(String param){
+		public static String askService(String param){
 			return "Service said: "+param+" accepted.";
 		}
 		
@@ -92,7 +92,7 @@ public class MockTest {
 	}
 	
 	public static class Mock2 implements Mocking{
-		public void voidDummyMethod(){
+		public static void voidDummyMethod(){
 			int a = 100;
 			for (int i=0; i<1000; i++)
 				a++;
@@ -100,7 +100,7 @@ public class MockTest {
 	}
 	
 	public static class Mock3 implements Mocking{
-		public void throwExceptionOnCall() throws TestException{
+		public static void throwExceptionOnCall() throws TestException{
 			throw new TestException();
 		}
 	}

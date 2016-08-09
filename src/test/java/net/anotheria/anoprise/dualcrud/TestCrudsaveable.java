@@ -21,7 +21,7 @@ public class TestCrudsaveable implements CrudSaveable {
 
 	@Override
 	public String toString() {
-		return id + "=" + content;
+		return id + '=' + content;
 	}
 
 	public String getContent() {

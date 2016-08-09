@@ -1,10 +1,11 @@
 package net.anotheria.anoprise.eventservice;
 
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class LocalEventsTest {
 	
@@ -18,7 +19,7 @@ public class LocalEventsTest {
 		
 		EventChannel testPushForSupplier = service.obtainEventChannel(CHANNEL_NAME, ProxyType.PUSH_SUPPLIER_PROXY);
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -28,7 +29,7 @@ public class LocalEventsTest {
 		service.obtainEventChannel(CHANNEL_NAME, t1).addConsumer(t1);
 		
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -38,7 +39,7 @@ public class LocalEventsTest {
 		service.obtainEventChannel(CHANNEL_NAME, t2).addConsumer(t2);
 		
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -50,21 +51,21 @@ public class LocalEventsTest {
 	
 	@Test public void testMultipleSuppliers() throws InterruptedException{
 		EventService service = EventServiceFactory.createEventService();
-		
-		int numberOfEvents = 10000;
-		int parallelThreadCount = 10;
+
+        int parallelThreadCount = 10;
 
 		TestConsumer t1 = new TestConsumer();
 		TestConsumer t2 = new TestConsumer();
-		final TestSupplier[] suppliers = new TestSupplier[parallelThreadCount];
-		
-		service.obtainEventChannel(CHANNEL_NAME, t1).addConsumer(t1);
+
+        service.obtainEventChannel(CHANNEL_NAME, t1).addConsumer(t1);
 		service.obtainEventChannel(CHANNEL_NAME, t2).addConsumer(t2);
 		
 		final CountDownLatch startLatch = new CountDownLatch(1);
 		final CountDownLatch stopLatch = new CountDownLatch(parallelThreadCount);
 
-		for (int i=0; i<parallelThreadCount; i++){
+        final TestSupplier[] suppliers = new TestSupplier[parallelThreadCount];
+        int numberOfEvents = 10000;
+        for (int i = 0; i<parallelThreadCount; i++){
 			final TestSupplier ts = new TestSupplier(service, CHANNEL_NAME, numberOfEvents);; 
 			suppliers[i] = ts;
 			Thread t = new Thread(){
@@ -118,7 +119,7 @@ public class LocalEventsTest {
 		public void sendEvents(CountDownLatch start, CountDownLatch stop) throws InterruptedException{
 			start.await();
 			for (int i=0; i<numberOfEvents; i++){
-				Event e = new Event(""+i);
+				Event e = new Event(String.valueOf(i));
 				e.setOriginator(this.toString());
 				channel.push(e);
 			}

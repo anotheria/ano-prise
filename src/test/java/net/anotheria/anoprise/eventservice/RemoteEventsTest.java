@@ -18,7 +18,7 @@ public class RemoteEventsTest {
 		
 		EventChannel testPushForSupplier = service.obtainEventChannel("testPush", ProxyType.PUSH_SUPPLIER_PROXY);
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -30,7 +30,7 @@ public class RemoteEventsTest {
 		((RemoteEventChannelConsumerProxy)service.obtainEventChannel("testPush", t3)).addRemoteConsumer(t3);
 		
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -41,7 +41,7 @@ public class RemoteEventsTest {
 		service.obtainEventChannel("testPush", t2).addConsumer(t2);
 		
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -51,7 +51,7 @@ public class RemoteEventsTest {
 		
 		((RemoteEventChannelConsumerProxy)service.obtainEventChannel("testPush", t3)).removeRemoteConsumer(t3);
 		for (int i=0; i<10; i++){
-			Event e = new Event(""+i);
+			Event e = new Event(String.valueOf(i));
 			testPushForSupplier.push(e);
 		}
 		
@@ -76,7 +76,7 @@ public class RemoteEventsTest {
 		}
 
 		@Override public String toString(){
-			return TestRemoteConsumer.class.getSimpleName()+" "+eventCount;
+			return TestRemoteConsumer.class.getSimpleName()+ ' ' +eventCount;
 		}
 		
 	}

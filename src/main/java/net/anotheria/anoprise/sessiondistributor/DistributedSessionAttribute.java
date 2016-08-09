@@ -63,16 +63,16 @@ public class DistributedSessionAttribute implements Serializable {
 
 	@Override
 	public String toString() {
-		return getName() + ",  with " + getDataSize() + " bytes.";
+        return name + ",  with " + getDataSize() + " bytes.";
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		return o == this || ((o instanceof DistributedSessionAttribute) && ((DistributedSessionAttribute) o).getName().equals(getName()));
+        return o == this || ((o instanceof DistributedSessionAttribute) && ((DistributedSessionAttribute) o).name.equals(name));
 	}
 
 	@Override
 	public int hashCode() {
-		return getName() != null ? getName().hashCode() : 0;
+        return name != null ? name.hashCode() : 0;
 	}
 }

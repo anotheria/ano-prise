@@ -1,5 +1,7 @@
 package net.anotheria.anoprise.metafactory;
 
+import net.anotheria.moskito.core.util.storage.Storage;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.anotheria.moskito.core.util.storage.Storage;
 
 /**
  * Utility class for dynamic instance creation of multiple possible instance types.
@@ -29,7 +29,7 @@ public class MetaFactory {
 	/**
 	 * Storage for factory classes.
 	 */
-	@SuppressWarnings("rawtypes")
+
 	private static Map<String, FactoryHolder> factoryClasses;
 	/**
 	 * Storage for factories.
@@ -56,7 +56,7 @@ public class MetaFactory {
 	 * Performs a complete reset of the inner state. Useful for unit testing to call @AfterClass or @After.
 	 */
 	public static void reset() {
-		resolverList = new CopyOnWriteArrayList<AliasResolver>();
+		resolverList = new CopyOnWriteArrayList<>();
 		resolverList.add(new SystemPropertyResolver());
 		resolverList.add(ConfigurableResolver.create());
 		factoryResolver = ConfigurableFactoryResolver.create();
@@ -64,7 +64,7 @@ public class MetaFactory {
 		factories = Storage.createConcurrentHashMapStorage("mf-factories");
 		aliases = Storage.createConcurrentHashMapStorage("mf-aliases");
 		instances = Storage.createConcurrentHashMapStorage("mf-instances");
-		otfConflictResolvers = new CopyOnWriteArrayList<OnTheFlyConflictResolver>();
+		otfConflictResolvers = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class MetaFactory {
 		return pattern.cast(create(pattern, Extension.NONE));
 	}
 
-	@SuppressWarnings("unchecked")
+
 	private static <T extends Service> T _create(Class<T> pattern, Extension extension, String name) throws MetaFactoryException {
 		if (name==null)
 			name = extension.toName(pattern);
@@ -140,11 +140,8 @@ public class MetaFactory {
 					}
 					
 					factories.put(name, factory);
-				} catch (IllegalAccessException e) {
-					throw new FactoryInstantiationError(clazz, name, e.getMessage());
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-					throw new FactoryInstantiationError(clazz, name, e.getMessage());
+				} catch (IllegalAccessException | InstantiationException e) {
+					throw new FactoryInstantiationError(clazz, name, e.getMessage(), e);
 				}
 			}
 
@@ -153,7 +150,7 @@ public class MetaFactory {
 	}
 	
 	private static <T extends Service> T _create(final Class<T> service, final String serviceKey) throws MetaFactoryException {
-		@SuppressWarnings("unchecked")
+
 		FactoryHolder<T> factoryConfiguration = factoryClasses.get(serviceKey);
 		if (factoryConfiguration == null)
 			throw new FactoryNotFoundException(serviceKey);
@@ -166,10 +163,8 @@ public class MetaFactory {
 			}
 
 			return factory.create();
-		} catch (IllegalAccessException e) {
-			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage());
-		} catch (InstantiationException e) {
-			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage());
+		} catch (IllegalAccessException | InstantiationException e) {
+			throw new FactoryInstantiationError(factoryConfiguration.getFactoryClass(), service.getName(), e.getMessage(), e);
 		}
 	}
 
@@ -179,19 +174,13 @@ public class MetaFactory {
 
 	public static <T extends Service> T get(Class<T> pattern, Extension extension) throws MetaFactoryException {
 
-		out("get called, pattern: " + pattern + ", extension: " + extension);
-
 		if (extension == null)
 			extension = Extension.NONE;
 		String name = extension.toName(pattern);
-		out("name is " + name);
 
 		name = resolveAlias(name);
-		out("resolved alias to " + name);
 
 		T instance = pattern.cast(instances.get(name));
-
-		out("instance of " + name + " is: " + instance);
 
 		if (instance != null)
 			return instance;
@@ -199,9 +188,7 @@ public class MetaFactory {
 		synchronized (instances) {
 			instance = pattern.cast(instances.get(name));
 			if (instance == null) {
-				out("creating new instance of " + name);
 				instance = pattern.cast(_create(pattern, extension, name));
-				out("created new instance of " + name + " ---> " + instance);
 				instances.put(name, instance);
 			}
 		}
@@ -213,7 +200,7 @@ public class MetaFactory {
 		if (service == null)
 			throw new IllegalArgumentException("service argument is null.");
 
-		String innerExtension = extension != null ? "." + extension.replaceAll("\\.", "_").toLowerCase() : ".null";
+		String innerExtension = extension != null ? '.' + extension.replaceAll("\\.", "_").toLowerCase() : ".null";
 		String serviceKey = service.getName() + innerExtension;
 
 		T instance = service.cast(instances.get(serviceKey));
@@ -232,18 +219,23 @@ public class MetaFactory {
 	}
 
 	public static String resolveAlias(String name) {
+		resolveAlias:
+		while (true) {
 
-		// first check resolvers
-		synchronized (resolverList) {
-			for (AliasResolver resolver : resolverList) {
-				String resolved = resolver.resolveAlias(name);
-				if (resolved != null)
-					return resolveAlias(resolved);
+			// first check resolvers
+			synchronized (resolverList) {
+				for (AliasResolver resolver : resolverList) {
+					String resolved = resolver.resolveAlias(name);
+					if (resolved != null) {
+						name = resolved;
+						continue resolveAlias;
+					}
+				}
 			}
-		}
 
-		String alias = aliases.get(name);
-		return alias == null ? name : resolveAlias(alias);
+			String alias = aliases.get(name);
+			return alias == null ? name : resolveAlias(alias);
+		}
 	}
 
 	public static String resolveAlias(Class<? extends Service> clazz) {
@@ -267,7 +259,7 @@ public class MetaFactory {
 	}
 
 	public static <T extends Service> void createOnTheFlyFactory(Class<T> service, Extension extension, T serviceInstance) {
-		OnTheFlyFactory<T> factory = new OnTheFlyFactory<T>(serviceInstance);
+		ServiceFactory<T> factory = new OnTheFlyFactory<>(serviceInstance);
 		factories.put(extension.toName(service), factory);
 	}
 
@@ -276,7 +268,7 @@ public class MetaFactory {
 	}
 
 	public static <T extends Service> void addFactoryClass(String name, Class<? extends ServiceFactory<T>> factoryClass) {
-		factoryClasses.put(name, new FactoryHolder<T>(factoryClass, null));
+		factoryClasses.put(name, new FactoryHolder<>(factoryClass, null));
 	} 
 	
 	public static <T extends Service, V extends ParameterizedServiceFactory<T>> void addParameterizedFactoryClass(final Class<T> service, final String extension, final Class<V> factoryClass, final Map<String, Serializable> parameters) {
@@ -285,24 +277,14 @@ public class MetaFactory {
 		if (factoryClass == null)
 			throw new IllegalArgumentException("factoryClass argument is null.");
 		
-		String innerExtension = extension != null ? "." + extension.replaceAll("\\.", "_").toLowerCase() : ".null";
-		factoryClasses.put(service.getName() + innerExtension, new FactoryHolder<T>(factoryClass, parameters));
-	}
-
-	/**
-	 * Used for debug output.
-	 * 
-	 * @param o
-	 *            output.
-	 */
-	private static void out(Object o) {
-		// System.out.println("[MetaFactory] "+o);
+		String innerExtension = extension != null ? '.' + extension.replaceAll("\\.", "_").toLowerCase() : ".null";
+		factoryClasses.put(service.getName() + innerExtension, new FactoryHolder<>(factoryClass, parameters));
 	}
 
 	public static void debugDumpAliasMap() {
 		Set<String> keys = aliases.keySet();
-		for (String key : keys) {
-			System.out.println(key + " = " + aliases.get(key));
+		for (Map.Entry<String, String> stringStringEntry : aliases.entrySet()) {
+			System.out.println(stringStringEntry.getKey() + " = " + stringStringEntry.getValue());
 		}
 	}
 
@@ -321,15 +303,13 @@ public class MetaFactory {
 
 	public static List<AliasResolver> getAliasResolverList() {
 		synchronized (resolverList) {
-			ArrayList<AliasResolver> ret = new ArrayList<AliasResolver>();
-			ret.addAll(resolverList);
-			return ret;
+			List<AliasResolver> ret = new ArrayList<>(resolverList);
+            return ret;
 		}
 	}
 
 	/**
 	 * Adds a new conflict resolver to be used whenever onthefly impl lookup returns multiple candidates.
-	 * @param otfCR
 	 */
 	public static void addOnTheFlyConflictResolver(OnTheFlyConflictResolver otfCR){
 		otfConflictResolvers.add(otfCR);
@@ -340,7 +320,6 @@ public class MetaFactory {
 	 * 
 	 * @author Alexandr Bolbat
 	 *
-	 * @param <T>
 	 */
 	private static class FactoryHolder<T extends Service> {
 
@@ -380,13 +359,12 @@ public class MetaFactory {
 
 		@Override
 		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("FactoryHolder [factoryClass=");
-			builder.append(factoryClass);
-			builder.append(", parameters=");
-			builder.append(parameters);
-			builder.append("]");
-			return builder.toString();
+			String builder = "FactoryHolder [factoryClass=" +
+					factoryClass +
+					", parameters=" +
+					parameters +
+					']';
+			return builder;
 		}
 
 	}

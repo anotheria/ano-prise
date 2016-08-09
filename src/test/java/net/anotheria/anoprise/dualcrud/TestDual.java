@@ -124,7 +124,7 @@ public class TestDual {
 		testSingleMode(testService, beta, alpha);
 	}
 
-	private void testSingleMode(DualCrudService<TestCrudsaveable> dualService, CrudService<TestCrudsaveable> usedService, CrudService<TestCrudsaveable> unusedService) throws Exception{
+	private static void testSingleMode(DualCrudService<TestCrudsaveable> dualService, CrudService<TestCrudsaveable> usedService, CrudService<TestCrudsaveable> unusedService) throws Exception{
 		
 		String id = "singlemode";
 		String content = "singlemode";

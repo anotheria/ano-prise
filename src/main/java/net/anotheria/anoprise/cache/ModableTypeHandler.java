@@ -13,5 +13,5 @@ public interface ModableTypeHandler {
 	 * @param parameter key parameter of the cache
 	 * @return modable value
 	 */
-	public long getModableValue(Object parameter);
+    long getModableValue(Object parameter);
 }

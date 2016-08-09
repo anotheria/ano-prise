@@ -8,7 +8,6 @@ package net.anotheria.anoprise.eventservice;
 public interface EventChannelConsumerProxy extends EventChannelProxy{
 	/**
 	 * Called by a connected supplier proxy.
-	 * @param e
 	 */
-	public void pushEvent(Event e);
+    void pushEvent(Event e);
 }

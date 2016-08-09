@@ -41,7 +41,7 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 		try {
 			ConfigurationManager.INSTANCE.configure(resolver);
 		} catch (IllegalArgumentException e) {
-			LOG.warn("create() - no factory config found, configurable resolver remains unused.");
+			LOG.warn("create() - no factory config found, configurable resolver remains unused.", e);
 		}catch(RuntimeException e){
 			LOG.warn("create() - couldn't find factories.json file, probably packed in a jar, ignored.", e);
 		}
@@ -54,7 +54,7 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 	 */
 	private ConfigurableFactoryResolver() {
 		priority = 50;
-		factoryMap = new ConcurrentHashMap<String, Class<? extends ServiceFactory<? extends Service>>>();
+		factoryMap = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -63,14 +63,14 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 	 * @param name service class name
 	 * @param value service factory class name
 	 */
-	@SuppressWarnings("unchecked")
+
 	@SetAll
 	public void addFactory(final String name, final String value) {
-		System.out.println("Set "+name+" = "+value);
+		LOG.debug("Set "+name+" = "+value);
 		try {
 			factoryMap.put(name, (Class<? extends ServiceFactory<? extends Service>>) Class.forName(value));
 		} catch (ClassNotFoundException e) {
-			LOG.error("addFactory("+name+", "+value+")", e);
+			LOG.error("addFactory("+name+", "+value+ ')', e);
 		}
 	}
 
@@ -92,6 +92,6 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 
 	@Override
 	public String toString(){
-		return getClass().getSimpleName()+" "+factoryMap;
+		return getClass().getSimpleName()+ ' ' +factoryMap;
 	}
 }

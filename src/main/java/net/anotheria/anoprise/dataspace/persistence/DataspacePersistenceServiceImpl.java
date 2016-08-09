@@ -37,7 +37,7 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 	/**
 	 * DDL queries. Don't make this variable static.
 	 */
-	private final List<String> ddlQueries = new ArrayList<String>();
+	private final List<String> ddlQueries = new ArrayList<>();
 
 	/**
 	 * Persistence service configuration
@@ -99,7 +99,7 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 				result.addAttribute(attrName, Attribute.createAttribute(attrType, attrName, attrValue));
 			}
 		} catch (SQLException sqle) {
-			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage(), sqle);
+            log.error(LOG_PREFIX + "SQL Exception", sqle);
 			throw new DataspacePersistenceServiceException(sqle.getMessage(), sqle);
 		} finally {
 			close(rs);
@@ -119,14 +119,13 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 		if (dataspace.getDataspaceType() == null)
 			throw new IllegalArgumentException("Dataspace type null");
 
-		Connection conn = null;
-		PreparedStatement st = null;
-		PreparedStatement st2 = null;
-
-		String lockId = dataspace.getUserId() + "_" + dataspace.getDataspaceType();
+        String lockId = dataspace.getUserId() + '_' + dataspace.getDataspaceType();
 		IdBasedLock lock = lockManager.obtainLock(lockId);
 		lock.lock();
-		try {
+        PreparedStatement st2 = null;
+        PreparedStatement st = null;
+        Connection conn = null;
+        try {
 			conn = getConnection();
 			conn.setAutoCommit(false);
 			// remove old dataspace from persistence
@@ -166,10 +165,10 @@ public class DataspacePersistenceServiceImpl extends GenericPersistenceService i
 			try {
 				conn.rollback();
 			} catch (SQLException sqle2) {
-				log.error(LOG_PREFIX + "SQL Exception on transaction rollback: " + sqle2.getMessage(), sqle2);
+                log.error(LOG_PREFIX + "SQL Exception on transaction rollback", sqle2);
 			}
-			log.error(LOG_PREFIX + "SQL Exception: " + sqle.getMessage(), sqle);
-			throw new DataspacePersistenceServiceException(sqle.getMessage(), sqle);
+            log.error(LOG_PREFIX + "SQL Exception", sqle);
+			throw new DataspacePersistenceServiceException(sqle);
 		} finally {
 			close(st2);
 			close(st);

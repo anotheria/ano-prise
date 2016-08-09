@@ -49,10 +49,8 @@ public interface SessionDistributorService extends Service {
 	 * Get distributed session names.
 	 *
 	 * @return {@link List} of {@link String} session names
-	 * @throws SessionDistributorServiceException
-	 *          on errors
 	 */
-	List<String> getDistributedSessionNames() throws SessionDistributorServiceException;
+	List<String> getDistributedSessionNames();
 
 	/**
 	 * Updates DistributedSession userId property.

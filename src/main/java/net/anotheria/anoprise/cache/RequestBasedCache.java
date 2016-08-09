@@ -58,17 +58,17 @@ public class RequestBasedCache<K,V> extends AbstractCache implements Cache<K, V>
 	/**
 	 * The thread local variable associated with the current thread.
 	 */
-	private static InheritableThreadLocal<HashMap> mapHolder = new InheritableThreadLocal<HashMap>() {
+	private static final InheritableThreadLocal<HashMap> mapHolder = new InheritableThreadLocal<HashMap>() {
 		@Override
-		protected synchronized HashMap initialValue() {
-			return new HashMap();
+		protected HashMap initialValue() {
+			synchronized (this) {
+				return new HashMap();
+			}
 		}
 
 		@Override
 		protected HashMap childValue(HashMap parentValue) {
-			HashMap ret = new HashMap();
-			ret.putAll(parentValue);
-			return ret;
+			return new HashMap(parentValue);
 		}
 	};
 	

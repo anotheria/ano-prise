@@ -9,11 +9,6 @@ package net.anotheria.anoprise.dualcrud;
 public class CrudServiceException extends Exception {
 
 	/**
-	 * Basic serialVersionUID variable.
-	 */
-	private static final long serialVersionUID = -1846792906505930875L;
-
-	/**
 	 * Creates a new {@link CrudServiceException} with a message.
 	 * 
 	 * @param message

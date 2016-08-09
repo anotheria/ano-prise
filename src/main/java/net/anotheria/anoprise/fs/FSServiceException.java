@@ -9,11 +9,6 @@ package net.anotheria.anoprise.fs;
 public class FSServiceException extends Exception {
 
 	/**
-	 * Basic serialVersionUID variable.
-	 */
-	private static final long serialVersionUID = -8250719745502463566L;
-
-	/**
 	 * Creates a new {@link FSServiceException} with a message.
 	 * 
 	 * @param message
@@ -35,4 +30,7 @@ public class FSServiceException extends Exception {
 		super(message, cause);
 	}
 
+	public FSServiceException(Throwable cause) {
+		super(cause);
+	}
 }

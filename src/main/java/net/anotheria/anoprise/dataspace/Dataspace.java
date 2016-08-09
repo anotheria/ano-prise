@@ -1,13 +1,13 @@
 package net.anotheria.anoprise.dataspace;
 
+import net.anotheria.anoprise.dataspace.attribute.Attribute;
+import net.anotheria.util.BasicComparable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.anotheria.anoprise.dataspace.attribute.Attribute;
-import net.anotheria.util.BasicComparable;
 
 /**
  * Dataspace used in DataspaceService.
@@ -34,7 +34,7 @@ public class Dataspace implements Serializable, Cloneable {
 	/**
 	 * Dataspace attributes.
 	 */
-	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
+	private Map<String, Attribute> attributes = new HashMap<>();
 
 	/**
 	 * Default constructor.
@@ -82,7 +82,7 @@ public class Dataspace implements Serializable, Cloneable {
 	 * @return {@link List} with all attributes
 	 */
 	public List<Attribute> getAttributes() {
-		return new ArrayList<Attribute>(attributes.values());
+		return new ArrayList<>(attributes.values());
 	}
 
 	/**
@@ -109,13 +109,13 @@ public class Dataspace implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Dataspace [attributes=" + attributes + ", dataspaceTypeId=" + dataspaceType.getId() + ", userId=" + userId + "]";
+		return "Dataspace [attributes=" + attributes + ", dataspaceTypeId=" + dataspaceType.getId() + ", userId=" + userId + ']';
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		return o instanceof Dataspace ? BasicComparable.compareString(userId, ((Dataspace) o).userId) == 0
-				&& dataspaceType.getId() == ((Dataspace) o).dataspaceType.getId() : false;
+		return o instanceof Dataspace && (BasicComparable.compareString(userId, ((Dataspace) o).userId) == 0
+                && dataspaceType.getId() == ((Dataspace) o).dataspaceType.getId());
 	}
 
 	@Override

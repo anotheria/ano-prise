@@ -1,19 +1,19 @@
 package net.anotheria.anoprise.cache;
 
+import java.util.HashMap;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+
 import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.HashMap;
-import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-
 public class BoundedCacheTester {
 	public static void testBasicFunctionality(BoundedCache<Integer, String> cache) throws Exception{
 		
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.offer(i,""+i);
+			cache.offer(i, String.valueOf(i));
 		}
 		
 		for (int i=0; i<MAX_SIZE; i++){
@@ -31,7 +31,7 @@ public class BoundedCacheTester {
 		
 		//put again.
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.offer(i,""+i);
+			cache.offer(i, String.valueOf(i));
 		}
 		
 		for (int i=0; i<MAX_SIZE; i++){
@@ -48,11 +48,11 @@ public class BoundedCacheTester {
 	
 	public static void testOverwrite(BoundedCache<Integer, String> cache) throws Exception{
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.offer(i,""+i);
+			cache.offer(i, String.valueOf(i));
 		}
 		//cache is full now, fill it again.
 		for (int i=0; i<MAX_SIZE; i++){
-			cache.offer(i,""+(i+MAX_SIZE));
+			cache.offer(i, String.valueOf(i + MAX_SIZE));
 		}
 
 		//unlike the unbounded cache this cache doesn't allow overwrite. so it will simply ignore everything written after it was full.
@@ -105,7 +105,7 @@ public class BoundedCacheTester {
 										stats.addRead();
 										if (value==null){
 											stats.addMiss();
-											cache.offer(i, ""+i);
+											cache.offer(i, String.valueOf(i));
 											stats.addWrite();
 										}else{
 											stats.addHit();
@@ -147,10 +147,10 @@ public class BoundedCacheTester {
 				emptySpots++;
 			}
 		}
-		
-		
-		long timeInMs = (endTime-startTime)/1000/1000;
+
+
 		System.out.println("All threads finished: totals "+totals+" empty spots: "+emptySpots+" of "+MAX_SIZE);
+		long timeInMs = (endTime - startTime) / 1000 / 1000;
 		System.out.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
 		System.out.println("Stats: "+cache.getCacheStats().toStatsString());
 
@@ -178,12 +178,12 @@ public class BoundedCacheTester {
 				@Override
 				public void run() {
 					int identity = rnd.nextInt(100);
-					String sIdentity = ""+identity;
-					boolean doWrite = false;
 					try{
 						RunnerStats stats = new RunnerStats(Thread.currentThread().getName(), identity);
 						startLatch.await();
-						for (int l=0; l<loops; l++){
+						boolean doWrite = false;
+						String sIdentity = String.valueOf(identity);
+						for (int l = 0; l<loops; l++){
 							int step = rnd.nextInt(3)+1;
 							//System.out.println(sIdentity+", "+step);
 							for (int i=0; i<MAX_SIZE; i+=step){
@@ -235,7 +235,7 @@ public class BoundedCacheTester {
 		//perform sanity check
 		int emptySpots = 0;
 		
-		HashMap<String, Integer> countersByIdentity = new HashMap<String, Integer>();
+		HashMap<String, Integer> countersByIdentity = new HashMap<>();
 		
 		for (int i=0; i<MAX_SIZE; i++){
 			String v = cache.get(i);
@@ -250,9 +250,9 @@ public class BoundedCacheTester {
 				emptySpots++;
 			}
 		}
-		
-		long timeInMs = (endTime-startTime)/1000/1000;
+
 		System.out.println("All threads finished: totals "+totals+" empty spots: "+emptySpots+" of "+MAX_SIZE);
+		long timeInMs = (endTime - startTime) / 1000 / 1000;
 		System.out.println("Performed "+totals.requestCount() +" requests on ("+cache+") in "+timeInMs+" ms, performance: "+totals.requestCount()/timeInMs+" operations per millisecond");
 		System.out.println("Stats: "+cache.getCacheStats().toStatsString());
 		System.out.println("Counters by Identity: "+countersByIdentity);
@@ -275,14 +275,16 @@ public class BoundedCacheTester {
 			modulo = aModulo;
 			readCount = writeCount = removeCount = errorCount = missCount = 0; 
 		}
-		
-		public synchronized void add(RunnerStats anotherStats){
-			readCount += anotherStats.readCount;
-			writeCount += anotherStats.writeCount;
-			removeCount += anotherStats.removeCount;
-			errorCount += anotherStats.errorCount;
-			missCount += anotherStats.missCount;
-			hitCount += anotherStats.hitCount;
+
+		public void add(RunnerStats anotherStats) {
+			synchronized (this) {
+				readCount += anotherStats.readCount;
+				writeCount += anotherStats.writeCount;
+				removeCount += anotherStats.removeCount;
+				errorCount += anotherStats.errorCount;
+				missCount += anotherStats.missCount;
+				hitCount += anotherStats.hitCount;
+			}
 		}
 		
 		public String toString(){

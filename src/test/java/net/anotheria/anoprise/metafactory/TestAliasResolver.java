@@ -20,6 +20,6 @@ public class TestAliasResolver implements AliasResolver{
 	}
 	
 	@Override public String toString(){
-		return "Resolver P"+getPriority();
+        return "Resolver P"+ priority;
 	}
 }

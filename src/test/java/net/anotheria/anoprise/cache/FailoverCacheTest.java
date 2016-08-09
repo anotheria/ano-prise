@@ -16,37 +16,37 @@ public class FailoverCacheTest {
 
 	@Test
 	public void testBasicFunctionality() throws Exception {
-		FailoverCache<Integer, String> cache = new FailoverCache<Integer, String>("test",0, 0, null,  new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE,MAX_SIZE));
+		FailoverCache<Integer, String> cache = new FailoverCache<>(0, 0, null, new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE, MAX_SIZE));
 		CacheTester.testBasicFunctionality(cache);
 	}
 
 	@Test
 	public void testOverwrite() throws Exception {
-		FailoverCache<Integer, String> cache = new FailoverCache<Integer, String>("test",0, 0, null,  new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE,MAX_SIZE));
+		FailoverCache<Integer, String> cache = new FailoverCache<>(0, 0, null, new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE, MAX_SIZE));
 		CacheTester.testOverwrite(cache);
 	}
 
 	@Test
 	public void testRollover() throws Exception {
-		FailoverCache<Integer, String> cache = new FailoverCache<Integer, String>("test",0, 0, null,  new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE,MAX_SIZE));
+		FailoverCache<Integer, String> cache = new FailoverCache<>(0, 0, null, new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE, MAX_SIZE));
 		CacheTester.testRollover(cache);
 	}
 
 	@Test
 	public void testConcurrency() throws Exception {
-		FailoverCache<Integer, String> cache = new FailoverCache<Integer, String>("test",0, 0, null,  new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE,MAX_SIZE));
+		FailoverCache<Integer, String> cache = new FailoverCache<>(0, 0, null, new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE, MAX_SIZE));
 		CacheTester.tryToCorruptInternalStructures(cache);
 	}
 
 	@Test
 	public void testFailOverFunctionality() throws Exception {
-		FailoverCache<Integer, String> cache = new FailoverCache<Integer, String>("test",INSTANCE_AMOUNT, CURRENT_INSTANCE_NUMBER, null,  new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE,MAX_SIZE));
+		FailoverCache<Integer, String> cache = new FailoverCache<>(INSTANCE_AMOUNT, CURRENT_INSTANCE_NUMBER, null, new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE, MAX_SIZE));
 		CacheTester.testFailOverFunctionality(cache);
 	}
 
 	@Test
 	public void testCompetition() throws Exception {
-		FailoverCache<Integer, String> cache = new FailoverCache<Integer, String>("test",0, 0, null,  new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE,MAX_SIZE));
+		FailoverCache<Integer, String> cache = new FailoverCache<>(0, 0, null, new RoundRobinSoftReferenceCache<Integer, String>(START_SIZE, MAX_SIZE));
 		CacheTester.writeCompetion(cache);
 	}
 

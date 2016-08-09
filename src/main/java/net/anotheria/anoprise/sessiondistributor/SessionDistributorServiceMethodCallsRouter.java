@@ -7,9 +7,9 @@ import org.distributeme.core.routing.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -36,7 +36,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	 * Should contains only SDS interface methods names - which has some incoming parameters - and should be
 	 * routed by MOD.
 	 */
-	private final static Set<String> routeModMethods = new HashSet<String>();
+	private final static Collection<String> routeModMethods = new HashSet<>();
 	/**
 	 * Under line constant.
 	 */
@@ -105,7 +105,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	 * @param callContext {@link ClientSideCallContext}
 	 * @return service id which should be called
 	 */
-	@SuppressWarnings({"PointlessArithmeticExpression"})
+
 	private String getModBasedServiceId(ClientSideCallContext callContext) {
 		List<?> parameters = callContext.getParameters();
 		if (parameters.size() < PARAMETER_POSITION + 1)
@@ -118,7 +118,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 
 		String result = (mod - 1) <= 0 ? callContext.getServiceId() : callContext.getServiceId() + UNDER_LINE + (parameterValue % mod);
 		if (LOG.isDebugEnabled())
-			LOG.debug("Returning mod based result : " + result + " for " + callContext);
+            LOG.debug("Returning mod based result : {} for {}", result, callContext);
 		return result;
 	}
 
@@ -144,7 +144,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 		String result = (mod - 1) <= 0 ? serviceId : serviceId + UNDER_LINE + callCounter;
 
 		if (LOG.isDebugEnabled())
-			LOG.debug("Returning roundRobin based result : " + result + " for " + callContext);
+            LOG.debug("Returning roundRobin based result : {} for {}", result, callContext);
 
 		return result;
 	}
@@ -157,7 +157,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	 * @param o object to convert
 	 * @return long value
 	 */
-	private long getModableValue(Object o) {
+	private static long getModableValue(Object o) {
 		if (o instanceof String)
 			return Math.abs(String.class.cast(o).hashCode());
 		if (o == null)

@@ -57,7 +57,6 @@ public class DualCrudConfig {
 	
 	/**
 	 * This config allows reading from old and new persistences and migrating from old to new on each read from old persistence.
-	 * @return
 	 */
 	public static final DualCrudConfig migrateOnTheFly(){
 		DualCrudConfig config = new DualCrudConfig();
@@ -93,7 +92,6 @@ public class DualCrudConfig {
 
 	/**
 	 * This config enables reading and writing to both persistences, but migrates only on call to migrate().
-	 * @return
 	 */
 	public static final DualCrudConfig migrateOnCallOnly(){
 		DualCrudConfig config = new DualCrudConfig();
@@ -117,7 +115,6 @@ public class DualCrudConfig {
 	/**
 	 * This config is useful for writing to two persistences for backup. Everything written to the 'master' will also be writter to the 'slave' (in fact 
 	 * both persistences are equal).
-	 * @return
 	 */
 	public static final DualCrudConfig duplicate(){
 		DualCrudConfig config = new DualCrudConfig();

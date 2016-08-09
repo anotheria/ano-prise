@@ -12,7 +12,6 @@ import java.util.List;
  * 
  * @author dmetelin
  * 
- * @param <E>
  */
 public interface EnterpriseQueue<E> {
 
@@ -25,7 +24,7 @@ public interface EnterpriseQueue<E> {
 	 * @throws QueueOverflowException
 	 *             if no left space
 	 */
-	void add(E element) throws QueueOverflowException;
+	void add(E element);
 
 	/**
 	 * Inserts an element to the queue if it possible due to capacity
@@ -46,7 +45,7 @@ public interface EnterpriseQueue<E> {
 	 * @throws QueueEmptyException
 	 *             if this queue is empty
 	 */
-	E remove() throws QueueEmptyException;
+	E remove();
 
 	/**
 	 * Retrieves and removes the head of this queue, or returns <tt>null</tt> if
@@ -67,21 +66,18 @@ public interface EnterpriseQueue<E> {
 	/**
 	 * Returns true if the queue doesn't contains elements.
 	 * 
-	 * @return
 	 */
 	boolean isEmpty();
 
 	/**
 	 * Returns the number of elements in the queue.
 	 * 
-	 * @return
 	 */
 	int size();
 
 	/**
 	 * Returns the capacity restriction of the queue.
 	 * 
-	 * @return
 	 */
 	int capacity();
 
@@ -93,21 +89,18 @@ public interface EnterpriseQueue<E> {
 	/**
 	 * Adds a queue listener to the queue.
 	 * 
-	 * @param listener
 	 */
 	void addListener(EnterpriseQueueListener listener);
 
 	/**
 	 * Removes a queue listener from the queue.
 	 * 
-	 * @param listener
 	 */
 	void removeListener(EnterpriseQueueListener listener);
 
 	/**
 	 * Returns the size of the queue.
 	 * 
-	 * @return
 	 */
 
 	QueueStats getQueueStats();

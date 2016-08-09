@@ -6,8 +6,6 @@ import net.anotheria.moskito.core.predefined.CacheStats;
  * A cache implementation where elements expire after some time.
  * @author another
  *
- * @param <K>
- * @param <V>
  */
 public class ExpiringCache<K,V> implements Cache<K,V>{
 	/**
@@ -25,10 +23,10 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	private CacheStats moskitoCacheStats;
 	
 	public ExpiringCache(String name, int aStartSize, int aMaxSize, long anExpirationTime, CacheFactory<K, CachedObjectWrapper<V>> underlyingCacheFactory){
-		this(name, anExpirationTime, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
+		this(anExpirationTime, underlyingCacheFactory.create(name, aStartSize, aMaxSize));
 	}
 
-	public ExpiringCache(String name, long anExpirationTime, Cache<K, CachedObjectWrapper<V>> underlyingCache){
+	public ExpiringCache(long anExpirationTime, Cache<K, CachedObjectWrapper<V>> underlyingCache){
 		cache = underlyingCache;
 		expirationTime = anExpirationTime;
 		moskitoCacheStats = cache.getCacheStats();
@@ -52,11 +50,11 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	}
 
 	public void put(K id, V cacheable) {
-		cache.put(id, new CachedObjectWrapper<V>(cacheable));
+		cache.put(id, new CachedObjectWrapper<>(cacheable));
 	}
 	
 	@Override public String toString(){
-		return cache.toString()+", ExpirationTime: "+expirationTime;
+		return cache +", ExpirationTime: "+expirationTime;
 	}
 	
 	@Override public void clear() {

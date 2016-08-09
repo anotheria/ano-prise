@@ -22,7 +22,7 @@ public final class DualCrudServiceFactory {
 	 * @return created instance of {@link DualCrudService}
 	 */
 	public static final <T extends CrudSaveable> DualCrudService<T> createDualCrudService(CrudService<T> left, CrudService<T> right, DualCrudConfig config) {
-		return new DualCrudServiceImpl<T>(config, left, right);
+		return new DualCrudServiceImpl<>(config, left, right);
 	}
 
 	/**

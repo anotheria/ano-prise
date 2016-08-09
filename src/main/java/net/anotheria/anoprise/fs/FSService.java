@@ -16,8 +16,6 @@ public interface FSService<T extends FSSaveable> {
 	 * @param ownerId
 	 *            - owner id
 	 * @return instance of T
-	 * @throws FSServiceException
-	 * @throws FSItemNotFoundException
 	 */
 	T read(String ownerId) throws FSServiceException;
 
@@ -26,7 +24,6 @@ public interface FSService<T extends FSSaveable> {
 	 * 
 	 * @param t
 	 *            - instance of T
-	 * @throws FSServiceException
 	 */
 	void save(T t) throws FSServiceException;
 
@@ -35,7 +32,6 @@ public interface FSService<T extends FSSaveable> {
 	 * 
 	 * @param ownerId
 	 *            - owner id
-	 * @throws FSServiceException
 	 */
 	void delete(String ownerId) throws FSServiceException;
 }
