@@ -59,8 +59,8 @@
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>ano-net</artifactId>
+            <version>2.1.1-SNAPSHOT</version>
             <scope>test</scope>
-            <version>2.1.0</version>
         </dependency>
 
     </dependencies>
