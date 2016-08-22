@@ -7,5 +7,5 @@ package net.anotheria.anoprise.eventservice;
  */
 public interface ProxyListener {
 	//called if the proxy doesn't have any consumers.
-	public void proxyEmptied();
+	void proxyEmptied();
 }

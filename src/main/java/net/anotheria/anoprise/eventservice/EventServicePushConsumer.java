@@ -6,5 +6,5 @@ package net.anotheria.anoprise.eventservice;
  * Created on 22.09.2004
  */
 public interface EventServicePushConsumer extends EventServiceConsumer{
-	public void push(Event e);
+	void push(Event e);
 }
