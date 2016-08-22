@@ -16,12 +16,30 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EventServiceImpl implements EventService {
 
+	/**
+	 * Logger.
+	 */
 	private static Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
+	/**
+	 * Singleton instance.
+	 */
 	private static EventServiceImpl instance = new EventServiceImpl();
 
+	/**
+	 * Map with local pushConsumerProxies.
+	 */
 	private ConcurrentMap<String, EventChannelPushConsumerProxy>	pushConsumerProxies;
+	/**
+	 * Map with local pushSupplierProxies.
+	 */
 	private ConcurrentMap<String, EventChannelPushSupplierProxy>	pushSupplierProxies;
+	/**
+	 * Map with remoteConsumerProxies.
+	 */
 	private ConcurrentMap<String, RemoteEventChannelConsumerProxy>	remoteConsumerProxies;
+	/**
+	 * Map with remoteSupplierProxies.
+	 */
 	private ConcurrentMap<String, RemoteEventChannelSupplierProxy>	remoteSupplierProxies;
 
 	private List<EventServiceListener> listeners;
@@ -45,12 +63,21 @@ public class EventServiceImpl implements EventService {
 		init();
 	}
 
-	
-	
+
+	/**
+	 * Returns the singleton instance.
+	 * @return
+	 */
 	public static EventServiceImpl getInstance() {
 		return instance;
 	}
 
+	/**
+	 * Public factory method for event channels.
+	 * @param channelName name of the channel.
+	 * @param participant a {@link net.anotheria.anoprise.eventservice.EventServiceParticipant} object.
+	 * @return
+	 */
 	public EventChannel obtainEventChannel(String channelName, EventServiceParticipant participant) {
 
 		ProxyType type = ProxyType.NONE;
@@ -69,8 +96,14 @@ public class EventServiceImpl implements EventService {
 			throw new IllegalArgumentException("Unsupported participant type: " + participant);
 
 		return obtainEventChannel(channelName, type);
-	} 
+	}
 
+	/**
+	 * Public factory method for event channels.
+	 * @param channelName a {@link java.lang.String} object.
+	 * @param proxyType a {@link net.anotheria.anoprise.eventservice.ProxyType} object.
+	 * @return
+	 */
 	public  EventChannel obtainEventChannel(String channelName, ProxyType proxyType) {
 		EventChannel ret = null;
 		log.debug("Creating event channel: " + channelName + " of type " + proxyType);
@@ -203,10 +236,18 @@ public class EventServiceImpl implements EventService {
 
 	}
 
+	/**
+	 * Adds an EventServiceListener to this service.
+	 * @param listener a {@link net.anotheria.anoprise.eventservice.EventServiceListener} object.
+	 */
 	public void addListener(EventServiceListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Removes a listener.
+	 * @param listener a {@link net.anotheria.anoprise.eventservice.EventServiceListener} object.
+	 */
 	public void removeListener(EventServiceListener listener) {
 		listeners.remove(listener);
 	}
@@ -216,7 +257,7 @@ public class EventServiceImpl implements EventService {
 			try{
 				listener.channelCreated(channelName, type);
 			}catch(Exception e){
-				log.error("Unexcepted exception in listener "+listener+", in call notifyChannelCreation(" + channelName+ ", "+ type+")", e);
+				log.error("Un-excepted exception in listener "+listener+", in call notifyChannelCreation(" + channelName+ ", "+ type+")", e);
 			}
 		}
 	}
