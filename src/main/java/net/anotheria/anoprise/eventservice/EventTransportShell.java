@@ -3,16 +3,25 @@ package net.anotheria.anoprise.eventservice;
 import java.io.Serializable;
 
 /**
- * TODO Please remind lrosenberg to comment this class.
+ * This is used as a wrapper for event transportation.
  *
  * @author lrosenberg
  * Created on 22.09.2004
  * @version $Id: $Id
  */
 public class EventTransportShell implements Serializable{
+	/**
+	 * SerialVersionUID.
+	 */
 	private static final long serialVersionUID = 42L;
 
+	/**
+	 * Name of the channel.
+	 */
 	private String channelName;
+	/**
+	 * Message data.
+	 */
 	private byte[] data;
 	/**
 	 * <p>Getter for the field <code>channelName</code>.</p>
