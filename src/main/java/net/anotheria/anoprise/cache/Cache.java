@@ -5,6 +5,9 @@ import net.anotheria.moskito.core.predefined.CacheStats;
 /**
  * An interface for the service side object cache.
  *
+ * @param <K> key type.
+ * @param <V> value type.
+ *
  * @author another
  * @version $Id: $Id
  */
