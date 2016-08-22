@@ -13,8 +13,8 @@ import java.util.List;
 
 /**
  * Helper class for QueuedMultiProcessor - moskito integration.
- * @author another, dmetelin
  *
+ * @version $Id: $Id
  */
 public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
 	/**
@@ -38,6 +38,14 @@ public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
 	 */
 	private List<IStats> stats;
 	
+	/**
+	 * <p>Constructor for QueuedMultiProcessorProducerWrapper.</p>
+	 *
+	 * @param aCache a {@link net.anotheria.anoprise.processor.QueuedMultiProcessor} object.
+	 * @param aProducerId a {@link java.lang.String} object.
+	 * @param aCategory a {@link java.lang.String} object.
+	 * @param aSubsystem a {@link java.lang.String} object.
+	 */
 	public QueuedMultiProcessorProducerWrapper(QueuedMultiProcessor<?> aCache, String aProducerId, String aCategory, String aSubsystem){
 		producerId = aProducerId;
 		category = aCategory;
@@ -48,26 +56,33 @@ public class QueuedMultiProcessorProducerWrapper implements IStatsProducer{
 		stats.add(processor.getProcessorStats());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getCategory() {
 		return category;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getProducerId() {
 		return producerId;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<IStats> getStats() {
 		return stats;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getSubsystem() {
 		return subsystem;
 	}
 	
+	/**
+	 * <p>attachToMoskitoLoggers.</p>
+	 */
 	public void attachToMoskitoLoggers(){
 		new DefaultStatsLogger(this, new SL4JLogOutput(LoggerFactory.getLogger("MoskitoDefault")));
 		new IntervalStatsLogger(this, DefaultIntervals.FIVE_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("Moskito5m")));

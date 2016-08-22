@@ -2,18 +2,18 @@ package net.anotheria.anoprise.fs;
 
 /**
  * Factory for file system service.
- * 
+ *
  * @author abolbat
- * @version 1.0, 2010/02/13
  */
 public final class FSServiceFactory {
 
 	/**
-	 * Create instance of {@link FSService} with given {@link FSServiceConfig}.
-	 * 
+	 * Create instance of {@link net.anotheria.anoprise.fs.FSService} with given {@link net.anotheria.anoprise.fs.FSServiceConfig}.
+	 *
 	 * @param config
-	 *            - {@link FSServiceConfig}
-	 * @return {@link FSService}
+	 *            - {@link net.anotheria.anoprise.fs.FSServiceConfig}
+	 * @return {@link net.anotheria.anoprise.fs.FSService}
+	 * @param <T> a T object.
 	 */
 	public static <T extends FSSaveable> FSService<T> createFSService(FSServiceConfig config) {
 		return new FSServiceImpl<T>(config);

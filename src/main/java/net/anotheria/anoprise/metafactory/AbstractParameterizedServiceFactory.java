@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstract {@link ParameterizedServiceFactory} implementation.
- * 
+ * Abstract {@link net.anotheria.anoprise.metafactory.ParameterizedServiceFactory} implementation.
+ *
  * @author Alexandr Bolbat
- * 
  * @param <T>
+ * @version $Id: $Id
  */
 public abstract class AbstractParameterizedServiceFactory<T extends Service> implements ParameterizedServiceFactory<T> {
 
@@ -20,6 +20,7 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 	 */
 	private Map<String, Serializable> parameters;
 
+	/** {@inheritDoc} */
 	@Override
 	public void setParameters(final Map<String, Serializable> aParameters) {
 		this.parameters = aParameters;
@@ -27,7 +28,7 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 
 	/**
 	 * Add parameter.
-	 * 
+	 *
 	 * @param parameterName
 	 *            parameter name
 	 * @param parameterValue
@@ -48,8 +49,8 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 
 	/**
 	 * Get all parameters map.
-	 * 
-	 * @return {@link Map}
+	 *
+	 * @return {@link java.util.Map}
 	 */
 	protected Map<String, Serializable> getParameters() {
 		return parameters != null ? new HashMap<String, Serializable>(parameters) : new HashMap<String, Serializable>();
@@ -57,8 +58,8 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 
 	/**
 	 * Get all parameters names.
-	 * 
-	 * @return {@link List} of {@link String}
+	 *
+	 * @return {@link java.util.List} of {@link java.lang.String}
 	 */
 	protected List<String> getParametersNames() {
 		return parameters != null ? new ArrayList<String>(parameters.keySet()) : new ArrayList<String>();
@@ -66,10 +67,10 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 
 	/**
 	 * Get parameter value.
-	 * 
+	 *
 	 * @param parameterName
 	 *            parameter name
-	 * @return {@link Serializable} value or empty {@link String} if parameter not exist
+	 * @return {@link java.io.Serializable} value or empty {@link java.lang.String} if parameter not exist
 	 */
 	protected Serializable getParameterValue(final String parameterName) {
 		if (parameterName == null || parameterName.trim().isEmpty() || parameters == null)
@@ -80,11 +81,11 @@ public abstract class AbstractParameterizedServiceFactory<T extends Service> imp
 	}
 
 	/**
-	 * Get parameter value as {@link String}.
-	 * 
+	 * Get parameter value as {@link java.lang.String}.
+	 *
 	 * @param parameterName
 	 *            parameter name
-	 * @return {@link Serializable} value or empty {@link String} if parameter not exist
+	 * @return {@link java.io.Serializable} value or empty {@link java.lang.String} if parameter not exist
 	 */
 	protected String getParameterValueAsString(final String parameterName) {
 		return String.valueOf(getParameterValue(parameterName));

@@ -17,12 +17,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Processor to perform same type work under elements that arrives in non
  * deterministic time intervals. Each new element added the queue where it will
  * wait until processor async channel is available to perform the work.
- * 
+ *
  * This is the implementation of QueueingSystem model.
- * 
+ *
  * @author dmetelin
- * 
  * @param <T>
+ * @version $Id: $Id
  */
 public class QueuedMultiProcessor<T extends Object> extends Thread {
 
@@ -64,10 +64,10 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Creates a new QueuedProcessor. This is the standard constructor used by
 	 * all other constructors.
-	 * 
+	 *
 	 * NOTE: instead of direct call of this constructor it is recommended to use
 	 * QueuedMultiProcessorBuilder to create new QueuedProcessor
-	 * 
+	 *
 	 * @param aName
 	 *            name of the processor.
 	 * @param aWorker
@@ -80,6 +80,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	 *            sleep time in case of an overflow.
 	 * @param aLog
 	 *            logger for output. If null default will be used.
+	 * @param aProcessingChannels a int.
 	 */
 	public QueuedMultiProcessor(String aName, PackageWorker<T> aWorker, EnterpriseQueueFactory<T> aQueueFactory, int aQueueSize, int aProcessingChannels, long aSleepTime, Logger aLog) {
 		super(aName);
@@ -142,9 +143,9 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Default method to add an element to the queue. Calls addToQueueDontWait
 	 * internally.
-	 * 
-	 * @param aElement
-	 * @throws UnrecoverableQueueOverflowException
+	 *
+	 * @param aElement a T object.
+	 * @throws net.anotheria.anoprise.processor.UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
 	public void addToQueue(T aElement) throws UnrecoverableQueueOverflowException {
@@ -154,11 +155,11 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Inserts the specified element at the tail of the processing queue,
 	 * waiting if necessary for space in the queue to become available
-	 * 
+	 *
 	 * @param element
 	 *            the element to add
+	 * @throws net.anotheria.anoprise.processor.UnrecoverableQueueOverflowException if any.
 	 */
-
 	public void addToQueueAndWait(T element) throws UnrecoverableQueueOverflowException {
 		addToQueueAndWait(element, 0);
 	}
@@ -166,13 +167,13 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Inserts the specified element at the tail of the processing queue,
 	 * waiting if necessary for space in the queue to become available
-	 * 
+	 *
 	 * @param element
 	 *            the element to add
 	 * @param timeout
 	 *            the maximum time to wait in milliseconds.
+	 * @throws net.anotheria.anoprise.processor.UnrecoverableQueueOverflowException if any.
 	 */
-
 	public void addToQueueAndWait(T element, long timeout) throws UnrecoverableQueueOverflowException {
 		stats.addArrived();
 
@@ -202,9 +203,9 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Inserts the specified element at the tail of the processing queue if the
 	 * queue is not full
-	 * 
-	 * @param element
-	 * @throws UnrecoverableQueueOverflowException
+	 *
+	 * @param element a T object.
+	 * @throws net.anotheria.anoprise.processor.UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
 	 */
 	public void addToQueueDontWait(T element) throws UnrecoverableQueueOverflowException {
@@ -214,10 +215,12 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Inserts the specified element at the tail of the processing queue if the
 	 * queue is not full
-	 * 
-	 * @param element
-	 * @throws UnrecoverableQueueOverflowException
+	 *
+	 * @param element a T object.
+	 * @throws net.anotheria.anoprise.processor.UnrecoverableQueueOverflowException
 	 *             if the processing queue is full.
+	 * @param enqueueTries a int.
+	 * @param triesDelay a int.
 	 */
 	public void addToQueueDontWait(T element, int enqueueTries, int triesDelay) throws UnrecoverableQueueOverflowException {
 		stats.addArrived();
@@ -244,6 +247,7 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 		throw new UnrecoverableQueueOverflowException("Element: " + element + ", " + getStatsString());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 
@@ -307,6 +311,11 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 		}
 	}
 
+	/**
+	 * <p>drainQueue.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<T> drainQueue() {
 		return queue.drain();
 	}
@@ -322,6 +331,8 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	/**
 	 * Sends signal to stop the QueueProcessor running Thread after working
 	 * current element.
+	 *
+	 * @return a {@link java.util.List} object.
 	 */
 	public List<T> stopImmediately() {
 		stopImmediately.set(true);
@@ -329,6 +340,8 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 	}
 
 	/**
+	 * <p>isStopped.</p>
+	 *
 	 * @return true if processing was stopped by calling
 	 *         stopAfterQueueProcessing() or stopImmediately().
 	 */
@@ -336,14 +349,29 @@ public class QueuedMultiProcessor<T extends Object> extends Thread {
 		return stopImmediately.get() || stopQueueing.get();
 	}
 
+	/**
+	 * <p>getProcessorStats.</p>
+	 *
+	 * @return a {@link net.anotheria.moskito.core.predefined.QueuingSystemStats} object.
+	 */
 	public QueuingSystemStats getProcessorStats() {
 		return stats;
 	}
 
+	/**
+	 * <p>getQueueStat.</p>
+	 *
+	 * @return a {@link net.anotheria.moskito.core.predefined.QueueStats} object.
+	 */
 	public QueueStats getQueueStat() {
 		return queue.getQueueStats();
 	}
 
+	/**
+	 * <p>getStatsString.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getStatsString() {
 		return getProcessorStats().toStatsString() + ",\nQUEUE: " + getQueueStat().toStatsString();
 	}

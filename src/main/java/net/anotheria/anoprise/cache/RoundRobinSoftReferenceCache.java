@@ -8,7 +8,9 @@ import java.util.HashMap;
 
 /**
  * A simple RoundRobin implementation of the cache.
+ *
  * @author lrosenberg
+ * @version $Id: $Id
  */
 public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements Cache<K,V> {
 	
@@ -73,28 +75,64 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 	private CacheStats cacheStatsCopy = null;
 	
 	
+	/**
+	 * <p>Constructor for RoundRobinSoftReferenceCache.</p>
+	 */
 	public RoundRobinSoftReferenceCache(){
 		this(getUnnamedInstanceName(RoundRobinSoftReferenceCache.class));
 	}
 	
+	/**
+	 * <p>Constructor for RoundRobinSoftReferenceCache.</p>
+	 *
+	 * @param aStartSize a int.
+	 * @param aMaxSize a int.
+	 */
 	public RoundRobinSoftReferenceCache(int aStartSize, int aMaxSize){
 		this(getUnnamedInstanceName(RoundRobinSoftReferenceCache.class), aStartSize, aMaxSize);
 	}
 	
 	
+	/**
+	 * <p>Constructor for RoundRobinSoftReferenceCache.</p>
+	 *
+	 * @param aStartSize a int.
+	 * @param aMaxSize a int.
+	 * @param anIncrement a float.
+	 */
 	public RoundRobinSoftReferenceCache(int aStartSize, int aMaxSize, float anIncrement){
 		this(getUnnamedInstanceName(RoundRobinSoftReferenceCache.class), aStartSize, aMaxSize, anIncrement);
 	}
 	
+	/**
+	 * <p>Constructor for RoundRobinSoftReferenceCache.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public RoundRobinSoftReferenceCache(String name){
 		this(name, DEF_START_SIZE, DEF_MAX_SIZE, DEF_INCREMENT);
 	}
 	
+	/**
+	 * <p>Constructor for RoundRobinSoftReferenceCache.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param aStartSize a int.
+	 * @param aMaxSize a int.
+	 */
 	public RoundRobinSoftReferenceCache(String name, int aStartSize, int aMaxSize){
 		this(name, aStartSize, aMaxSize, DEF_INCREMENT);
 	}
 	
 	
+	/**
+	 * <p>Constructor for RoundRobinSoftReferenceCache.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param aStartSize a int.
+	 * @param aMaxSize a int.
+	 * @param anIncrement a float.
+	 */
 	public RoundRobinSoftReferenceCache(String name, int aStartSize, int aMaxSize, float anIncrement){
 		super(name);
 		this.startSize = aStartSize;
@@ -107,6 +145,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 
 	}
 	
+	/** {@inheritDoc} */
 	@Override public synchronized void remove(K id){
 		cacheStatsCopy.addDelete();
 		Integer index = getCachePosition(id);
@@ -130,6 +169,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 	}
 	
 	
+	/** {@inheritDoc} */
 	@Override public synchronized V get(K id){
 		cacheStatsCopy.addRequest();
 		Integer index = getCachePosition(id);
@@ -152,6 +192,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 		return id2index.get(id);
 	}
 	
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override public synchronized void put(K id, V cacheable){
 		
@@ -232,6 +273,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 	}
 	
 
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override public synchronized void clear(){
 		cache = new SoftReference[startSize];
@@ -244,6 +286,7 @@ public class RoundRobinSoftReferenceCache<K,V> extends AbstractCache implements 
 		currentSize = startSize;
 	}
 	
+	/** {@inheritDoc} */
 	@Override public String toString(){
 		if (cache==null)
 			return "Not initialized cache "+getName();

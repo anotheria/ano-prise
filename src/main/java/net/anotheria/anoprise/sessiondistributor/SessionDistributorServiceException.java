@@ -2,9 +2,8 @@ package net.anotheria.anoprise.sessiondistributor;
 
 /**
  * SessionDistributorServiceException exception.
- * 
+ *
  * @author lrosenberg
- * @version 1.0, 2010/01/03
  */
 public class SessionDistributorServiceException extends Exception {
 
@@ -15,7 +14,7 @@ public class SessionDistributorServiceException extends Exception {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param message
 	 *            - exception message
 	 */

@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Complex call-router for SessionDistributorService.
  *
  * @author h3ll
+ * @version $Id: $Id
  */
 public class SessionDistributorServiceMethodCallsRouter implements Router, FailingStrategy {
 
@@ -76,6 +77,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 		this.delegateCallCounter = new AtomicInteger(0);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public FailDecision callFailed(ClientSideCallContext clientSideCallContext) {
 		//check that failing strategy is enabled!
@@ -90,6 +92,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public String getServiceIdForCall(ClientSideCallContext callContext) {
 		//Checking if MOD routing is possible for current call!
@@ -166,6 +169,7 @@ public class SessionDistributorServiceMethodCallsRouter implements Router, Faili
 		throw new AssertionError("Object " + o + " of type " + o.getClass() + " is not supported. Please use String");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void customize(String serviceId, String parameter) {
 		//in current implementation it's not required! at all :)

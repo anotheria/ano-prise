@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * DistributedSession value object used in SessionDistributorService.
  *
  * @author lrosenberg
- * @version 1.0, 2010/01/03
  */
 public class DistributedSessionVO implements Serializable {
 
@@ -71,51 +70,106 @@ public class DistributedSessionVO implements Serializable {
 	}
 
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * <p>Getter for the field <code>lastChangeTime</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getLastChangeTime() {
 		return lastChangeTime;
 	}
 
+	/**
+	 * <p>Setter for the field <code>lastChangeTime</code>.</p>
+	 *
+	 * @param lastChangeTime a long.
+	 */
 	public void setLastChangeTime(long lastChangeTime) {
 		this.lastChangeTime = lastChangeTime;
 	}
 
+	/**
+	 * <p>Getter for the field <code>userId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getUserId() {
 		return userId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>userId</code>.</p>
+	 *
+	 * @param userId a {@link java.lang.String} object.
+	 */
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>editorId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getEditorId() {
 		return editorId;
 	}
 
+	/**
+	 * <p>Setter for the field <code>editorId</code>.</p>
+	 *
+	 * @param editorId a {@link java.lang.String} object.
+	 */
 	public void setEditorId(String editorId) {
 		this.editorId = editorId;
 	}
 
 
 
+	/**
+	 * <p>Getter for the field <code>distributedAttributes</code>.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 */
 	public Map<String, DistributedSessionAttribute> getDistributedAttributes() {
 		return distributedAttributes;
 	}
 
 
+	/**
+	 * <p>Setter for the field <code>distributedAttributes</code>.</p>
+	 *
+	 * @param aDistributedAttributes a {@link java.util.Map} object.
+	 */
 	public void setDistributedAttributes(Map<String, DistributedSessionAttribute> aDistributedAttributes) {
 		if (aDistributedAttributes == null)
 			throw new IllegalArgumentException("distributedAttributes can't be null");
 		this.distributedAttributes = aDistributedAttributes;
 	}
 
+	/**
+	 * <p>addDistributedAttribute.</p>
+	 *
+	 * @param attribute a {@link net.anotheria.anoprise.sessiondistributor.DistributedSessionAttribute} object.
+	 */
 	public void addDistributedAttribute(DistributedSessionAttribute attribute) {
 		if (attribute == null)
 			throw new IllegalArgumentException("Distributed attribute can't be null");
@@ -123,6 +177,11 @@ public class DistributedSessionVO implements Serializable {
 
 	}
 
+	/**
+	 * <p>removeDistributedAttribute.</p>
+	 *
+	 * @param attributeName a {@link java.lang.String} object.
+	 */
 	public void removeDistributedAttribute(String attributeName) {
 		if (StringUtils.isEmpty(attributeName))
 			throw new IllegalArgumentException("Distributed attribute name is illegal");
@@ -130,6 +189,7 @@ public class DistributedSessionVO implements Serializable {
 			distributedAttributes.remove(attributeName);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "DistributedSessionVO{" +

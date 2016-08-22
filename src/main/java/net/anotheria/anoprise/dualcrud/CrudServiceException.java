@@ -1,10 +1,9 @@
 package net.anotheria.anoprise.dualcrud;
 
 /**
- * Basic exception of the {@link CrudService} interface.
- * 
+ * Basic exception of the {@link net.anotheria.anoprise.dualcrud.CrudService} interface.
+ *
  * @author lrosenberg
- * @version 1.0, 2010/02/02
  */
 public class CrudServiceException extends Exception {
 
@@ -14,8 +13,8 @@ public class CrudServiceException extends Exception {
 	private static final long serialVersionUID = -1846792906505930875L;
 
 	/**
-	 * Creates a new {@link CrudServiceException} with a message.
-	 * 
+	 * Creates a new {@link net.anotheria.anoprise.dualcrud.CrudServiceException} with a message.
+	 *
 	 * @param message
 	 *            - exception message
 	 */
@@ -24,8 +23,8 @@ public class CrudServiceException extends Exception {
 	}
 
 	/**
-	 * Creates a new {@link CrudServiceException} with a message and a cause.
-	 * 
+	 * Creates a new {@link net.anotheria.anoprise.dualcrud.CrudServiceException} with a message and a cause.
+	 *
 	 * @param message
 	 *            - exception message
 	 * @param cause

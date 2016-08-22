@@ -5,8 +5,8 @@ package net.anotheria.anoprise.sessiondistributor.events;
  * Event service constants for SessionDistributorService.
  *
  * @author h3ll
+ * @version $Id: $Id
  */
-
 public final class SessionDistributorESConstants {
 	/**
 	 * Channel name.
