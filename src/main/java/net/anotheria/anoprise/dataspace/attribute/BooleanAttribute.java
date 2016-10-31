@@ -2,8 +2,9 @@ package net.anotheria.anoprise.dataspace.attribute;
 
 /**
  * Boolean attribute used in dataspace.
- * 
+ *
  * @author abolbat
+ * @version $Id: $Id
  */
 public class BooleanAttribute extends Attribute {
 
@@ -19,7 +20,7 @@ public class BooleanAttribute extends Attribute {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param aName
 	 *            - attribute name
 	 * @param aStringValue
@@ -32,7 +33,7 @@ public class BooleanAttribute extends Attribute {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param aName
 	 *            - attribute name
 	 * @param aValue
@@ -43,20 +44,32 @@ public class BooleanAttribute extends Attribute {
 		this.value = aValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getValueAsString() {
 		return String.valueOf(value);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public AttributeType getType() {
 		return AttributeType.BOOLEAN;
 	}
 
+	/**
+	 * <p>Setter for the field <code>value</code>.</p>
+	 *
+	 * @param aValue a boolean.
+	 */
 	public void setValue(boolean aValue) {
 		this.value = aValue;
 	}
 
+	/**
+	 * <p>Getter for the field <code>value</code>.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean getValue() {
 		return value;
 	}

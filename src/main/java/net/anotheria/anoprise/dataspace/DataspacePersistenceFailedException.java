@@ -4,8 +4,9 @@ import net.anotheria.anoprise.dataspace.persistence.DataspacePersistenceServiceE
 
 /**
  * Dataspace exception used in DataspaceService. Throwed on persistence fail.
- * 
+ *
  * @author lrosenberg
+ * @version $Id: $Id
  */
 public class DataspacePersistenceFailedException extends DataspaceServiceException {
 
@@ -16,7 +17,7 @@ public class DataspacePersistenceFailedException extends DataspaceServiceExcepti
 
 	/**
 	 * Public constructor.
-	 * 
+	 *
 	 * @param cause
 	 *            - exception cause
 	 */

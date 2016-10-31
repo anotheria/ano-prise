@@ -4,8 +4,8 @@ package net.anotheria.anoprise.sessiondistributor.events;
  * SessionRestoreEvent.
  *
  * @author h3ll
+ * @version $Id: $Id
  */
-
 public class SessionRestoreEvent extends SessionDistributorEvent {
 
 	/**
@@ -33,15 +33,26 @@ public class SessionRestoreEvent extends SessionDistributorEvent {
 		this.serviceId = aCallerId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>serviceId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getServiceId() {
 		return serviceId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sessionId</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getSessionId() {
 		return sessionId;
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return super.toString() +

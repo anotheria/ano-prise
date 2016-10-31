@@ -13,9 +13,10 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 /**
- * SDCacheUtil - provides FS persistence functionality for  {@link SDCache}.
+ * SDCacheUtil - provides FS persistence functionality for  {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache}.
  *
  * @author h3ll
+ * @version $Id: $Id
  */
 public final class SDCacheUtil {
 
@@ -54,11 +55,11 @@ public final class SDCacheUtil {
 
 
 	/**
-	 * Read {@link SDCache}.
+	 * Read {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache}.
 	 * <p/>
 	 * Anyway - this method will return some Cache :)  so please do not add any NULL checks.
 	 *
-	 * @return {@link SDCache} read from FS - or newly created.
+	 * @return {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache} read from FS - or newly created.
 	 */
 	public static SDCache createCache() {
 		if (!SessionDistributorServiceConfig.getInstance().isWrightSessionsToFsOnShutdownEnabled())
@@ -83,9 +84,9 @@ public final class SDCacheUtil {
 	}
 
 	/**
-	 * Save {@link SDCache}.
+	 * Save {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache}.
 	 *
-	 * @param sessionsCache {@link SDCache} to save
+	 * @param sessionsCache {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache} to save
 	 */
 	public static void save(SDCache sessionsCache) {
 		if (sessionsCache == null)

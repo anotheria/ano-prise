@@ -2,9 +2,8 @@ package net.anotheria.anoprise.sessiondistributor;
 
 /**
  * NoSuchDistributedSessionException exception.
- * 
+ *
  * @author lrosenberg
- * @version 1.0, 2010/01/03
  */
 public class NoSuchDistributedSessionException extends SessionDistributorServiceException {
 
@@ -15,7 +14,7 @@ public class NoSuchDistributedSessionException extends SessionDistributorService
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param name
 	 *            - exception message
 	 */

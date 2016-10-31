@@ -2,8 +2,9 @@ package net.anotheria.anoprise.dataspace.persistence;
 
 /**
  * Dataspace persistence exception used in DataspacePersistenceService. Throwed if dataspace not found in persistence.
- * 
+ *
  * @author lrosenberg
+ * @version $Id: $Id
  */
 public class DataspaceNotFoundException extends DataspacePersistenceServiceException {
 
@@ -14,7 +15,7 @@ public class DataspaceNotFoundException extends DataspacePersistenceServiceExcep
 
 	/**
 	 * Public constructor.
-	 * 
+	 *
 	 * @param userId
 	 *            - user id
 	 * @param dataspaceId

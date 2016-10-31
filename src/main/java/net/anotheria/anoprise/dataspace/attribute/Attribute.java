@@ -6,9 +6,10 @@ import net.anotheria.util.BasicComparable;
 
 /**
  * Abstract attribute used in dataspace.
- * 
+ *
  * @author lrosenberg
  * @author abolbat
+ * @version $Id: $Id
  */
 public abstract class Attribute implements Serializable {
 
@@ -24,7 +25,7 @@ public abstract class Attribute implements Serializable {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param aName
 	 *            - attribute name
 	 */
@@ -32,34 +33,39 @@ public abstract class Attribute implements Serializable {
 		name = aName;
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
 	 * Get attribute value as string.
-	 * 
-	 * @return {@link String}
+	 *
+	 * @return {@link java.lang.String}
 	 */
 	public abstract String getValueAsString();
 
 	/**
 	 * Get attribute type.
-	 * 
-	 * @return {@link AttributeType}
+	 *
+	 * @return {@link net.anotheria.anoprise.dataspace.attribute.AttributeType}
 	 */
 	public abstract AttributeType getType();
 
 	/**
 	 * Create new attribute by type id with given name and string value.
-	 * 
+	 *
 	 * @param aTypeId
 	 *            - type id
 	 * @param aName
 	 *            - attribute name
 	 * @param aStringValue
 	 *            - attribute value
-	 * @return {@link Attribute}
+	 * @return {@link net.anotheria.anoprise.dataspace.attribute.Attribute}
 	 */
 	public static Attribute createAttribute(int aTypeId, String aName, String aStringValue) {
 		return createAttribute(AttributeType.getTypeById(aTypeId), aName, aStringValue);
@@ -67,14 +73,14 @@ public abstract class Attribute implements Serializable {
 
 	/**
 	 * Create new attribute by type with given name and string value.
-	 * 
+	 *
 	 * @param aType
 	 *            - type
 	 * @param aName
 	 *            - attribute name
 	 * @param aStringValue
 	 *            - attribute value
-	 * @return {@link Attribute}
+	 * @return {@link net.anotheria.anoprise.dataspace.attribute.Attribute}
 	 */
 	public static Attribute createAttribute(AttributeType aType, String aName, String aStringValue) {
 		switch (aType) {
@@ -91,11 +97,13 @@ public abstract class Attribute implements Serializable {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return getName() + " = " + getValueAsString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final int hashCode() {
 		final int prime = 31;
@@ -104,6 +112,7 @@ public abstract class Attribute implements Serializable {
 		return result;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public final boolean equals(Object o) {
 		return o instanceof Attribute ? BasicComparable.compareString(getName(), ((Attribute) o).getName()) == 0 && getType() == ((Attribute) o).getType()

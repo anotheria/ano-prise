@@ -7,19 +7,19 @@ import org.slf4j.Logger;
 import java.util.List;
 
 /**
- * 
+ *
  * Use this class to build new QueuedMultiProcessor. If some processor
  * parameters are not set during the building default values will be used.
- * 
+ *
  * Can be build processors with two types of workers:
  * <ol>
  * <li>ElementWorker to perform work on a single element at one processing cycle
  * </li>
  * <li>PackageWorker to perform work on a package of element at one processing cycle
  * </li>
- * 
+ *
  * @author dmetelin
- * 
+ * @version $Id: $Id
  */
 public class QueuedMultiProcessorBuilder<E>{
 
@@ -32,8 +32,10 @@ public class QueuedMultiProcessorBuilder<E>{
 	 */
 	public static final int DEF_QUEUE_SIZE = 1000;
 
+	/** Constant <code>DEF_QUEUE_FACTORY_CLASS</code> */
 	public static final Class<?> DEF_QUEUE_FACTORY_CLASS = BoundedFifoQueueFactory.class;
 
+	/** Constant <code>DEF_PROCESSOR_CHANNELS=10</code> */
 	public static final int DEF_PROCESSOR_CHANNELS = 10;
 
 	private long sleepTime;
@@ -70,8 +72,7 @@ public class QueuedMultiProcessorBuilder<E>{
 	/**
 	 * Builds processor to perform work under single element at one processing
 	 * cycle: single element is dequeued and sent to the element worker.
-	 * 
-	 * @param <T>
+	 *
 	 * @param name
 	 *            (identifier) for this processor
 	 * @param worker
@@ -86,8 +87,7 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * Builds processor to perform work under elements package at one processing
 	 * cycle: elements from the queue are gathered to the package and sent to
 	 * the package worker
-	 * 
-	 * @param <T>
+	 *
 	 * @param name
 	 *            (identifier) for this processor
 	 * @param worker
@@ -108,9 +108,9 @@ public class QueuedMultiProcessorBuilder<E>{
 
 	/**
 	 * Sets the maximal size of the processor Queue
-	 * 
-	 * @param queueSize
-	 * @return
+	 *
+	 * @param queueSize a int.
+	 * @return a {@link net.anotheria.anoprise.processor.QueuedMultiProcessorBuilder} object.
 	 */
 	public QueuedMultiProcessorBuilder<E> setQueueSize(int queueSize) {
 		this.queueSize = queueSize;
@@ -119,9 +119,9 @@ public class QueuedMultiProcessorBuilder<E>{
 
 	/**
 	 * Sets factory to be used for creating Queue
-	 * 
-	 * @param queueFactoryClass
-	 * @return
+	 *
+	 * @param queueFactoryClass a {@link java.lang.Class} object.
+	 * @return a {@link net.anotheria.anoprise.processor.QueuedMultiProcessorBuilder} object.
 	 */
 	public QueuedMultiProcessorBuilder<E> setQueueFactoryClass(Class<EnterpriseQueueFactory<E>> queueFactoryClass) {
 		this.queueFactoryClass = queueFactoryClass;
@@ -130,8 +130,8 @@ public class QueuedMultiProcessorBuilder<E>{
 
 	/**
 	 * Sets number of async channels of processor in which work is performed.
-	 * 
-	 * @param processorChannels
+	 *
+	 * @param processorChannels a int.
 	 * @return builder
 	 */
 	public QueuedMultiProcessorBuilder<E> setProcessorChannels(int processorChannels) {
@@ -139,6 +139,12 @@ public class QueuedMultiProcessorBuilder<E>{
 		return this;
 	}
 	
+	/**
+	 * <p>Setter for the field <code>processingLog</code>.</p>
+	 *
+	 * @param processingLog a {@link org.slf4j.Logger} object.
+	 * @return a {@link net.anotheria.anoprise.processor.QueuedMultiProcessorBuilder} object.
+	 */
 	public QueuedMultiProcessorBuilder<E>  setProcessingLog(Logger processingLog) {
 		this.processingLog = processingLog;
 		return this;
@@ -146,8 +152,8 @@ public class QueuedMultiProcessorBuilder<E>{
 
 	/**
 	 * Sets sleep time to wait a new element arriving if queue is empty.
-	 * 
-	 * @param sleepTime
+	 *
+	 * @param sleepTime a long.
 	 * @return builder
 	 */
 	public QueuedMultiProcessorBuilder<E> setSleepTime(long sleepTime) {
@@ -155,6 +161,14 @@ public class QueuedMultiProcessorBuilder<E>{
 		return this;
 	}
 	
+	/**
+	 * <p>attachMoskitoLoggers.</p>
+	 *
+	 * @param producerId a {@link java.lang.String} object.
+	 * @param category a {@link java.lang.String} object.
+	 * @param subsystem a {@link java.lang.String} object.
+	 * @return a {@link net.anotheria.anoprise.processor.QueuedMultiProcessorBuilder} object.
+	 */
 	public QueuedMultiProcessorBuilder<E> attachMoskitoLoggers(String producerId, String category, String subsystem){
 		attachMoskitoLoggers = true;
 		moskitoProducerId = producerId;

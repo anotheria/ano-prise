@@ -2,8 +2,9 @@ package net.anotheria.anoprise.dataspace.attribute;
 
 /**
  * AtributeType used in DataspaceService.
- * 
+ *
  * @author abolbat
+ * @version $Id: $Id
  */
 public enum AttributeType {
 
@@ -42,16 +43,21 @@ public enum AttributeType {
 		this.typeId = aTypeId;
 	}
 
+	/**
+	 * <p>Getter for the field <code>typeId</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getTypeId() {
 		return typeId;
 	}
 
 	/**
-	 * Get {@link AttributeType} type by given id.
-	 * 
+	 * Get {@link net.anotheria.anoprise.dataspace.attribute.AttributeType} type by given id.
+	 *
 	 * @param aTypeId
 	 *            - id
-	 * @return {@link AttributeType} type or {@link RuntimeException} if type id is unknown
+	 * @return {@link net.anotheria.anoprise.dataspace.attribute.AttributeType} type or {@link java.lang.RuntimeException} if type id is unknown
 	 */
 	public static AttributeType getTypeById(int aTypeId) {
 		for (AttributeType obj : AttributeType.values()) {

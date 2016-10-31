@@ -78,16 +78,6 @@ public class CacheController<K, V> implements Cache<K, V> {
 	private long preExpirationTime;
 
 	/**
-	 * instanceAmount previous to a reconfigur
-	 */
-	private int preInstanceAmount;
-
-	/**
-	 * currentInstanceNumber previous to a reconfigur
-	 */
-	private int preCurrentInstanceNumber;
-
-	/**
 	 * Underlying cache.
 	 */
 	private Cache<K, V> cache;
@@ -207,19 +197,13 @@ public class CacheController<K, V> implements Cache<K, V> {
 				@SuppressWarnings("unchecked")
 				CacheFactory<K, V> newFactory = (CacheFactory<K, V>) Class.forName(factoryClazz).newInstance();
 				factory = newFactory;
-			} catch (ClassNotFoundException e) {
-				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
-			} catch (InstantiationException e) {
-				log.error(FATAL, "can't init cache", e);
-				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
-			} catch (IllegalAccessException e) {
+			} catch (ClassNotFoundException | InstantiationException |IllegalAccessException e) {
 				log.error(FATAL, "can't init cache", e);
 				throw new AssertionError("Unproperly configured factory: " + factoryClazz + " --> " + e.getMessage());
 			}
 		}
 
-		log.debug("reiniting cache for " + configurationName);
+		log.debug("re-initing cache for " + configurationName);
 		if (!cacheOn) {
 			if (prevCacheOn) {
 				log.debug("switching cache off.");
