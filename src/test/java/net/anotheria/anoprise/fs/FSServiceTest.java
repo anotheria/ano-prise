@@ -57,7 +57,7 @@ public class FSServiceTest {
 		service.delete(ownerId);
 	}
 
-	private class FSTestObject implements FSSaveable {
+	private class FSTestObject extends FSSaveableAdapter {
 
 		private static final long serialVersionUID = 5206989403406117205L;
 

@@ -449,6 +449,20 @@ public final class FSServiceConfig implements Serializable {
 		return getStoreFolderPath(ownerId) + getStoreFileName(ownerId);
 	}
 
+	/**
+	 * Return store file path with file name for given owner id.
+	 *
+	 * @param ownerId
+	 * 		- owner id
+	 * @param folderPath
+	 * 		- folder
+	 * @return storing file path with file name
+	 * @throws FSServiceConfigException
+	 */
+	public String getStoreFilePath(String folderPath, String ownerId) throws FSServiceConfigException {
+		return folderPath + getStoreFileName(ownerId);
+	}
+
 	public void setMaxOwnerIdLength(int maxOwnerIdLength) {
 		this.maxOwnerIdLength = maxOwnerIdLength;
 	}

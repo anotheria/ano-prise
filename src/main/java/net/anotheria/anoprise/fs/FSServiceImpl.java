@@ -75,8 +75,8 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 
 	@Override
 	public void save(T t) throws FSServiceException {
-		String folderPath = config.getStoreFolderPath(t.getOwnerId());
-		String filePath = config.getStoreFilePath(t.getOwnerId());
+		String folderPath = config.getStoreFolderPath(t.getDirOwnerId());
+		String filePath = config.getStoreFilePath(folderPath, t.getFileOwnerId());
 
 		File file = new File(folderPath);
 		if (!file.exists()){

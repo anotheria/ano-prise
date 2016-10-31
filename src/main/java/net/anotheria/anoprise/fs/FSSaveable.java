@@ -17,4 +17,17 @@ public interface FSSaveable extends Serializable {
 	 */
 	String getOwnerId();
 
+	/**
+	 * Returns the owner file name of the {@link FSSaveable} object.
+	 *
+	 * @return {@link String}
+	 */
+	String getFileOwnerId();
+
+	/**
+	 * Returns the owner directory path of the {@link FSSaveable} object.
+	 *
+	 * @return {@link String}
+	 */
+	String getDirOwnerId();
 }

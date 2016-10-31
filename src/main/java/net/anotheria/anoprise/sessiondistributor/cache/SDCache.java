@@ -6,6 +6,7 @@ import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
 import net.anotheria.anoprise.eventservice.util.QueuedEventReceiver;
 import net.anotheria.anoprise.fs.FSSaveable;
+import net.anotheria.anoprise.fs.FSSaveableAdapter;
 import net.anotheria.anoprise.sessiondistributor.DistributedSessionAttribute;
 import net.anotheria.anoprise.sessiondistributor.DistributedSessionVO;
 import net.anotheria.anoprise.sessiondistributor.NoSuchDistributedSessionException;
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Defines SDCache, with serialization possibility, etc.
  */
-public final class SDCache implements FSSaveable {
+public final class SDCache extends FSSaveableAdapter {
 	/**
 	 * Basic serial version UID.
 	 */
