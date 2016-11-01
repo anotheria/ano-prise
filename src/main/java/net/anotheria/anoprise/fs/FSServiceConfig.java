@@ -93,6 +93,20 @@ public final class FSServiceConfig implements Serializable {
 	 */
 	@Configure
 	private boolean useStringOwnerId = false;
+	/**
+	 * Allow to use owner id as folder for reading files, disabled by default.
+	 *
+	 * Example: owner id = ed13f3. If value is true then files will be read from folder structure as ed/13/f3/ed13f3/.
+	 */
+	@Configure
+	private boolean readOwnerIdAsFolder = false;
+	/**
+	 * Allow to use owner id as folder for saving files, disabled by default.
+	 *
+	 * Example: owner id = ed13f3. If value is true then files will be saved in folder structure as ed/13/f3/ed13f3/.
+	 */
+	@Configure
+	private boolean saveOwnerIdAsFolder = false;
 
 	/**
 	 * Default constructor.
@@ -167,6 +181,8 @@ public final class FSServiceConfig implements Serializable {
 		this.maxOwnerIdLength = aMaxOwnerIdLength;
 		this.fragmetLegth = aFragmentLength;
 		this.useStringOwnerId = false;
+		this.readOwnerIdAsFolder = false;
+		this.saveOwnerIdAsFolder = false;
 	}
 
 	/**
@@ -408,6 +424,22 @@ public final class FSServiceConfig implements Serializable {
 		this.fileExtension = fileExtension;
 	}
 
+	public boolean isReadOwnerIdAsFolder() {
+		return readOwnerIdAsFolder;
+	}
+
+	public void setReadOwnerIdAsFolder(boolean readOwnerIdAsFolder) {
+		this.readOwnerIdAsFolder = readOwnerIdAsFolder;
+	}
+
+	public boolean isSaveOwnerIdAsFolder() {
+		return saveOwnerIdAsFolder;
+	}
+
+	public void setSaveOwnerIdAsFolder(boolean saveOwnerIdAsFolder) {
+		this.saveOwnerIdAsFolder = saveOwnerIdAsFolder;
+	}
+
 	/**
 	 * Return store file name.
 	 *
@@ -434,7 +466,32 @@ public final class FSServiceConfig implements Serializable {
 		if (!lastChar.equals(File.separator))
 			path += File.separator;
 
-		return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId);
+		if (saveOwnerIdAsFolder) {
+			return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId) + ownerId + File.separator;
+		} else {
+			return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId);
+		}
+	}
+
+	/**
+	 * Return store folder path.
+	 *
+	 * @param ownerId
+	 * 		- owner id
+	 * @return folder name
+	 * @throws FSServiceConfigException
+	 */
+	public String getReadFolderPath(String ownerId) throws FSServiceConfigException {
+		String path = rootFolderPath;
+		String lastChar = path.substring(path.length() - 1, path.length());
+		if (!lastChar.equals(File.separator))
+			path += File.separator;
+
+		if (readOwnerIdAsFolder) {
+			return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId) + ownerId + File.separator;
+		} else {
+			return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId);
+		}
 	}
 
 	/**
