@@ -22,7 +22,7 @@ public class TestAlpha {
 		}catch(CrudServiceException e){
 		}
 		
-		TestCrudsaveable b = service.read(id);
+		TestCrudsaveable b = service.read(new SaveableID(id, id));
 		assertNotNull(b);
 		
 		assertEquals(a.getOwnerId(), b.getOwnerId());
@@ -32,7 +32,7 @@ public class TestAlpha {
 		
 		TestCrudsaveable c = new TestCrudsaveable(id, content+"bla");
 		service.update(c);
-		TestCrudsaveable d = service.read(id);
+		TestCrudsaveable d = service.read(new SaveableID(id, id));
 		assertNotNull(d);
 		
 		assertEquals(a.getOwnerId(), d.getOwnerId());

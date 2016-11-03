@@ -24,11 +24,11 @@ public class CacheUtilTest {
 			config = new FSServiceConfig(SessionDistributorServiceConfig.getInstance().getSdSessionsFSRootFolder(), SessionDistributorServiceConfig.getInstance().getSdSessionsFileExtension());
 			FSService<SDCache> fsPersistence = FSServiceFactory.createFSService(config);
 			//remove stored cache fro 0 instance
-			fsPersistence.delete(NODE_0_VALUE);
+			fsPersistence.delete(new FSSaveableID(NODE_0_VALUE, NODE_0_VALUE));
 			//remove stored cache fro 1 instance
-			fsPersistence.delete(NODE_1_VALUE);
+			fsPersistence.delete(new FSSaveableID(NODE_1_VALUE, NODE_1_VALUE));
 			//remove stored cache fro DEFAULT instance
-			fsPersistence.delete("1000");
+			fsPersistence.delete(new FSSaveableID("1000", "1000"));
 		} catch (FSServiceConfigException e) {
 			Assert.fail("Should not happen!" + e.getMessage());
 		} catch (FSServiceException e) {

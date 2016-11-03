@@ -29,7 +29,7 @@ public class MigrateButMaintainTest {
 		assertTrue(testService.exists(a));
 		assertTrue(beta.exists(a));
 		assertTrue(alpha.exists(a));
-		assertEquals(testService.read(a.getId()), a);
+		assertEquals(testService.read(new SaveableID(a.getId(), a.getId())), a);
 		
 		
 		//test on the fly migration
@@ -41,7 +41,7 @@ public class MigrateButMaintainTest {
 		assertTrue(alpha.exists(a));
 		
 		//now read and force migration.
-		assertEquals(testService.read(a.getId()), a);
+		assertEquals(testService.read(new SaveableID(a.getId(), a.getId())), a);
 		assertTrue(testService.exists(a));
 		assertTrue("instance should have been copied to beta", beta.exists(a));
 		assertTrue("instance should have been keeped in alpha", alpha.exists(a));
@@ -65,7 +65,7 @@ public class MigrateButMaintainTest {
 		assertFalse("instance should be deleted on new", beta.exists(a));
 		assertFalse("instance should be deleted on old", alpha.exists(a));
 		alpha.create(a);
-		testService.migrate(a.getOwnerId());
+		testService.migrate(new SaveableID(a.getOwnerId(), a.getOwnerId()));
 		assertTrue("instance should exists deleted on new", beta.exists(a));
 		assertFalse("instance should be deleted on old", alpha.exists(a));
 

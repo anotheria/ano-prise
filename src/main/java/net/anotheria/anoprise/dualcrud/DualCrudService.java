@@ -16,11 +16,11 @@ public interface DualCrudService<T extends CrudSaveable> {
 	T create(T t) throws CrudServiceException;
 	/**
 	 * Reads an existing instance.
-	 * @param ownerId
+	 * @param id
 	 * @return
 	 * @throws CrudServiceException
 	 */
-	T read(String ownerId) throws CrudServiceException;
+	T read(SaveableID id) throws CrudServiceException;
 	/**
 	 * Updates an existing instance.
 	 * @param t
@@ -43,10 +43,10 @@ public interface DualCrudService<T extends CrudSaveable> {
 	T save(T t) throws CrudServiceException;
 	/**
 	 * Migrates an instance with given id from one persistence to another along the config.
-	 * @param ownerId
+	 * @param id
 	 * @throws CrudServiceException
 	 */
-	void migrate(String ownerId) throws CrudServiceException;
+	void migrate(SaveableID id) throws CrudServiceException;
 	/**
 	 * Returns true if such an instance exists.
 	 * @param t

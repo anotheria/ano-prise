@@ -1,5 +1,6 @@
 package net.anotheria.anoprise.sessiondistributor.cache;
 
+import net.anotheria.anoprise.fs.FSSaveableID;
 import net.anotheria.anoprise.fs.FSService;
 import net.anotheria.anoprise.fs.FSServiceConfig;
 import net.anotheria.anoprise.fs.FSServiceConfigException;
@@ -69,10 +70,10 @@ public final class SDCacheUtil {
 		String cacheId = System.getProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName());
 		cacheId = StringUtils.isEmpty(cacheId) ? SDCache.DEFAULT_NODE_ID : cacheId;
 		try {
-			SDCache cache = fsPersistence.read(cacheId);
+			SDCache cache = fsPersistence.read(new FSSaveableID(cacheId, cacheId));
 			// remove  after read!
 			try {
-				fsPersistence.delete(cacheId);
+				fsPersistence.delete(new FSSaveableID(cacheId, cacheId));
 			} catch (FSServiceException e) {
 				LOG.warn(LOG_PREFIX + "Deleting restored sessions cache  failed! CAUSE : " + e.getMessage());
 			}

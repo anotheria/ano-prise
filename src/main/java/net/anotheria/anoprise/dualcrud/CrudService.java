@@ -17,12 +17,12 @@ public interface CrudService<T extends CrudSaveable> extends Service {
 	/**
 	 * Returns a saved instance of T.
 	 * 
-	 * @param ownerId
+	 * @param id
 	 * @return instance of T
 	 * @throws CrudServiceException
 	 * @throws ItemNotFoundException
 	 */
-	T read(String ownerId) throws CrudServiceException, ItemNotFoundException;
+	T read(SaveableID id) throws CrudServiceException, ItemNotFoundException;
 
 	/**
 	 * Updates an existing instance of T. Fails if there is no previously saved instance.

@@ -13,13 +13,12 @@ public interface FSService<T extends FSSaveable> {
 	/**
 	 * Returns a saved instance of T.
 	 * 
-	 * @param ownerId
-	 *            - owner id
+	 * @param id - owner id
 	 * @return instance of T
 	 * @throws FSServiceException
 	 * @throws FSItemNotFoundException
 	 */
-	T read(String ownerId) throws FSServiceException;
+	T read(FSSaveableID id) throws FSServiceException;
 
 	/**
 	 * Saves an instance of T.
@@ -33,9 +32,8 @@ public interface FSService<T extends FSSaveable> {
 	/**
 	 * Delete an instance of T.
 	 * 
-	 * @param ownerId
-	 *            - owner id
+	 * @param id - owner id
 	 * @throws FSServiceException
 	 */
-	void delete(String ownerId) throws FSServiceException;
+	void delete(FSSaveableID id) throws FSServiceException;
 }

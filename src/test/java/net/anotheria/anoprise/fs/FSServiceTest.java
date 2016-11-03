@@ -52,9 +52,9 @@ public class FSServiceTest {
 	public void testSaveReadDelete() throws FSServiceException {
 		FSTestObject obj = new FSTestObject(ownerId);
 		service.save(obj);
-		FSTestObject result = service.read(ownerId);
+		FSTestObject result = service.read(new FSSaveableID(ownerId, ownerId));
 		Assert.assertTrue(obj.equals(result));
-		service.delete(ownerId);
+		service.delete(new FSSaveableID(ownerId, ownerId));
 	}
 
 	private class FSTestObject extends FSSaveableAdapter {

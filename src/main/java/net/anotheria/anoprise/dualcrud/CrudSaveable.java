@@ -9,7 +9,7 @@ import java.io.Serializable;
 public interface CrudSaveable extends Serializable{
 	/**
 	 * Returns the id of the owner of the CrudSaveable object.
-	 * @return a string representation of an id object.
+	 * @return a string representation of an owner id object.
 	 */
 	String getOwnerId();
 }

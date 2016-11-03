@@ -56,19 +56,19 @@ public abstract class AbstractTestCrudService implements CrudService<TestCrudsav
 	}
 
 	@Override
-	public TestCrudsaveable read(String ownerId) throws CrudServiceException {
-		File f = getFile(ownerId);
+	public TestCrudsaveable read(SaveableID id) throws CrudServiceException {
+		File f = getFile(id.getSaveableId());
 		if (!f.exists())
-			throw new ItemNotFoundException(ownerId);
+			throw new ItemNotFoundException(id.getSaveableId());
 		FileInputStream fIn = null;
 		try {
 			fIn = new FileInputStream(f);
 			ObjectInputStream oIn = new ObjectInputStream(fIn);
 			return (TestCrudsaveable) oIn.readObject();
 		} catch (IOException e) {
-			throw new CrudServiceException("read(" + ownerId + ")", e);
+			throw new CrudServiceException("read(" + id + ")", e);
 		} catch (ClassNotFoundException e) {
-			throw new CrudServiceException("read(" + ownerId + ")", e);
+			throw new CrudServiceException("read(" + id + ")", e);
 		} finally {
 			if (fIn != null) {
 				try {

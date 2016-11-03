@@ -45,13 +45,13 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 	}
 
 	@Override
-	public T read(String ownerId) throws FSServiceException {
-		String filePath = config.getStoreFilePath(ownerId);
+	public T read(FSSaveableID id) throws FSServiceException {
+		String filePath = config.getReadFolderPath(id.getOwnerId(), id.getSaveableId());
 		File file = new File(filePath);
 
 		if (!file.exists()) {
-			log.debug("read("+ownerId+") " + "Item not found. Owner id: " + ownerId + ". File path: " + filePath);
-			throw new FSItemNotFoundException(ownerId);
+			log.debug("read("+id.getOwnerId()+") " + "Item not found. Owner id: " + id.getOwnerId() + ". File path: " + filePath);
+			throw new FSItemNotFoundException(id.getOwnerId());
 		}
 
 		ObjectInputStream in = null;
@@ -63,10 +63,10 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 				return result;
 			}
 		} catch (IOException ioe) {
-			log.error("read("+ownerId+")", ioe);
+			log.error("read("+id.getOwnerId()+")", ioe);
 			throw new FSServiceException(ioe.getMessage(), ioe);
 		} catch (ClassNotFoundException cnfe) {
-			log.error("read("+ownerId+")", cnfe);
+			log.error("read("+id.getOwnerId()+")", cnfe);
 			throw new FSServiceException(cnfe.getMessage(), cnfe);
 		} finally {
 			IOUtils.closeIgnoringException(in);
@@ -103,15 +103,15 @@ public class FSServiceImpl<T extends FSSaveable> implements FSService<T> {
 	}
 
 	@Override
-	public void delete(String ownerId) throws FSServiceException {
-		String filePath = config.getStoreFilePath(ownerId);
+	public void delete(FSSaveableID id) throws FSServiceException {
+		String filePath = config.getReadFolderPath(id.getOwnerId(), id.getSaveableId());
 		File f = new File(filePath);
 
 		if (!f.exists())
 			return;
 
 		if (!f.delete())
-			throw new FSServiceException("Deletion filed. Owner id: " + ownerId + ". File path: " + filePath);
+			throw new FSServiceException("Deletion filed. Owner id: " + id.getOwnerId() + ". File path: " + filePath);
 	}
 
 }

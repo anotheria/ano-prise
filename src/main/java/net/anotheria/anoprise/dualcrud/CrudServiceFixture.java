@@ -21,11 +21,14 @@ public class CrudServiceFixture<T extends CrudSaveable> implements CrudService<T
 	}
 
 	@Override
-	public T read(String ownerId) throws CrudServiceException, ItemNotFoundException {
-		if (!exist(ownerId))
-			throw new ItemNotFoundException(ownerId);
+	public T read(SaveableID id) throws CrudServiceException, ItemNotFoundException {
 
-		return holder.get(ownerId);
+		String saveableId = id.getSaveableId();
+
+		if (!exist(saveableId))
+			throw new ItemNotFoundException(saveableId);
+
+		return holder.get(saveableId);
 	}
 
 	@Override

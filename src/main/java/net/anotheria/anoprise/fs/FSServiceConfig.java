@@ -481,17 +481,8 @@ public final class FSServiceConfig implements Serializable {
 	 * @return folder name
 	 * @throws FSServiceConfigException
 	 */
-	public String getReadFolderPath(String ownerId) throws FSServiceConfigException {
-		String path = rootFolderPath;
-		String lastChar = path.substring(path.length() - 1, path.length());
-		if (!lastChar.equals(File.separator))
-			path += File.separator;
-
-		if (readOwnerIdAsFolder) {
-			return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId) + ownerId + File.separator;
-		} else {
-			return path + getStoreFolderPath(ownerId, maxOwnerIdLength, fragmetLegth, useStringOwnerId);
-		}
+	public String getReadFolderPath(String ownerId, String saveableId) throws FSServiceConfigException {
+		return getStoreFolderPath(ownerId) + getStoreFileName(saveableId);
 	}
 
 	/**
