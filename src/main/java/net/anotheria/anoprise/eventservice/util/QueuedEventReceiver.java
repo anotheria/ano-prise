@@ -147,11 +147,9 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 		} catch (QueueOverflowException e1) {
 			overflowCount++;
 
-			synchronized (this) {
-				try {
-					Thread.sleep(sleepTime);
-				} catch (Exception ignored) {
-				}
+			try {
+				Thread.sleep(sleepTime);
+			} catch (Exception ignored) {
 			}
 
 			try {

@@ -120,11 +120,9 @@ public class QueuedEventSender extends Thread {
 		}catch(QueueOverflowException e1){
 			overflowCount++;
 			//ok, first exception, we try to recover
-			synchronized (this){
-				try{
-					Thread.sleep(sleepTime);
-				}catch(Exception ignored){}
-			}
+			try{
+				Thread.sleep(sleepTime);
+			}catch(Exception ignored){}
 			try{
 				queue.putElement(event);
 			}catch(QueueOverflowException e2){
