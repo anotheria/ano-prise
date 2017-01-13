@@ -145,19 +145,7 @@ public class QueuedEventReceiver extends Thread implements EventServicePushConsu
 		try {
 			queue.putElement(event);
 		} catch (QueueOverflowException e1) {
-			overflowCount++;
-
-			try {
-				Thread.sleep(sleepTime);
-			} catch (Exception ignored) {
-			}
-
-			try {
-				queue.putElement(event);
-			} catch (QueueOverflowException e2) {
-				throwAwayCount++;
-				logger.error("Couldn't recover from queue overflow, throwing away " + event);
-			}
+			logger.error("not synchronized: Couldn't recover from queue overflow, throwing away " + event);
 		}
 	}
 
