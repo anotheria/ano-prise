@@ -17,6 +17,7 @@ import java.util.List;
  * </li>
  * <li>PackageWorker to perform work on a package of element at one processing cycle
  * </li>
+ * </ol>
  *
  * @author dmetelin
  * @version $Id: $Id
