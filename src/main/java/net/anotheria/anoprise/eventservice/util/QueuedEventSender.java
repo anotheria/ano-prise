@@ -119,20 +119,8 @@ public class QueuedEventSender extends Thread {
 			queue.putElement(event);
 		}catch(QueueOverflowException e1){
 			overflowCount++;
-			//ok, first exception, we try to recover
-			synchronized (this){
-				try{
-					Thread.sleep(sleepTime);
-				}catch(Exception ignored){}
-			}
-			try{
-				queue.putElement(event);
-			}catch(QueueOverflowException e2){
-				throwAwayCount++;
-				log.error("couldn't recover from queue overflow, throwing away "+event);
-				throw new QueueFullException(event,"Stats:"+getStatsString());
-			}
-			
+			log.error("not synchronized: couldn't recover from queue overflow, throwing away "+event);
+			throw new QueueFullException(event,"Stats:"+getStatsString());
 		}
 	}
 	
