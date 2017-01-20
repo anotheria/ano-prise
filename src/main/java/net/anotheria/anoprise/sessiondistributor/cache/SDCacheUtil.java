@@ -55,7 +55,6 @@ public final class SDCacheUtil {
 
 	/**
 	 * Read {@link SDCache}.
-	 * <p/>
 	 * Anyway - this method will return some Cache :)  so please do not add any NULL checks.
 	 *
 	 * @return {@link SDCache} read from FS - or newly created.

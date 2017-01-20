@@ -16,8 +16,7 @@ public class MetaFactoryException extends Exception {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param name
-	 *            - exception message
+	 * @param message - exception message
 	 */
 	public MetaFactoryException(String message) {
 		super(message);

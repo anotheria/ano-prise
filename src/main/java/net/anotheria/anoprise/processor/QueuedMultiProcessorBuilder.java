@@ -17,6 +17,7 @@ import java.util.List;
  * </li>
  * <li>PackageWorker to perform work on a package of element at one processing cycle
  * </li>
+ * </ol>
  * 
  * @author dmetelin
  * 
@@ -71,7 +72,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * Builds processor to perform work under single element at one processing
 	 * cycle: single element is dequeued and sent to the element worker.
 	 * 
-	 * @param <T>
 	 * @param name
 	 *            (identifier) for this processor
 	 * @param worker
@@ -87,7 +87,6 @@ public class QueuedMultiProcessorBuilder<E>{
 	 * cycle: elements from the queue are gathered to the package and sent to
 	 * the package worker
 	 * 
-	 * @param <T>
 	 * @param name
 	 *            (identifier) for this processor
 	 * @param worker

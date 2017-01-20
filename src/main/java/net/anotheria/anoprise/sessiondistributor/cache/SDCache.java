@@ -132,7 +132,7 @@ public final class SDCache implements FSSaveable {
 	/**
 	 * Returns all cached sessions.
 	 *
-	 * @return {@link java.util.List <DistributedSessionVO>}
+	 * @return {@link java.util.List}
 	 */
 	public List<DistributedSessionVO> getSessions() {
 		return new ArrayList<DistributedSessionVO>(sessions.values());

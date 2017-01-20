@@ -11,7 +11,7 @@ import java.util.List;
 public interface PackageWorker<E> {
 	/**
 	 * Called to perform some work.
-	 * @param workingElement
+	 * @param workingPackage
 	 * @throws Exception
 	 */
 	void doWork(List<E> workingPackage) throws Exception;
