@@ -1,8 +1,5 @@
 package net.anotheria.anoprise.metafactory;
 
-import net.anotheria.anoprise.dualcrud.CrudService;
-import net.anotheria.anoprise.dualcrud.DualCrudService;
-
 /**
  * Extensions definition for factory types.
  *
@@ -70,11 +67,11 @@ public enum Extension {
      */
     JSONRPC,    
 	/**
-	 * {@link DualCrudService} left {@link CrudService}.
+	 * {@link net.anotheria.anoprise.dualcrud.DualCrudService} left {@link net.anotheria.anoprise.dualcrud.CrudService}.
 	 */
 	CRUD_LEFT,
 	/**
-	 * {@link DualCrudService} right {@link CrudService}.
+	 * {@link net.anotheria.anoprise.dualcrud.DualCrudService} right {@link net.anotheria.anoprise.dualcrud.CrudService}.
 	 */
 	CRUD_RIGHT;
 
