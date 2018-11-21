@@ -1,5 +1,7 @@
 package net.anotheria.anoprise.metafactory;
 
+import net.anotheria.moskito.core.util.storage.Storage;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.anotheria.moskito.core.util.storage.Storage;
 
 /**
  * Utility class for dynamic instance creation of multiple possible instance types.
@@ -320,11 +320,7 @@ public class MetaFactory {
 	}
 
 	public static List<AliasResolver> getAliasResolverList() {
-		synchronized (resolverList) {
-			ArrayList<AliasResolver> ret = new ArrayList<AliasResolver>();
-			ret.addAll(resolverList);
-			return ret;
-		}
+		return new ArrayList<AliasResolver>(resolverList);
 	}
 
 	/**
