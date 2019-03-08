@@ -1,11 +1,7 @@
 package net.anotheria.anoprise.cache;
 
-import net.anotheria.moskito.core.logging.DefaultStatsLogger;
-import net.anotheria.moskito.core.logging.IntervalStatsLogger;
-import net.anotheria.moskito.core.logging.SL4JLogOutput;
-import net.anotheria.moskito.core.stats.DefaultIntervals;
+import net.anotheria.moskito.core.logging.LoggerUtil;
 import org.configureme.ConfigurationManager;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility for cache creation.
@@ -181,11 +177,7 @@ public final class Caches {
 
 	public static void attachCacheToMoskitoLoggers(Cache<?, ?> cache, String producerId, String category, String subsystem) {
 		CacheProducerWrapper cacheWrapper = new CacheProducerWrapper(cache, producerId, category, subsystem);
-		new DefaultStatsLogger(cacheWrapper, new SL4JLogOutput(LoggerFactory.getLogger("moskito.custom.default")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIVE_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("moskito.custom.5m")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.FIFTEEN_MINUTES, new SL4JLogOutput(LoggerFactory.getLogger("moskito.custom.15m")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_HOUR, new SL4JLogOutput(LoggerFactory.getLogger("moskito.custom.1h")));
-		new IntervalStatsLogger(cacheWrapper, DefaultIntervals.ONE_DAY, new SL4JLogOutput(LoggerFactory.getLogger("moskito.custom.1d")));
+		LoggerUtil.createSLF4JDefaultAndIntervalStatsLogger(cacheWrapper);
 	}
 
 	/*
