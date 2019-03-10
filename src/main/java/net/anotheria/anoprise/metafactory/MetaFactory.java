@@ -69,6 +69,8 @@ public class MetaFactory {
 
 	/**
 	 * Performs reset of created instances for some service.
+	 * @param <T> a service class.
+	 * @param pattern class to look for.
 	 */
 	public static <T extends Service> void resetInstances(Class<T> pattern) {
 		String className = pattern.getName();

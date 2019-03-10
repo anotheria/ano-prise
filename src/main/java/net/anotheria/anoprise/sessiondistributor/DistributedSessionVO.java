@@ -125,7 +125,7 @@ public class DistributedSessionVO implements Serializable {
 	}
 
 	/**
-	 * <p>Getter for the field <code>editorId</code>.</p>
+	 * Getter for the field <code>editorId</code>.
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
@@ -134,7 +134,7 @@ public class DistributedSessionVO implements Serializable {
 	}
 
 	/**
-	 * <p>Setter for the field <code>editorId</code>.</p>
+	 * Setter for the field <code>editorId</code>.
 	 *
 	 * @param editorId a {@link java.lang.String} object.
 	 */
@@ -145,7 +145,7 @@ public class DistributedSessionVO implements Serializable {
 
 
 	/**
-	 * <p>Getter for the field <code>distributedAttributes</code>.</p>
+	 * Getter for the field <code>distributedAttributes</code>.
 	 *
 	 * @return a {@link java.util.Map} object.
 	 */
@@ -155,7 +155,7 @@ public class DistributedSessionVO implements Serializable {
 
 
 	/**
-	 * <p>Setter for the field <code>distributedAttributes</code>.</p>
+	 * Setter for the field <code>distributedAttributes</code>.
 	 *
 	 * @param aDistributedAttributes a {@link java.util.Map} object.
 	 */

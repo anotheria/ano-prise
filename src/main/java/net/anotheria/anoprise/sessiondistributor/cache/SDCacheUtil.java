@@ -57,7 +57,6 @@ public final class SDCacheUtil {
 
 	/**
 	 * Read {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache}.
-	 * <p/>
 	 * Anyway - this method will return some Cache :)  so please do not add any NULL checks.
 	 *
 	 * @return {@link net.anotheria.anoprise.sessiondistributor.cache.SDCache} read from FS - or newly created.

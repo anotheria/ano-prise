@@ -10,7 +10,6 @@ import java.util.Map;
  * Abstract {@link net.anotheria.anoprise.metafactory.ParameterizedServiceFactory} implementation.
  *
  * @author Alexandr Bolbat
- * @param <T>
  * @version $Id: $Id
  */
 public abstract class AbstractParameterizedServiceFactory<T extends Service> implements ParameterizedServiceFactory<T> {

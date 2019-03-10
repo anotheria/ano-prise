@@ -1,9 +1,9 @@
 package net.anotheria.anoprise.cache;
 
+import net.anotheria.moskito.core.predefined.CacheStats;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
-
-import net.anotheria.moskito.core.predefined.CacheStats;
 
 
 /**
@@ -40,9 +40,9 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	public BoundedHardwiredCache(){
 		this(getUnnamedInstanceName(BoundedHardwiredCache.class));
 	}
+
 	/**
 	 * Creates a new cache with given start and max size.
-	 * @param aStartSize the start size.
 	 * @param aMaxSize the max size.
 	 */
 	public BoundedHardwiredCache(int aMaxSize){
@@ -59,7 +59,6 @@ public class BoundedHardwiredCache<K,V> extends AbstractCache implements Bounded
 	/**
 	 * Creates a new named cache with given start and max size.
 	 * @param name
-	 * @param aStartSize
 	 * @param aMaxSize
 	 */
 	public BoundedHardwiredCache(String name, int aMaxSize){

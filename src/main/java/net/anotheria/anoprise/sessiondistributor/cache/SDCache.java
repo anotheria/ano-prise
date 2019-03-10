@@ -5,7 +5,6 @@ import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
 import net.anotheria.anoprise.eventservice.util.QueuedEventReceiver;
-import net.anotheria.anoprise.fs.FSSaveable;
 import net.anotheria.anoprise.fs.FSSaveableAdapter;
 import net.anotheria.anoprise.sessiondistributor.DistributedSessionAttribute;
 import net.anotheria.anoprise.sessiondistributor.DistributedSessionVO;
@@ -133,7 +132,7 @@ public final class SDCache extends FSSaveableAdapter {
 	/**
 	 * Returns all cached sessions.
 	 *
-	 * @return {@link java.util.List <DistributedSessionVO>}
+	 * @return {@link java.util.List of DistributedSessionVO}
 	 */
 	public List<DistributedSessionVO> getSessions() {
 		return new ArrayList<DistributedSessionVO>(sessions.values());

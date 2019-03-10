@@ -12,11 +12,12 @@ import java.util.List;
  * parameters are not set during the building default values will be used.
  *
  * Can be build processors with two types of workers:
- * <ol>
- * <li>ElementWorker to perform work on a single element at one processing cycle
- * </li>
- * <li>PackageWorker to perform work on a package of element at one processing cycle
- * </li>
+ * &lt;ol&gt;
+ * &lt;li&gt;ElementWorker to perform work on a single element at one processing cycle
+ * &lt;/li&gt;
+ * &lt;li&gt;PackageWorker to perform work on a package of element at one processing cycle
+ * &lt;/li&gt;
+ * &lt;/ol&gt;
  *
  * @author dmetelin
  * @version $Id: $Id
