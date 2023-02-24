@@ -2,6 +2,7 @@ package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class RequestBasedCache<K,V> extends AbstractCache implements Cache<K, V>{
@@ -45,7 +46,12 @@ public class RequestBasedCache<K,V> extends AbstractCache implements Cache<K, V>
 		
 	}
 
-	@Override
+    @Override
+    public Collection<V> getAllElements() {
+        return mapHolder.get().values();
+    }
+
+    @Override
 	public void clear() {
 		mapHolder.get().clear();
 	}

@@ -2,6 +2,8 @@ package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
 
+import java.util.Collection;
+
 /**
  * An interface for the service side object cache.
  *
@@ -46,5 +48,12 @@ public interface Cache<K,V> {
 	 * @return a {@link net.anotheria.moskito.core.predefined.CacheStats} object.
 	 */
 	CacheStats getCacheStats();
+
+    /**
+     * Return all elements from cache.
+     *
+     * @return collection
+     */
+    Collection<V> getAllElements();
 	
 }

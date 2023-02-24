@@ -3,7 +3,10 @@ package net.anotheria.anoprise.cache;
 import net.anotheria.moskito.core.predefined.CacheStats;
 
 import java.lang.ref.SoftReference;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -188,8 +191,13 @@ public class RoundRobinSoftReferenceExperimentalCache<K,V> extends AbstractCache
 		//hier sollten wir nicht ankommen!
 		throw new AssertionError("You couldn't reach this point in code! ("+this+")");
 	}
-	
-	private void init(){
+
+    @Override
+    public Collection<V> getAllElements() {
+        return Arrays.stream(cache).map(SoftReference::get).collect(Collectors.toList());
+    }
+
+    private void init(){
 		clear();
 	}
 	

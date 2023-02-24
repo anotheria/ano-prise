@@ -2,6 +2,8 @@ package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
 
+import java.util.Collection;
+
 /**
  * A cache implementation where elements stored based on the instance of cache
  * If its called by its instance (so current call is not fail over call) - element will be stored, other wise - not stored.
@@ -74,7 +76,12 @@ public class FailoverCache<K, V> implements Cache<K, V> {
 			cache.remove(id);
 	}
 
-	@Override
+    @Override
+    public Collection<V> getAllElements() {
+        return cache.getAllElements();
+    }
+
+    @Override
 	public CacheStats getCacheStats() {
 		return moskitoCacheStats;
 	}

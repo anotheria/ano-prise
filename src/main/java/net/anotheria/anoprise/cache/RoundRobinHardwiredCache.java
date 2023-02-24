@@ -2,7 +2,10 @@ package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -242,8 +245,13 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 		//hier sollten wir nicht ankommen!
 		throw new AssertionError("You couldn't reach this point in code! ("+this+")");
 	}
-	
-	private void init(){
+
+    @Override
+    public Collection<V> getAllElements() {
+        return Arrays.stream(cache).collect(Collectors.toList());
+    }
+
+    private void init(){
 		clear();
 	}
 	
