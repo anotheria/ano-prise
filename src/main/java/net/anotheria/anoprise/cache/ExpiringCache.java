@@ -2,10 +2,9 @@ package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
 
-import java.lang.ref.SoftReference;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * A cache implementation where elements expire after some time.
@@ -82,6 +81,10 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 
     @Override
     public Collection<V> getAllElements() {
-        return cache.getAllElements().stream().map(CachedObjectWrapper::getObj).collect(Collectors.toList());
+        List<V> allElements = new ArrayList<>();
+        for (CachedObjectWrapper<V> wrapper : cache.getAllElements()) {
+            allElements.add(wrapper.getObj());
+        }
+        return allElements;
     }
 }
