@@ -5,7 +5,6 @@ import net.anotheria.moskito.core.predefined.CacheStats;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 
 /**
@@ -248,7 +247,7 @@ public class RoundRobinHardwiredCache<K,V> extends AbstractCache implements Cach
 
     @Override
     public Collection<V> getAllElements() {
-        return Arrays.stream(cache).collect(Collectors.toList());
+        return Arrays.asList(cache);
     }
 
     private void init(){
