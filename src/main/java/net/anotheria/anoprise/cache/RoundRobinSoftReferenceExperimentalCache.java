@@ -196,7 +196,8 @@ public class RoundRobinSoftReferenceExperimentalCache<K,V> extends AbstractCache
     public Collection<V> getAllElements() {
         List<V> allElements = new ArrayList<>();
         for (SoftReference<V> element : cache) {
-            allElements.add(element.get());
+            if (element != null)
+                allElements.add(element.get());
         }
         return allElements;
     }

@@ -83,7 +83,8 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
     public Collection<V> getAllElements() {
         List<V> allElements = new ArrayList<>();
         for (CachedObjectWrapper<V> wrapper : cache.getAllElements()) {
-            allElements.add(wrapper.getObj());
+            if (wrapper != null)
+                allElements.add(wrapper.getObj());
         }
         return allElements;
     }
