@@ -2,6 +2,10 @@ package net.anotheria.anoprise.cache;
 
 import net.anotheria.moskito.core.predefined.CacheStats;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * A cache implementation where elements expire after some time.
  * @author another
@@ -74,4 +78,14 @@ public class ExpiringCache<K,V> implements Cache<K,V>{
 	void setExpirationTime(long anExpirationTime){
 		expirationTime = anExpirationTime;
 	}
+
+    @Override
+    public Collection<V> getAllElements() {
+        List<V> allElements = new ArrayList<>();
+        for (CachedObjectWrapper<V> wrapper : cache.getAllElements()) {
+            if (wrapper != null)
+                allElements.add(wrapper.getObj());
+        }
+        return allElements;
+    }
 }

@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
+import java.util.Collection;
+
 
 /**
  * This class is a cache controller, which hides access to a configurable
@@ -320,7 +322,12 @@ public class CacheController<K, V> implements Cache<K, V> {
 		cache.remove(id);
 	}
 
-	@AfterConfiguration
+    @Override
+    public Collection<V> getAllElements() {
+        return cache.getAllElements();
+    }
+
+    @AfterConfiguration
 	public void configurationFinished() {
 		log.info("configuration " + configurationName + " finished, settings are:");
 		log.info("cacheOn " + prevCacheOn + " -> " + cacheOn);

@@ -14,6 +14,7 @@ public class CacheTester {
 		for (int i=0; i<MAX_SIZE; i++){
 			cache.put(i,""+i);
 		}
+        assertEquals(MAX_SIZE, cache.getAllElements().size());
 		
 		for (int i=0; i<MAX_SIZE; i++){
 			String s = cache.get(i);
