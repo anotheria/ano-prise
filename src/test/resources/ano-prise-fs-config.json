@@ -1,5 +1,5 @@
 {
-    rootFolderPath:"/work/fsstorage/",
-    fileExtension:"test",
-    fragmetLegth:5,
+    "rootFolderPath":"/work/fsstorage/",
+    "fileExtension":"test",
+    "fragmetLegth":5
 }
