@@ -11,7 +11,6 @@ import java.util.Collection;
  * @param <K> key value
  * @param <V> stored element
  * @author ivanbatura
- * @since: 23.06.12
  */
 public class FailoverCache<K, V> implements Cache<K, V> {
 	/**

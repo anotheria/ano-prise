@@ -49,18 +49,16 @@ public interface EnterpriseQueue<E> {
 	E remove() throws QueueEmptyException;
 
 	/**
-	 * Retrieves and removes the head of this queue, or returns <tt>null</tt> if
+	 * Retrieves and removes the head of this queue, or returns null if
 	 * this queue is empty.
 	 * 
-	 * @return the head of this queue, or <tt>null</tt> if this queue is empty
+	 * @return the head of this queue, or null if this queue is empty
 	 */
 	E poll();
 
 	/**
-	 * Retrieves, but does not remove, the head of this queue, or returns
-	 * <tt>null</tt> if this queue is empty.
-	 * 
-	 * @return the head of this queue, or <tt>null</tt> if this queue is empty
+	 * Retrieves, but does not remove, the head of this queue, or returns null if this queue is empty.
+	 * @return the head of this queue, or null if this queue is empty
 	 */
 	E peek();
 
