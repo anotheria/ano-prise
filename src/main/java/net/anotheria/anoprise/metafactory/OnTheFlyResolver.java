@@ -18,9 +18,10 @@ public class OnTheFlyResolver {
 	public static <T> Collection<Class<? extends T>> resolveOnTheFly(Class<T> interfaceClass){
 		Reflections reflections = new Reflections(
 				new ConfigurationBuilder()
-				.filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(interfaceClass.getPackage().getName())))
-				.setUrls(ClasspathHelper.forPackage(interfaceClass.getPackage().getName()))
-				.setScanners(new SubTypesScanner())
+						.filterInputsBy(new FilterBuilder().includePackage(interfaceClass.getPackage().getName()))
+//						.forPackages(interfaceClass.getPackage().getName())
+						.setUrls(ClasspathHelper.forPackage(interfaceClass.getPackage().getName()))
+						.setScanners(new SubTypesScanner())
 		);
 		return reflections.getSubTypesOf(interfaceClass);
 	}

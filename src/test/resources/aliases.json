@@ -3,7 +3,7 @@
 		junit:{
 			XxxService: "foo.bar.XxxService",
 			DomainXxxService: "XxxService",
-			CmsXxxService: "XxxService",           
-		},
-	},
+			CmsXxxService: "XxxService"
+		}
+	}
 }
