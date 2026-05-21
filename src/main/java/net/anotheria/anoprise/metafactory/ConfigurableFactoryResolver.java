@@ -41,9 +41,9 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 		try {
 			ConfigurationManager.INSTANCE.configure(resolver);
 		} catch (IllegalArgumentException e) {
-			LOG.warn("create() - no factory config found, configurable resolver remains unused.");
+			LOG.info("create() - no factory config found, configurable resolver remains unused.");
 		}catch(RuntimeException e){
-			LOG.warn("create() - couldn't find factories.json file, probably packed in a jar, ignored.", e);
+			LOG.info("create() - couldn't find factories.json file, probably packed in a jar, ignored.", e);
 		}
 		
 		return resolver;
@@ -66,7 +66,6 @@ public final class ConfigurableFactoryResolver implements FactoryResolver {
 	@SuppressWarnings("unchecked")
 	@SetAll
 	public void addFactory(final String name, final String value) {
-		System.out.println("Set "+name+" = "+value);
 		try {
 			factoryMap.put(name, (Class<? extends ServiceFactory<? extends Service>>) Class.forName(value));
 		} catch (ClassNotFoundException e) {

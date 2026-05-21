@@ -41,9 +41,9 @@ public class ConfigurableResolver implements AliasResolver {
 		try{
 			ConfigurationManager.INSTANCE.configure(resolver);
 		}catch(IllegalArgumentException e){
-			log.warn("create() - no factory config found, configurable resolver remains unused.");
+			log.info("create() - no factory config found, configurable resolver remains unused.");
 		}catch(RuntimeException e){
-			log.warn("create() - couldn't find aliases.json file, probably packed in a jar, ignored.", e);
+			log.info("create() - couldn't find aliases.json file, probably packed in a jar, ignored.", e);
 		}
 		return resolver;
 	}
