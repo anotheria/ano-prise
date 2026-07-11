@@ -2,8 +2,8 @@ package net.anotheria.anoprise.cache;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestConfigurationReading {
 	@Test public void testInDevelopment(){

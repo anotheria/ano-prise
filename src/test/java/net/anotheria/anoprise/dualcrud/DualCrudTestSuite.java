@@ -1,11 +1,10 @@
 package net.anotheria.anoprise.dualcrud;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(value=Suite.class)
-@SuiteClasses(value={TestAlpha.class, TestDual.class} )
+@Suite
+@SelectClasses({TestAlpha.class, TestDual.class})
 public class DualCrudTestSuite {
 
 }

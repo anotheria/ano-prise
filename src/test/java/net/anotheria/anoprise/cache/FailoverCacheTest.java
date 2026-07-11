@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static net.anotheria.anoprise.cache.CacheTestSettings.CURRENT_INSTANCE_NUMBER;
 import static net.anotheria.anoprise.cache.CacheTestSettings.INSTANCE_AMOUNT;

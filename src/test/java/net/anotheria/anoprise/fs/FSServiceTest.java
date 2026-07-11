@@ -6,10 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class FSServiceTest {
 
@@ -17,7 +17,7 @@ public class FSServiceTest {
 	private static final String ownerId = "123456789";
 	private static long currentTime;
 
-	@BeforeClass
+	@BeforeAll
 	public static void init() {
 		currentTime = new Date().getTime();
 		try {
@@ -28,7 +28,7 @@ public class FSServiceTest {
 		}
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void deInit() {
 		File file = new File(System.getProperty("user.home") + File.separator + ("test" + currentTime));
 		if (file.exists())
@@ -53,7 +53,7 @@ public class FSServiceTest {
 		FSTestObject obj = new FSTestObject(ownerId);
 		service.save(obj);
 		FSTestObject result = service.read(new FSSaveableID(ownerId, ownerId));
-		Assert.assertTrue(obj.equals(result));
+		Assertions.assertTrue(obj.equals(result));
 		service.delete(new FSSaveableID(ownerId, ownerId));
 	}
 

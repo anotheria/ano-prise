@@ -1,13 +1,13 @@
 package net.anotheria.anoprise.mock;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import net.anotheria.anoprise.mocking.MockFactory;
 import net.anotheria.anoprise.mocking.Mocking;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * This is the simplies possible test for mocking.
@@ -28,7 +28,7 @@ public class SimpleTest {
 	
 	private TestInterface test;
 	
-	@Before public void initTest(){
+	@BeforeEach public void initTest(){
 		test = MockFactory.createMock(TestInterface.class, new MyMocking());
 
 	}

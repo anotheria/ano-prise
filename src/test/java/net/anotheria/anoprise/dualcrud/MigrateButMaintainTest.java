@@ -1,10 +1,10 @@
 package net.anotheria.anoprise.dualcrud;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MigrateButMaintainTest {
 	
@@ -43,40 +43,40 @@ public class MigrateButMaintainTest {
 		//now read and force migration.
 		assertEquals(testService.read(new SaveableID(a.getId(), a.getId())), a);
 		assertTrue(testService.exists(a));
-		assertTrue("instance should have been copied to beta", beta.exists(a));
-		assertTrue("instance should have been keeped in alpha", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should have been copied to beta");
+		assertTrue(alpha.exists(a), "instance should have been keeped in alpha");
 		
 		
 		//test delete
 		testService.delete(a);
-		assertFalse("instance should be deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertFalse(beta.exists(a), "instance should be deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 		
 		//test migration on update
 		TestCrudsaveable b = new TestCrudsaveable(id, "bla"+content);
 		alpha.create(a);
 		testService.save(b);
 		assertTrue(testService.exists(a));
-		assertTrue("instance should have been copied to beta", beta.exists(a));
-		assertTrue("instance should have been keeped in alpha", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should have been copied to beta");
+		assertTrue(alpha.exists(a), "instance should have been keeped in alpha");
 
 		//test migrate
 		testService.delete(a);
-		assertFalse("instance should be deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertFalse(beta.exists(a), "instance should be deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 		alpha.create(a);
 		testService.migrate(new SaveableID(a.getOwnerId(), a.getOwnerId()));
-		assertTrue("instance should exists deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should exists deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 
 		//test save on the fly.
 		testService.delete(a);
-		assertFalse("instance should be deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertFalse(beta.exists(a), "instance should be deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 		alpha.create(a);
 		testService.save(a);
-		assertTrue("instance should exists on new", beta.exists(a));
-		assertTrue("instance should exists in old too", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should exists on new");
+		assertTrue(alpha.exists(a), "instance should exists in old too");
 		
 		
 	}

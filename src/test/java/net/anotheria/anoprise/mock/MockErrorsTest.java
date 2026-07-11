@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.mock;
 
-import org.junit.Test;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import net.anotheria.anoprise.mocking.MockFactory;
 import net.anotheria.anoprise.mocking.Mocking;

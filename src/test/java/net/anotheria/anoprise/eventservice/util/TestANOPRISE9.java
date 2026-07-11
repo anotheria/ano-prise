@@ -2,8 +2,8 @@ package net.anotheria.anoprise.eventservice.util;
 
 import net.anotheria.anoprise.eventservice.Event;
 
-import org.junit.Test;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.fail;
 
 //tests for https://jira.opensource.anotheria.net/browse/ANOPRISE-9
 public class TestANOPRISE9 {

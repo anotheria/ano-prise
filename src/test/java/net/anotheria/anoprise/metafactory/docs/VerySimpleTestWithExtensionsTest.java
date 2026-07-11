@@ -6,19 +6,19 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
-import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VerySimpleTestWithExtensionsTest {
 
-	@BeforeClass
+	@BeforeAll
 	public static void setConfigureMe(){
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "junit"));
 	}
 
-	@Before public void configureMetaFactory(){
+	@BeforeEach public void configureMetaFactory(){
 		MetaFactory.reset();
 		
 		//first we have to configure all available services, this doesn't have to happen here, it's just easier to understand the test if it happens here.
@@ -33,16 +33,16 @@ public class VerySimpleTestWithExtensionsTest {
 	private void test() throws MetaFactoryException{
 		//no need to cast and compile time safety, that you'll get something of your type.
 		CalculatorService service = MetaFactory.get(CalculatorService.class);
-		assertEquals("Expected 4", 4, service.plus(2, 2));
+		assertEquals(4, service.plus(2, 2), "Expected 4");
 	}
 	
-	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
+	@org.junit.jupiter.api.Test public void testWithImpl() throws MetaFactoryException{
 		//this line basically says, the LOCAL variant of CalculatorService is now the default one.
 		MetaFactory.addAlias(CalculatorService.class, Extension.DOMAIN);
 		test();
 	}
 
-	@org.junit.Test public void testWithMock() throws MetaFactoryException{
+	@org.junit.jupiter.api.Test public void testWithMock() throws MetaFactoryException{
 		//this line basically says, the FIXTURE variant of CalculatorService is now the default one.
 		MetaFactory.addAlias(CalculatorService.class, Extension.FIXTURE);
 		test();

@@ -1,9 +1,9 @@
 package net.anotheria.anoprise.sessiondistributor;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class SessionAttributeTest {
 	@Test
@@ -14,7 +14,7 @@ public class SessionAttributeTest {
 		DistributedSessionAttribute attr2 = new DistributedSessionAttribute("bla",  new byte[]{1, 2, 3});
 		assertNotNull(attr1.toString());
 		assertNotNull(attr2.toString());
-		assertEquals("Should be same", attr1, attr2);
+		assertEquals(attr1, attr2, "Should be same");
 
 	}
 }

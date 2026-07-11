@@ -1,6 +1,6 @@
 package net.anotheria.anoprise.cache;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
 import static net.anotheria.anoprise.cache.CacheTestSettings.START_SIZE;

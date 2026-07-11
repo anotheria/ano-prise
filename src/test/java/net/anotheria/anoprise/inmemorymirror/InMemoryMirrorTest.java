@@ -1,17 +1,17 @@
 package net.anotheria.anoprise.inmemorymirror;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class InMemoryMirrorTest {
 
@@ -47,8 +47,8 @@ public class InMemoryMirrorTest {
 		String key = created.getKey();
 
 		assertEquals(101, mirror.getAll().size());
-		assertEquals("Should be created in the mirror", "foo", mirror.get(key).getValue());
-		assertNull("Should be not created in the backend/support", support.getForDebug(key));
+		assertEquals("foo", mirror.get(key).getValue(), "Should be created in the mirror");
+		assertNull(support.getForDebug(key), "Should be not created in the backend/support");
 	}
 
 	@Test public void testDelete()  throws InMemoryMirrorException{
@@ -82,7 +82,7 @@ public class InMemoryMirrorTest {
 			} catch (ElementNotFoundException e) {
 				// expected
 			}
-			assertNotNull("Should still present in backend/support", support.getForDebug(id));
+			assertNotNull(support.getForDebug(id), "Should still present in backend/support");
 		}
 	}
 
@@ -132,8 +132,8 @@ public class InMemoryMirrorTest {
 			mirror.updateLocalOnly(newData);
 
 			//check backend
-			assertEquals("Mirror value should be canged", newData.getValue(), mirror.get(id).getValue());
-			assertEquals("Backend/support value should be not changed", oldData.getValue(), support.getForDebug(id).getValue());
+			assertEquals(newData.getValue(), mirror.get(id).getValue(), "Mirror value should be canged");
+			assertEquals(oldData.getValue(), support.getForDebug(id).getValue(), "Backend/support value should be not changed");
 		}
 	}
 

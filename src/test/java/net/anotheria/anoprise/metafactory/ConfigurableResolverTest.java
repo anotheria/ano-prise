@@ -2,21 +2,21 @@ package net.anotheria.anoprise.metafactory;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ConfigurableResolverTest {
 	
 	private static ConfigurableResolver resolver;
 
-	@BeforeClass public static void setConfigureMe(){
+	@BeforeAll public static void setConfigureMe(){
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "junit"));
 	}
 
-	@BeforeClass public static void setUp(){
+	@BeforeAll public static void setUp(){
 		resolver = ConfigurableResolver.create();
 	}
 	

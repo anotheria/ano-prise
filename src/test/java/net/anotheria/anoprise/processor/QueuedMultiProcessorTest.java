@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.processor;
 
 import net.anotheria.util.ThreadUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Random;
@@ -12,8 +12,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class QueuedMultiProcessorTest {
@@ -28,7 +29,7 @@ public class QueuedMultiProcessorTest {
 	private Random rnd;
 	private Set<Integer> worksRegression; 
 	
-	@Before public void reset(){
+	@BeforeEach public void reset(){
 		elementCount = new AtomicLong();
 		rnd = new Random(System.currentTimeMillis());
 		worksRegression = Collections.newSetFromMap(new ConcurrentHashMap<Integer, Boolean>(REQUESTS));
@@ -78,22 +79,24 @@ public class QueuedMultiProcessorTest {
 	} 
 	
 	
-	@Test(expected=UnrecoverableQueueOverflowException.class) public void queueOverflowTest() throws UnrecoverableQueueOverflowException{
+	@Test public void queueOverflowTest() throws UnrecoverableQueueOverflowException{
 		final Random rnd = new Random(System.currentTimeMillis());
-		
+
 		final ElementWorker<Integer> worker = new ElementWorker<Integer>() {
 			@Override
 			public void doWork(Integer workingElement) throws Exception {
 				ThreadUtils.sleepIgnoreException(rnd.nextInt(100));
 			}
-		};		
-		
+		};
+
 		QueuedMultiProcessor<Integer> processor = new QueuedMultiProcessorBuilder<Integer>().setQueueSize(10).setSleepTime(SLEEP_TIME).setProcessorChannels(PROCESSOR_CHANNELS).build("queueOverflowTest", worker);
 		processor.start();
-		
-		for(int i = 0; i < 200; i++){
-			processor.addToQueueDontWait(new Integer(i), 2, 20);
-		}
+
+		assertThrows(UnrecoverableQueueOverflowException.class, () -> {
+			for(int i = 0; i < 200; i++){
+				processor.addToQueueDontWait(new Integer(i), 2, 20);
+			}
+		});
 	}
 	
 	

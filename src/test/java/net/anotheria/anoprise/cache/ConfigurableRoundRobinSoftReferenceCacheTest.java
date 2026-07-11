@@ -2,15 +2,15 @@ package net.anotheria.anoprise.cache;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author ivanbatura
  * @since: 14.06.12
  */
 public class ConfigurableRoundRobinSoftReferenceCacheTest {
-	@BeforeClass
+	@BeforeAll
 	public static void initconfigurationmanager() {
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("unittest"));
 	}

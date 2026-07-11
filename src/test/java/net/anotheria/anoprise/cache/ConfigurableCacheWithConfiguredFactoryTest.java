@@ -2,12 +2,12 @@ package net.anotheria.anoprise.cache;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class ConfigurableCacheWithConfiguredFactoryTest {
 	
-	@BeforeClass public static void initconfigurationmanager(){
+	@BeforeAll public static void initconfigurationmanager(){
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("unittest"));
 	}
 	

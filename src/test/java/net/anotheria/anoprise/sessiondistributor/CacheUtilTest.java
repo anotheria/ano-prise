@@ -3,7 +3,7 @@ package net.anotheria.anoprise.sessiondistributor;
 import net.anotheria.anoprise.fs.*;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCache;
 import net.anotheria.anoprise.sessiondistributor.cache.SDCacheUtil;
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
 /**
  * Junit for net.anotheria.anoprise.sessiondistributor.cache stuff.
@@ -17,7 +17,7 @@ public class CacheUtilTest {
 	private static final String NODE_0_VALUE = "0";
 	private static final String NODE_1_VALUE = "1";
 
-	@BeforeClass
+	@BeforeAll
 	public static void before() {
 		FSServiceConfig config = null;
 		try {
@@ -30,19 +30,19 @@ public class CacheUtilTest {
 			//remove stored cache fro DEFAULT instance
 			fsPersistence.delete(new FSSaveableID("1000", "1000"));
 		} catch (FSServiceConfigException e) {
-			Assert.fail("Should not happen!" + e.getMessage());
+			Assertions.fail("Should not happen!" + e.getMessage());
 		} catch (FSServiceException e) {
-			Assert.fail("Should not happen!" + e.getMessage());
+			Assertions.fail("Should not happen!" + e.getMessage());
 		}
 
 	}
 
-	@Before
+	@BeforeEach
 	public void beforeM(){
 		before();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void after() {
 		before();
 	}
@@ -53,16 +53,16 @@ public class CacheUtilTest {
 		System.setProperty("JUNITTEST", String.valueOf(true));
 		//creating some cache!
 		SDCache cache = SDCacheUtil.createCache();
-		Assert.assertNotNull("Is null", cache);
+		Assertions.assertNotNull(cache, "Is null");
 
 
 		String id = cache.createSession("123123qweqweqweqweqweqeasflk");
-		Assert.assertNotNull("is null", id);
+		Assertions.assertNotNull(id, "is null");
 
 		try {
 			DistributedSessionVO session = cache.getSession(id);
-			Assert.assertNotNull("Is null", session);
-			Assert.assertEquals(" Not equals", session.getName(), id);
+			Assertions.assertNotNull(session, "Is null");
+			Assertions.assertEquals(session.getName(), id, " Not equals");
 
 
 			// lets  persist it!!
@@ -83,13 +83,13 @@ public class CacheUtilTest {
 
 			DistributedSessionVO session2 = cache.getSession(id);
 			cache.updateCallTime(id);
-			Assert.assertNotNull("Is null", session2);
-			Assert.assertEquals(" Not properly restored!", session2.getName(), session.getName());
+			Assertions.assertNotNull(session2, "Is null");
+			Assertions.assertEquals(session2.getName(), session.getName(), " Not properly restored!");
 
 			String id5 = cache.createSession("123123qweqweqweqweqweqeasflkqweqweq");
 			cache.updateCallTime(id5);
 
-			Assert.assertNotNull("is null", id5);
+			Assertions.assertNotNull(id5, "is null");
 
 			//remove all stuff!
 			cache.removeSession(id);
@@ -101,13 +101,13 @@ public class CacheUtilTest {
 			//try to read not existing session
 			try {
 				cache.getSession(id);
-				Assert.fail("Already deleted");
+				Assertions.fail("Already deleted");
 			} catch (NoSuchDistributedSessionException e) {
 			}
 
 
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail("can't happen!!!");
+			Assertions.fail("can't happen!!!");
 		}
 	}
 
@@ -123,37 +123,37 @@ public class CacheUtilTest {
 		//Setting proper  Node ID  via system property!  before cache creation  --  0 id for this node
 		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), NODE_0_VALUE);
 		SDCache cacheInstance1 = SDCacheUtil.createCache();
-		Assert.assertNotNull("Is null", cacheInstance1);
+		Assertions.assertNotNull(cacheInstance1, "Is null");
 
 		//Setting proper  Node ID  via system property!  before cache creation  --  1 id for this node
 		System.setProperty(SessionDistributorServiceConfig.getInstance().getNodeIdSystemPropertyName(), NODE_1_VALUE);
 		SDCache cacheInstance2 = SDCacheUtil.createCache();
-		Assert.assertNotNull("Is null", cacheInstance2);
+		Assertions.assertNotNull(cacheInstance2, "Is null");
 
 		String id1 = cacheInstance1.createSession(sessionId1);
-		Assert.assertEquals(id1, sessionId1);
+		Assertions.assertEquals(id1, sessionId1);
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 		String id2 = cacheInstance1.createSession(sessionId2);
-		Assert.assertEquals(id2, sessionId2);
+		Assertions.assertEquals(id2, sessionId2);
 
 		//try to get first session from secondCache
 		try {
 			DistributedSessionVO session1 = cacheInstance2.getSession(sessionId1);
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail("Should not happen! Replication mistMatch!!!");
+			Assertions.fail("Should not happen! Replication mistMatch!!!");
 		}
 		//try to get first session from firstCache!
 		try {
 			DistributedSessionVO session2 = cacheInstance1.getSession(sessionId2);
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail("Should not happen! Replication mistMatch!!!");
+			Assertions.fail("Should not happen! Replication mistMatch!!!");
 		}
-		Assert.assertEquals("Error", cacheInstance1.getCount(), cacheInstance2.getCount());
-		Assert.assertEquals("Error", cacheInstance1.getSessions(), cacheInstance2.getSessions());
+		Assertions.assertEquals(cacheInstance1.getCount(), cacheInstance2.getCount(), "Error");
+		Assertions.assertEquals(cacheInstance1.getSessions(), cacheInstance2.getSessions(), "Error");
 
 
 		// adding some attribute!!!!!
@@ -164,16 +164,16 @@ public class CacheUtilTest {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				Assert.fail();
+				Assertions.fail();
 			}
 
 			DistributedSessionVO session1 = cacheInstance2.getSession(sessionId1);
-			Assert.assertTrue("Replication error! Attribute not present!!", session1.getDistributedAttributes().containsKey(attributeName));
-			Assert.assertEquals("Last change time differs!", session.getLastChangeTime(), session1.getLastChangeTime());
+			Assertions.assertTrue(session1.getDistributedAttributes().containsKey(attributeName), "Replication error! Attribute not present!!");
+			Assertions.assertEquals(session.getLastChangeTime(), session1.getLastChangeTime(), "Last change time differs!");
 
 
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 
 		// set UserID
@@ -184,7 +184,7 @@ public class CacheUtilTest {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				Assert.fail();
+				Assertions.fail();
 			}
 			cacheInstance1.updateSessionEditorId(sessionId1, editorId);
 
@@ -192,17 +192,17 @@ public class CacheUtilTest {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				Assert.fail();
+				Assertions.fail();
 			}
 
 			DistributedSessionVO session1 = cacheInstance2.getSession(sessionId1);
-			Assert.assertEquals("Replication error! editor id not p[resent!!", session1.getEditorId(), editorId);
-			Assert.assertEquals("Replication error! user id not p[resent!!", session1.getUserId(), userID);
-			Assert.assertEquals("Last change time differs!", session.getLastChangeTime(), session1.getLastChangeTime());
+			Assertions.assertEquals(session1.getEditorId(), editorId, "Replication error! editor id not p[resent!!");
+			Assertions.assertEquals(session1.getUserId(), userID, "Replication error! user id not p[resent!!");
+			Assertions.assertEquals(session.getLastChangeTime(), session1.getLastChangeTime(), "Last change time differs!");
 
 
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 
 
@@ -212,15 +212,15 @@ public class CacheUtilTest {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				Assert.fail();
+				Assertions.fail();
 			}
 			DistributedSessionVO session = cacheInstance1.getSession(sessionId1);
 			DistributedSessionVO session1 = cacheInstance2.getSession(sessionId1);
-			Assert.assertEquals("Last change time differs!", session.getLastChangeTime(), session1.getLastChangeTime());
+			Assertions.assertEquals(session.getLastChangeTime(), session1.getLastChangeTime(), "Last change time differs!");
 
 
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 
 		//Delete calls!
@@ -229,23 +229,23 @@ public class CacheUtilTest {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				Assert.fail();
+				Assertions.fail();
 			}
 			try {
 				cacheInstance2.getSession(sessionId1);
-				Assert.fail("Error! Was not deleted by Async call! - Cache2 session1");
+				Assertions.fail("Error! Was not deleted by Async call! - Cache2 session1");
 			} catch (NoSuchDistributedSessionException e) {
 			}
 			cacheInstance2.removeSession(sessionId2);
 			try {
 				cacheInstance1.getSession(sessionId2);
-				Assert.fail("Error! Was not deleted by Async call!  Cache1 session2");
+				Assertions.fail("Error! Was not deleted by Async call!  Cache1 session2");
 			} catch (NoSuchDistributedSessionException e) {
 			}
-			Assert.assertEquals("Error! smth present", cacheInstance1.getCount(), 0);
-			Assert.assertEquals("Error! smth present", cacheInstance2.getCount(), 0);
+			Assertions.assertEquals(cacheInstance1.getCount(), 0, "Error! smth present");
+			Assertions.assertEquals(cacheInstance2.getCount(), 0, "Error! smth present");
 		} catch (NoSuchDistributedSessionException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 		SessionDistributorServiceConfig.getInstance().setMultipleInstancesEnabled(false);
 

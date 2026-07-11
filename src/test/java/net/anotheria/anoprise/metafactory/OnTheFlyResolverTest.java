@@ -1,13 +1,13 @@
 package net.anotheria.anoprise.metafactory;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * TODO comment this class
@@ -17,8 +17,8 @@ import static org.junit.Assert.fail;
  */
 public class OnTheFlyResolverTest {
 
-	@Before
-	@After
+	@BeforeEach
+	@AfterEach
 	public void reset(){
 		MetaFactory.reset();
 	}

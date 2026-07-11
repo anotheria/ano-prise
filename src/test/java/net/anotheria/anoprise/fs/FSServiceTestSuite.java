@@ -1,11 +1,10 @@
 package net.anotheria.anoprise.fs;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(value = Suite.class)
-@SuiteClasses(value = { FSServiceConfigTest.class, FSServiceTest.class })
+@Suite
+@SelectClasses({FSServiceConfigTest.class, FSServiceTest.class})
 public class FSServiceTestSuite {
 
 }

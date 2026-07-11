@@ -1,8 +1,8 @@
 package net.anotheria.anoprise.eventservice.util;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventChannel;
@@ -22,7 +22,7 @@ public class QueuedEventSenderTest {
 		}
 	}
 	
-	@Ignore @Test public void testSimplePushOperations() throws QueueFullException, InterruptedException{
+	@Disabled @Test public void testSimplePushOperations() throws QueueFullException, InterruptedException{
 		//init consumer
 		String channelName = IdCodeGenerator.generateCode();
 		QueuedEventSenderConsumer consumer = new QueuedEventSenderConsumer();
@@ -46,7 +46,7 @@ public class QueuedEventSenderTest {
 		 
 	}
 	
-	@Ignore @Test public void testForUnrunningQueueOverflow() throws QueueFullException{
+	@Disabled @Test public void testForUnrunningQueueOverflow() throws QueueFullException{
 		int sleep = 500;
 		QueuedEventSender sender = new QueuedEventSender("TEST", IdCodeGenerator.generateCode(), 100, sleep, null);
 		//first put 100 elements
@@ -63,7 +63,7 @@ public class QueuedEventSenderTest {
 		}
 		long end = System.currentTimeMillis();
 		long duration = end - start;
-		assertTrue("should have slept longer than sleep time", duration>sleep);
+		assertTrue(duration>sleep, "should have slept longer than sleep time");
 				
 	}
 	

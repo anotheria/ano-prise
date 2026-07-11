@@ -5,10 +5,10 @@ import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.anoprise.metafactory.ServiceFactory;
 import net.anotheria.util.IdCodeGenerator;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ImplTest {
 
@@ -24,13 +24,13 @@ public class ImplTest {
 
 	private final String testSessionId = "123123123";
 
-	@Before
+	@BeforeEach
 	public void init() {
 		MetaFactory.addAlias(SessionDistributorService.class, Extension.LOCAL);
 		MetaFactory.addFactoryClass(SessionDistributorService.class, Extension.LOCAL, SDFactory.class);
 	}
 
-	@After
+	@AfterEach
 	public void deInit() {
 		MetaFactory.reset();
 	}
@@ -48,22 +48,22 @@ public class ImplTest {
 
 
 			name = service.createDistributedSession(testSessionId);
-			assertEquals("Should be same id!", name, testSessionId);
+			assertEquals(name, testSessionId, "Should be same id!");
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				//ignore
 			}
 			name = service.createDistributedSession(testSessionId);
-			assertTrue("Ids should not match!!!", !name.equals(testSessionId));
+			assertTrue(!name.equals(testSessionId), "Ids should not match!!!");
 
 			DistributedSessionVO session1 = service.restoreDistributedSession(testSessionId, "");
 			DistributedSessionVO session2 = service.restoreDistributedSession(name, "");
-			assertNotSame("Should not be same!", session1, session2);
+			assertNotSame(session1, session2, "Should not be same!");
 			assertFalse(session1.getLastChangeTime() == session2.getLastChangeTime());
 			assertFalse(session1.equals(session2));
 		} catch (MetaFactoryException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 
 	}
@@ -88,9 +88,9 @@ public class ImplTest {
 			assertTrue(service.restoreDistributedSession(name, "").getLastChangeTime() > sessionCreateTime);
 		}
 		for (DistributedSessionAttribute attribute : attributesDummy) {
-			assertTrue("Should contains such attribute!!!", service.restoreDistributedSession(name, "").getDistributedAttributes().containsValue(attribute));
-			assertTrue("Should contains such attribute!!!", service.restoreDistributedSession(name, "").getDistributedAttributes().containsKey(attribute.getName
-					()));
+			assertTrue(service.restoreDistributedSession(name, "").getDistributedAttributes().containsValue(attribute), "Should contains such attribute!!!");
+			assertTrue(service.restoreDistributedSession(name, "").getDistributedAttributes().containsKey(attribute.getName
+					()), "Should contains such attribute!!!");
 		}
 
 
@@ -100,9 +100,9 @@ public class ImplTest {
 
 
 		for (DistributedSessionAttribute attribute : attributesDummy2) {
-			assertTrue("Should contains such attribute!!!", service.restoreDistributedSession(name, "").getDistributedAttributes().containsValue(attribute));
-			assertTrue("Should contains such attribute!!!", service.restoreDistributedSession(name, "").getDistributedAttributes().containsKey(attribute.getName
-					()));
+			assertTrue(service.restoreDistributedSession(name, "").getDistributedAttributes().containsValue(attribute), "Should contains such attribute!!!");
+			assertTrue(service.restoreDistributedSession(name, "").getDistributedAttributes().containsKey(attribute.getName
+					()), "Should contains such attribute!!!");
 		}
 
 
@@ -146,7 +146,7 @@ public class ImplTest {
 
 		try {
 			service.removeDistributedAttribute("123123", "");
-			Assert.fail("Session does not exist");
+			Assertions.fail("Session does not exist");
 		} catch (NoSuchDistributedSessionException exception) {
 		}
 
@@ -240,7 +240,7 @@ public class ImplTest {
 					try {
 						sdService.createDistributedSession("test" + i);
 					} catch (SessionDistributorServiceException e) {
-						Assert.fail("Should not happen");
+						Assertions.fail("Should not happen");
 					}
 
 
@@ -248,11 +248,11 @@ public class ImplTest {
 
 
 				SessionDistributorServiceConfig.getInstance().setWrightSessionsToFsOnShutdownEnabled(false);
-				Assert.assertEquals("Should be  same size!!!", 15, sdService.getDistributedSessionNames().size());
+				Assertions.assertEquals(15, sdService.getDistributedSessionNames().size(), "Should be  same size!!!");
 
 			}
 		} catch (SessionDistributorServiceException e) {
-			Assert.fail("Should not happen!");
+			Assertions.fail("Should not happen!");
 		} catch (Throwable throwable) {
 		}
 	}
@@ -272,7 +272,7 @@ public class ImplTest {
 					try {
 						sdService.createDistributedSession("test" + i);
 					} catch (SessionDistributorServiceException e) {
-						Assert.fail("Should not happen");
+						Assertions.fail("Should not happen");
 					}
 
 
@@ -280,11 +280,11 @@ public class ImplTest {
 
 
 				SessionDistributorServiceConfig.getInstance().setWrightSessionsToFsOnShutdownEnabled(false);
-				Assert.assertEquals("Should be  same size!!!", 15, sdService.getDistributedSessionNames().size());
+				Assertions.assertEquals(15, sdService.getDistributedSessionNames().size(), "Should be  same size!!!");
 
 			}
 		} catch (SessionDistributorServiceException e) {
-			Assert.fail("Should not happen!");
+			Assertions.fail("Should not happen!");
 		} catch (Throwable throwable) {
 		}
 	}
@@ -323,17 +323,17 @@ public class ImplTest {
 							try {
 								sdService.createDistributedSession(IdCodeGenerator.generateCode(15));
 								if (failedCallsAmount.get() == sessionsLimit)
-									Assert.fail("Limit Reached - But Exception does not  fall!");
+									Assertions.fail("Limit Reached - But Exception does not  fall!");
 
 							} catch (SessionsCountLimitReachedSessionDistributorServiceException e) {
 								failedCallsAmount.incrementAndGet();
 							} catch (SessionDistributorServiceException e) {
-								Assert.fail(e.getMessage());
+								Assertions.fail(e.getMessage());
 							}
 
 
 						} catch (InterruptedException e) {
-							Assert.fail(e.getMessage());
+							Assertions.fail(e.getMessage());
 						} finally {
 							stopLatch.countDown();
 						}
@@ -348,13 +348,13 @@ public class ImplTest {
 
 				stopLatch.await();
 			} catch (InterruptedException e) {
-				Assert.fail(e.getMessage());
+				Assertions.fail(e.getMessage());
 			}
 
 
-			Assert.assertEquals("Should be EQUALS", nThreads - sessionsLimit, failedCallsAmount.get());
+			Assertions.assertEquals(nThreads - sessionsLimit, failedCallsAmount.get(), "Should be EQUALS");
 		} catch (MetaFactoryException e) {
-			Assert.fail();
+			Assertions.fail();
 		}
 
 		// Setting to prev  values!

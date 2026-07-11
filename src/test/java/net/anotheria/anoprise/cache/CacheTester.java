@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 import static net.anotheria.anoprise.cache.CacheTestSettings.MAX_SIZE;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CacheTester {
@@ -77,7 +77,7 @@ public class CacheTester {
 			int key1 = i;
 			int key2 = i+MAX_SIZE;
 			String s = cache.get(key1);
-			assertNull("First key should have been deleted (rolled over)", s);
+			assertNull(s, "First key should have been deleted (rolled over)");
 			s = cache.get(key2);
 			assertNotNull(s);
 			assertEquals(key2, Integer.parseInt(s));

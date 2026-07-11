@@ -1,11 +1,10 @@
 package net.anotheria.anoprise.mock;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(value=Suite.class)
-@SuiteClasses(value={MockTest.class, MockErrorsTest.class, SimpleTest.class} )
+@Suite
+@SelectClasses({MockTest.class, MockErrorsTest.class, SimpleTest.class})
 public class MockTestSuite {
 
 }

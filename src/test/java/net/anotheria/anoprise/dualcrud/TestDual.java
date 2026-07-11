@@ -1,11 +1,11 @@
 package net.anotheria.anoprise.dualcrud;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestDual {
 	
@@ -44,40 +44,40 @@ public class TestDual {
 		//now read and force migration.
 		assertEquals(testService.read(new SaveableID(a.getId(), a.getId())), a);
 		assertTrue(testService.exists(a));
-		assertTrue("instance should have been moved to beta", beta.exists(a));
-		assertFalse("instance should have been moved to beta", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should have been moved to beta");
+		assertFalse(alpha.exists(a), "instance should have been moved to beta");
 
 
 		//test delete
 		testService.delete(a);
-		assertFalse("instance should be deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertFalse(beta.exists(a), "instance should be deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 
 		//test migration on update
 		TestCrudsaveable b = new TestCrudsaveable(id, "bla"+content);
 		alpha.create(a);
 		testService.update(b);
 		assertTrue(testService.exists(a));
-		assertTrue("instance should have been moved to beta", beta.exists(a));
-		assertFalse("instance should have been moved to beta", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should have been moved to beta");
+		assertFalse(alpha.exists(a), "instance should have been moved to beta");
 
 		//test migrate
 		testService.delete(a);
-		assertFalse("instance should be deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertFalse(beta.exists(a), "instance should be deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 		alpha.create(a);
 		testService.migrate(new SaveableID(a.getOwnerId(), a.getOwnerId()));
-		assertTrue("instance should exists deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should exists deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 
 		//test save on the fly.
 		testService.delete(a);
-		assertFalse("instance should be deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertFalse(beta.exists(a), "instance should be deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 		alpha.create(a);
 		testService.save(a);
-		assertTrue("instance should exists deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should exists deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 
 
 	}
@@ -101,13 +101,13 @@ public class TestDual {
 
 		//this is wrong, there should be no stuation where a file exists on both!
 		testService.save(a);
-		assertTrue("instance should exists deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should exists deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 
 		alpha.create(a);
 		testService.update(b);
-		assertTrue("instance should exists deleted on new", beta.exists(a));
-		assertFalse("instance should be deleted on old", alpha.exists(a));
+		assertTrue(beta.exists(a), "instance should exists deleted on new");
+		assertFalse(alpha.exists(a), "instance should be deleted on old");
 
 		assertFalse(a.equals(testService.read(new SaveableID(a.getOwnerId(), a.getOwnerId()))));
 

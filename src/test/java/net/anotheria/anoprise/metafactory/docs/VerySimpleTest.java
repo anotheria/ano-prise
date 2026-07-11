@@ -5,19 +5,19 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
-import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VerySimpleTest {
 
-	@BeforeClass
+	@BeforeAll
 	public static void setConfigureMe(){
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "junit"));
 	}
 
-	@Before public void configureMetaFactory(){
+	@BeforeEach public void configureMetaFactory(){
 		MetaFactory.reset();
 		
 		//first we have to configure all available services, this doesn't have to happen here, it's just easier to understand the test if it happens here.
@@ -30,16 +30,16 @@ public class VerySimpleTest {
 	
 	private void test() throws MetaFactoryException{
 		CalculatorService service = MetaFactory.get(CalculatorService.class);
-		assertEquals("Expected 4", 4, service.plus(2, 2));
+		assertEquals(4, service.plus(2, 2), "Expected 4");
 	}
 	
 	
-	@org.junit.Test public void testWithMock() throws MetaFactoryException{
+	@org.junit.jupiter.api.Test public void testWithMock() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Mock", CalculatorService.class.getName());
 		test();
 	}
 
-	@org.junit.Test public void testWithImpl() throws MetaFactoryException{
+	@org.junit.jupiter.api.Test public void testWithImpl() throws MetaFactoryException{
 		MetaFactory.addAlias("CalculatorService-Impl", CalculatorService.class.getName());
 		test();
 	}

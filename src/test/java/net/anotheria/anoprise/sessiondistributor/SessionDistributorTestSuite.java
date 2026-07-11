@@ -1,11 +1,10 @@
 package net.anotheria.anoprise.sessiondistributor;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(value=Suite.class)
-@SuiteClasses(value={ImplTest.class, SessionAttributeTest.class, DistributedSessionVOTest.class } )
+@Suite
+@SelectClasses({ImplTest.class, SessionAttributeTest.class, DistributedSessionVOTest.class})
 public class SessionDistributorTestSuite {
 
 }

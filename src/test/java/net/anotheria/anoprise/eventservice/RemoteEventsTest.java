@@ -2,9 +2,9 @@ package net.anotheria.anoprise.eventservice;
 
 import net.anotheria.anoprise.eventservice.LocalEventsTest.TestConsumer;
 import net.anotheria.anoprise.eventservice.remote.RemoteSupplierFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RemoteEventsTest {
 
