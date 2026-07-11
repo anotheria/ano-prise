@@ -33,24 +33,24 @@
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>configureme</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>moskito-core</artifactId>
-            <version>3.2.8</version>
+            <version>4.0.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>ano-util</artifactId>
-            <version>4.0.1</version>
+            <version>4.0.6</version>
         </dependency>
         <dependency>
             <groupId>net.anotheria</groupId>
             <artifactId>distributeme-core</artifactId>
             <scope>provided</scope>
-            <version>2.5.3</version>
+            <version>4.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
